@@ -195,7 +195,7 @@
 }
 
 +class AnswerToReset {
-  -<b>final</b> byte[] atrBytes;
+  -<b>final</b> byte[] atrBytes
 
   +AnswerToReset(byte[] atrBytes)
   +byte[] getBytes()

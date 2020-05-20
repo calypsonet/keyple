@@ -98,7 +98,7 @@ package util #FFFFFF {
   }
 
   +interface Configurable {
-    +Map<String, String> getParameters();
+    +Map<String, String> getParameters()
     +setParameter(String key, String value)
     +setParameters(Map<String, String> parameters)
   }
@@ -109,7 +109,7 @@ package util #FFFFFF {
 ~interface ProxyElement {
   +String getName()
 
-  +Map<String, String> getParameters();
+  +Map<String, String> getParameters()
   +setParameter(String key, String value)
   +setParameters(Map<String, String> parameters)
 }
@@ -233,17 +233,17 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_8)
 +interface ObservablePlugin {
-  +addObserver(PluginObserver observer);
-  +removeObserver(PluginObserver observer);
-  +notifyObservers(PluginEvent event);
+  +addObserver(PluginObserver observer)
+  +removeObserver(PluginObserver observer)
+  +notifyObservers(PluginEvent event)
 }
 @enduml
 
 @startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_8_1)
 +interface ObservablePlugin {
-  +addObserver(<b>final</b> PluginObserver observer);
-  +removeObserver(<b>final</b> PluginObserver observer);
-  +notifyObservers(<b>final</b> PluginEvent event);
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
+  +notifyObservers(<b>final</b> PluginEvent event)
 }
 @enduml
 
@@ -251,16 +251,16 @@ package plugin.specific #D7BDE2 {
 +enum "EventType" as EventType_Plugin {
   READER_CONNECTED("Reader connected")
   READER_DISCONNECTED("Reader disconnected")
-  +EventType(String name);
-  +String getName();
+  +EventType(String name)
+  +String getName()
 }
 
 +class "<b>final</b> PluginEvent" as PluginEvent {
-  +PluginEvent(String pluginName, String readerName, EventType eventType);
-  +PluginEvent(String pluginName, Set<String> readerNames, EventType eventType);
-  +String getPluginName();
-  +SortedSet<String> getReaderNames();
-  +EventType getEventType();
+  +PluginEvent(String pluginName, String readerName, EventType eventType)
+  +PluginEvent(String pluginName, Set<String> readerNames, EventType eventType)
+  +String getPluginName()
+  +SortedSet<String> getReaderNames()
+  +EventType getEventType()
 }
 @enduml
 '---- PLUGIN EVENT -------------------------------------------------------------]
@@ -280,36 +280,36 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_OBSERVABLEREADER_0_8)
 +interface ObservableReader {
-  +addObserver(ReaderObserver observer);
-  +removeObserver(ReaderObserver observer);
-  +notifyObservers(ReaderEvent event);
+  +addObserver(ReaderObserver observer)
+  +removeObserver(ReaderObserver observer)
+  +notifyObservers(ReaderEvent event)
 
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
-    defaultSelectionsRequest, NotificationMode notificationMode);
+    defaultSelectionsRequest, NotificationMode notificationMode)
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
     defaultSelectionsRequest, NotificationMode notificationMode,
-    PollingMode pollingMode);
+    PollingMode pollingMode)
 
-  +startSeDetection(PollingMode pollingMode);
-  +stopSeDetection();
-  +notifySeProcessed();
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +notifySeProcessed()
 }
 @enduml
 
 @startuml(id=SEPROXY_OBSERVABLEREADER_0_8_1)
 +interface ObservableReader {
-  +addObserver(<b>final</b> ReaderObserver observer);
-  +removeObserver(<b>final</b> ReaderObserver observer);
-  +notifyObservers(<b>final</b> ReaderEvent event);
+  +addObserver(<b>final</b> ReaderObserver observer)
+  +removeObserver(<b>final</b> ReaderObserver observer)
+  +notifyObservers(<b>final</b> ReaderEvent event)
 
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    NotificationMode notificationMode);
+    NotificationMode notificationMode)
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    NotificationMode notificationMode, PollingMode pollingMode);
+    NotificationMode notificationMode, PollingMode pollingMode)
 
-  +startSeDetection(PollingMode pollingMode);
-  +stopSeDetection();
-  +notifySeProcessed();
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +notifySeProcessed()
 }
 @enduml
 
@@ -320,17 +320,17 @@ package plugin.specific #D7BDE2 {
   SE_MATCHED("SE matched")
   SE_REMOVAL("SE removal")
 
-  +EventType(String name);
-  +String getName();
+  +EventType(String name)
+  +String getName()
 }
 
 +class "<b>final</b> ReaderEvent" as ReaderEvent {
   +ReaderEvent(String pluginName, String readerName, EventType eventType,
-    DefaultSelectionsResponse defaultSelectionsResponse);
-  +String getPluginName();
-  +String getReaderName();
-  +EventType getEventType();
-  +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse();
+    DefaultSelectionsResponse defaultSelectionsResponse)
+  +String getPluginName()
+  +String getReaderName()
+  +EventType getEventType()
+  +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
 }
 @enduml
 
@@ -339,9 +339,9 @@ package plugin.specific #D7BDE2 {
   ALWAYS("always")
   MATCHED_ONLY("matched_only")
 
-  +NotificationMode(String name);
-  +String getName();
-  +{static}NotificationMode get(String name);
+  +NotificationMode(String name)
+  +String getName()
+  +{static}NotificationMode get(String name)
 }
 
 +enum PollingMode {
@@ -430,8 +430,8 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_SELECTOR_AID)
 +class "<b>final</b> AidSelector" as AidSelector <<static>> {
-  +{static} final int AID_MIN_LENGTH = 5;
-  +{static} final int AID_MAX_LENGTH = 16;
+  +{static} final int AID_MIN_LENGTH = 5
+  +{static} final int AID_MAX_LENGTH = 16
 
   +AidSelector(byte[] aidToSelect, Set<Integer> successfulSelectionStatusCodes,
     FileOccurrence fileOccurrence = FIRST, FileControlInformation fileControlInformation = FCI)
@@ -443,8 +443,8 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_SELECTOR_AID_ReaderAPI)
 +class "<b>final</b> AidSelector" as AidSelector <<static>> {
-  +{static} final int AID_MIN_LENGTH = 5;
-  +{static} final int AID_MAX_LENGTH = 16;
+  +{static} final int AID_MIN_LENGTH = 5
+  +{static} final int AID_MAX_LENGTH = 16
 
   +AidSelector(byte[] aidToSelect, FileOccurrence fileOccurrence = FIRST,
   FileControlInformation fileControlInformation = FCI)

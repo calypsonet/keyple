@@ -121,16 +121,16 @@
 
 @startuml(id=SELECTION_RESOURCE_0_8)
 +class "SeResource<T extends AbstractMatchingSe>" as SeResource_T {
-  #SeResource(SeReader seReader, T matchingSe);
-  +SeReader getSeReader();
-  +T getMatchingSe();
+  #SeResource(SeReader seReader, T matchingSe)
+  +SeReader getSeReader()
+  +T getMatchingSe()
 }
 @enduml
 
 @startuml(id=SELECTION_RESOURCE_0_9)
 +class "<b>final</b> SeResource<T extends AbstractMatchingSe>" as SeResource_T {
-  #SeResource(SeReader seReader, T matchingSe);
-  +SeReader getSeReader();
-  +T getMatchingSe();
+  #SeResource(SeReader seReader, T matchingSe)
+  +SeReader getSeReader()
+  +T getMatchingSe()
 }
 @enduml
