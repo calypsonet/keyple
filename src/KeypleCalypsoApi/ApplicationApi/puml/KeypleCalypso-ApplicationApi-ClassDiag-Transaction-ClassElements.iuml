@@ -1,0 +1,97 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml(id=TRANSACTION_INVALIDATED)
++enum InvalidatedPo {
+  REJECT
+  ACCEPT
+}
+@enduml
+
+@startuml(id=TRANSACTION_PO_SHORT_0_8)
++class CalypsoPo {
+  +CalypsoPo(SeResponse selectionResponse)
+  +String getDfName()
+  +String getApplicationSerialNumber()
+  +String getAtr()
+  +String getStartupInfo()
+  +PoRevision getRevision()
+}
+@enduml
+
+@startuml(id=TRANSACTION_PO_SHORT_0_9)
++class "<b>final</b> CalypsoPo" as CalypsoPo {
+  ~CalypsoPo(SeResponse selectionResponse)
+  +String getDfName()
+  +String getApplicationSerialNumber()
+  +String getAtr()
+  +String getStartupInfo()
+  +PoRevision getRevision()
+}
+@enduml
+
+@startuml(id=TRANSACTION_SELECTION_0_8)
++class PoAidSelector <<static>> {
+  +PoAidSelector(byte[] aidToSelect, InvalidatedPo invalidatedPo,
+    FileOccurrence fileOccurrence, FileControlInformation fileControlInformation)
+  +PoAidSelector(byte[] aidToSelect, InvalidatedPo invalidatedPo)
+}
+
++class "<b>final</b> PoSelector" as PoSelector {
+  +PoSelector(SeProtocol seProtocol, AtrFilter atrFilter, PoAidSelector poAidSelector, String extraInfo)
+}
+
++class "<b>final</b> PoSelectionRequest" as PoSelectionRequest {
+  +PoSelectionRequest(PoSelector seSelector)
+
+  +int prepareSelectFileCmd(byte[] path, String extraInfo)
+  +int prepareSelectFileCmd(SelectFileCmdBuild.SelectControl selectControl, String extraInfo)
+
+  +int prepareReadRecordsCmd(byte sfi, ReadDataStructure readDataStructureEnum,
+    byte firstRecordNumber, int expectedLength, String extraInfo)
+  +int prepareReadRecordsCmd(byte sfi, ReadDataStructure readDataStructureEnum,
+    byte firstRecordNumber, String extraInfo)
+
+  +int preparePoCustomReadCmd(String name, ApduRequest apduRequest)
+  +int preparePoCustomModificationCmd(String name, ApduRequest apduRequest)
+
+  +AbstractApduResponseParser getCommandParser(SeResponse seResponse, int commandIndex)
+  #CalypsoPo parse(SeResponse seResponse)
+}
+
++class "<b>final</b> PoResource" as PoResource {
+  +PoResource(SeReader seReader, CalypsoPo calypsoPo);
+}
+@enduml
+
+@startuml(id=TRANSACTION_SELECTION_0_9)
++class "<b>final</b> PoSelector" as PoSelector {
+  +PoSelector(SeProtocol seProtocol, AtrFilter atrFilter,
+    AidSelector aidToSelect, InvalidatedPo invalidatedPo)
+}
+
++class "<b>final</b> PoSelectionRequest" as PoSelectionRequest {
+  +PoSelectionRequest(PoSelector seSelector)
+
+  +prepareSelectFile(byte[] path)
+  +prepareSelectFile(shord lid)
+  +prepareSelectFile(SelectControl selectControl)
+
+  +prepareReadRecordFile(byte sfi, int recordNumber)
+
+  #CalypsoPo parse(SeResponse seResponse)
+}
+
++class "<b>final</b> SeResource<CalypsoPo>" as PoResource {
+}
+@enduml

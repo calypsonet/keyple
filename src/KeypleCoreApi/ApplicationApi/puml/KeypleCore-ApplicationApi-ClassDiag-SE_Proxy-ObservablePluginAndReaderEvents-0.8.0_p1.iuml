@@ -1,0 +1,95 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_TERMINALAPPLICATION
+
+package org.eclipse.keyple.core.seproxy #FFFFFF {
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_8
+
+package event #FFFFFF {
+'---- EVENT_PLUGIN -------------------------------------------------------------[
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTPLUGIN
+'  EventType_Plugin -down-+ PluginEvent
+  EventType_Plugin -up-+ PluginEvent
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_8
+
+'---- EVENT_PLUGIN -------------------------------------------------------------]
+
+'---- EVENT_PLUGIN_RELATION ----------------------------------------------------[
+'PluginObserver "1" o-down-+ "*" ObservablePlugin : observed >
+PluginObserver "1" +-down-o "*" ObservablePlugin : observes <
+PluginEvent . (ObservablePlugin, PluginObserver)
+'PluginObserver --+ ObservablePlugin
+'(ObservablePlugin, PluginObserver) . PluginEvent
+'---- EVENT_PLUGIN_RELATION ----------------------------------------------------]
+
+'---- EVENT_READER -------------------------------------------------------------[
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER
+
+'EventType_Reader -down-+ ReaderEvent
+EventType_Reader -up-+ ReaderEvent
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READEROBSERVER_0_8
+
+'+enum NotificationMode {
+'	ALWAYS("always")
+'	MATCHED_ONLY("matched_only")
+'
+'	+NotificationMode(String name);
+'	+String getName();
+'	+{static}NotificationMode get(String name);
+'}
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8
+
+'NotificationMode -left-+ ObservableReader
+
+'interface ReaderObserver extends Observable.Observer<ReaderEvent>
+'---- EVENT_READER -------------------------------------------------------------]
+
+'---- EVENT_READER_RELATION ----------------------------------------------------[
+'ReaderObserver "1" o-down- "*" ObservableReader : observed >
+ReaderObserver "1" +-down-o "*" ObservableReader : observes <
+'ReaderObserver +-down- ObservableReader
+'(ReaderObserver, ObservableReader) . ReaderEvent
+ReaderEvent . (ReaderObserver, ObservableReader)
+'---- EVENT_READER_RELATION ----------------------------------------------------]
+}
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_8
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+
+SeProxyService "1" *--> "*" ReaderPlugin : plugins
+ReaderPlugin "1" *-right-> "*" SeReader : readers
+
+ObservablePlugin -down-|> ReaderPlugin : extends
+ObservableReader --|> SeReader : extends
+}
+
+SpecificPluginObserver .down.|> PluginObserver : implements
+SpecificReaderObserver .down.|> ReaderObserver : implements
+SpecificTerminal -down- SeProxyService : uses >
+
+SpecificTerminal -right[hidden]- SpecificPluginObserver
+
+SeProxyService -right[hidden]--> EventType_Plugin
+EventType_Plugin  -right[hidden]--> PluginObserver
+PluginObserver -right[hidden]--> ReaderObserver
+ReaderObserver  -right[hidden]--> EventType_Reader
+@enduml

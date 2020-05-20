@@ -1,0 +1,281 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+'package org.keyple.calypso #FFFFFF {
+together {
+'  package transaction #FFFFFF {
+  together {
+
+    together {
+      +interface PoRevokedService {
+        +isPoRevoked(byte[] 8bytesSerial)
+      }
+
+      note as N1
+      Default values in PoTransaction if PoSecuritySetting doesn't specify it:
+        - session ModificationMode as ATOMIC
+        - session RatificationMode as CLOSE_RATIFIED
+        - PinTransmissionMode as ENCRYPTED if PoSecurity defined
+        - any KIF/KVC values are authorized
+        - no verification is done for: HCE token expiration, revoked PO or SAM
+      end note
+
+      +interface SamRevokedService {
+        +isSamRevoked(byte[] 4bytesSerial, byte[][0..1] 3bytesCounter)
+      }
+
+      PoRevokedService -right[hidden]- N1
+      SamRevokedService -left[hidden]- N1
+    }
+
+    together {
+      +interface PoHceService {
+        +boolean isCalypsoSerialExpired(byte[] 2bytesExpirationData)
+      }
+
+      +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
+        +PoSecuritySetting(SamResource samResource);
+        +setPoRevokedService(PoRevokedService revokedPo)
+        +setSamRevokedService(SamRevokedService revokedSam)
+        +setPoHceService(PoHceService expiredHce)
+        #PoRevokedService getPoRevokedService()
+        #SamRevokedService getSamRevokedService()
+        #PoHceService getPoHceService()
+
+        +loadProperties(Properties propertyFile)
+
+        +setSessionModificationMode(ModificationMode mode)
+        +setSessionRatificationMode(RatificationMode mode)
+        +setSessionDefaultKif(AccessLevel level, byte kif)
+        +setSessionDefaultKvc(AccessLevel level, byte kvc)
+        +setSessionAuthorizedKvcList(byte[] kvc)
+        #ModificationMode getSessionModificationMode()
+        #RatificationMode getSessionRatificationMode()
+        #Byte getSessionDefaultKif(AccessLevel level)
+        #Byte getSessionDefaultKvc(AccessLevel level)
+        #Boolean isSessionKvcAuthorized(byte kvc)
+
+        +setPinTransmissionMode(PinTransmissionMode mode)
+        #PinTransmissionMode getPinTransmissionMode()
+
+        +setSvGetLogReadMode(LogRead readRule)
+        +setSvNegativeBalanceMode(NegativeBalance authorization)
+        +setSvAuthorizedKvcList(byte[] kvc)
+        #LogRead getSvGetLogReadMode()
+        #NegativeBalance getSvNegativeBalance()
+        #Boolean isSvKvcAuthorized(byte kvc)
+      }
+
+      +class "SeResource<CalypsoSam>" as SamResource {
+        +SeResource(<color:red>SeReader seReader</color>,
+        CalypsoSam sam);
+      }
+
+      PoHceService "0..1 " -right-o " 1" PoSecuritySetting
+      PoSecuritySetting "1 " o-right- " 0..1" SamResource
+    }
+
+    +class "SeResource<CalypsoPo>" as PoResource {
+      +SeResource(<color:red>SeReader seReader</color>,
+      CalypsoPo po);
+    }
+
+
+    PoRevokedService -down[hidden]- PoHceService
+    PoHceService -down[hidden]- PoResource
+
+    +class "<b>final</b> CalypsoSam" as CalypsoSam {
+      ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
+
+      +SamRevision getSamRevision()
+      +byte[] getSerialNumber()
+      +byte getPlatform()
+      +byte getApplicationType()
+      +byte getApplicationSubType()
+      +byte getSoftwareIssuer()
+    }
+
+    SamRevokedService -down[hidden]- SamResource
+    SamResource "1" o-down- "1" CalypsoSam
+
+    +class PoTransaction {
+      +PoTransaction(PoResource poResource, PoSecuritySetting[0..1] securitySetting)
+
+      +<b>final</b> processPoCommands(ChannelControl channel)
+      +<b>final</b> processOpening(AccessLevel level)
+      +<b>final</b> processPoCommandsInSession()
+      +<b>final</b> processClosing(ChannelControl channel)
+      +<b>final</b> processCancel(ChannelControl channel)
+      +<b>final</b> prepareManageSession(EncryptionMode encMode, AuthenticationMode authMode)
+      +<b>final</b> SessionSecureData getSessionSecureData()
+
+      +<b>final</b> prepareCheckPinStatus()
+      +<b>final</b> prepareVerifyPin(String pin)
+      +<b>final</b> prepareVerifyPin(byte[] pin)
+
+      +<b>final</b> prepareSvGet(SvSetting.Operation operation, SvSetting.Action action)
+      +<b>final</b> prepareSvReload(int amount, int date, int time, String free)
+      +<b>final</b> prepareSvReload(int amount, byte[] date, byte[] time, byte[] free)
+      +<b>final</b> prepareSvReload(int amount)
+      +<b>final</b> prepareSvDebit(int amount, int date, int time)
+      +<b>final</b> prepareSvDebit(int amount, byte[] date, byte[] time)
+      +<b>final</b> prepareSvDebit(int amount)
+      +<b>final</b> SvOperationSecureData getSvOperationSecureData()
+
+      +<b>final</b> prepareSelectFile(short lid)
+      +<b>final</b> prepareSelectFile(byte[] lid)
+      +<b>final</b> prepareSelectFile(SelectFileControl control)
+      'lecture d'un record hors session (Le à 00h)
+      +<b>final</b> prepareReadRecordFile(byte sfi, int recordNumber)
+      'exception si recordSize erronée
+      +<b>final</b> prepareReadRecordFile(byte sfi, int firstRecordNumber, int numberOfRecords, int recordSize))
+      +<b>final</b> prepareReadSubRecordFile(byte sfi, int firstRecordNumber, int numberOfRecord, int recordOffset, int recordLength)
+      +<b>final</b> prepareReadBinaryFile(byte sfi, int dataLength, int[0..1] dataOffset)
+      'compteur simulé : exception si countersNumber<>1 et si countersNumber <> 1
+      +<b>final</b> prepareReadCounterFile(byte sfi, int countersNumber)
+      +<b>final</b> prepareAppendRecord(byte sfi, byte[] recordData)
+      +<b>final</b> prepareUpdateRecord(byte sfi, int recordNumber, byte[] recordData)
+      +<b>final</b> prepareWriteRecord(byte sfi, int recordNumber, byte[] recordData)
+      +<b>final</b> prepareUpdateBinaryFile(byte sfi, byte[] fileData, int[0..1] dataOffset)
+      +<b>final</b> prepareWriteBinaryFile(byte sfi, byte[] fileData, int[0..1] dataOffset)
+      +<b>final</b> prepareIncreaseCounter(byte sfi, int counterNumber, int incValue)
+      +<b>final</b> prepareDecreaseCounter(byte sfi, int counterNumber, int decValue)
+      +<b>final</b> prepareSetCounter(byte sfi, int counterNumber, int newValue)
+      +<b>final</b> int prepareSearchRecord(byte sfi, byte offset, SearchOffsetMode offsetMode, byte[] searchData, Byte[] searchMask, SearchReadMode readMode)
+      +<b>final</b> int[] getSearchResult(int searchRequestNumber)
+
+      +<b>final</b> prepareInvalidate()
+      +<b>final</b> prepareRehabilitate()
+
+      +<b>final</b> prepareChangeKey(AccessLevel level)
+      +<b>final</b> prepareChangePin(String pin)
+      +<b>final</b> prepareChangePin(byte[] pin)
+    }
+
+    -enum SessionState {
+      SESSION_UNITIALIZED,
+      SESSION_OPEN,
+      SESSION_CLOSED
+    }
+
+    +class "<b>final</b> SessionSetting" as SessionSetting {
+    }
+
+    +enum AccessLevel {
+      SESSION_LVL_PERSO("perso", byte 0x01),
+      SESSION_LVL_LOAD("load", byte 0x02),
+      SESSION_LVL_DEBIT("debit", byte 0x03)
+    }
+
+    +enum ModificationMode {
+      ATOMIC,
+      MULTIPLE
+    }
+
+    +enum RatificationMode {
+      CLOSE_RATIFIED,
+      CLOSE_NOT_RATIFIED
+    }
+
+    +enum EncryptionMode {
+      ACTIVATE,
+      DEACTIVATE
+    }
+
+    +enum AuthenticationMode {
+      REQUESTED,
+      NOT_REQUESTED
+    }
+
+    +enum PinTransmissionMode {
+      PLAIN,
+      ENCRYPTED
+    }
+
+    together {
+      +class "<b>final</b> SvSetting" as SvSetting {
+      }
+
+      +enum Operation {
+        RELOAD,
+        DEBIT
+      }
+
+      +enum Action {
+        DO,
+        UNDO
+      }
+
+      +enum LogRead {
+        SINGLE,
+        ALL
+      }
+
+      +enum NegativeBalance {
+        FORBIDDEN,
+        AUTHORIZED
+      }
+
+      SvSetting +-down- Operation
+      SvSetting +-down- Action
+      SvSetting +-down- LogRead
+      SvSetting +-right- NegativeBalance
+    }
+
+    PoSecuritySetting .up. N1
+    PoRevokedService "0..1" --o "1" PoSecuritySetting
+    PoSecuritySetting "1" o-- "0..1" SamRevokedService
+
+    PoResource "1" --o "1" PoTransaction
+    PoTransaction "1" o-up- "0..1" PoSecuritySetting
+
+    PoTransaction +-down- SessionState
+
+    PoTransaction +-down- SessionSetting
+    SessionSetting +-down- EncryptionMode
+    SessionSetting +-down- ModificationMode
+    SessionSetting +-down- RatificationMode
+    SessionSetting +-- AccessLevel
+    EncryptionMode -down[hidden]- AccessLevel
+    SessionSetting +-- AuthenticationMode
+    ModificationMode -down[hidden]- AuthenticationMode
+
+     PoTransaction +-down- PinTransmissionMode
+
+    PoTransaction +-down- SvSetting
+
+    SessionState -right[hidden]- SessionSetting
+    SessionSetting -right[hidden]- PinTransmissionMode
+    PinTransmissionMode -right[hidden]- SvSetting
+  }
+
+  +enum SelectFileControl {
+    FIRST_EF,
+    NEXT_EF,
+    CURRENT_DF
+  }
+
+  +enum ChannelControl {
+	KEEP_OPEN
+	CLOSE_AFTER
+  }
+
+  PoTransaction -- SelectFileControl
+  PoTransaction -- ChannelControl
+  AuthenticationMode -down[hidden]- SelectFileControl
+  ChannelControl -left[hidden]- SelectFileControl
+}
+@enduml

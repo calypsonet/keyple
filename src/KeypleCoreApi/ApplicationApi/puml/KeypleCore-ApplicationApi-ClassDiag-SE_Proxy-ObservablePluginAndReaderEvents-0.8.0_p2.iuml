@@ -1,0 +1,44 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.core.seproxy.event #FFFFFF {
+'---- EVENT_READER -------------------------------------------------------------[
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER
+
+  EventType_Reader --+ ReaderEvent
+
+  +interface ReaderObserver {
+    +update(ReaderEvent event)
+  }
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READERNOTIFICATION
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_8
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8
+
+  ObservableReader +-down- NotificationMode
+  ObservableReader +-down- PollingMode
+'---- EVENT_READER -------------------------------------------------------------]
+
+'---- EVENT_READER_RELATION ----------------------------------------------------[
+  ReaderObserver "1" +-down-o "*" ObservableReader : observes <
+  (ReaderObserver, ObservableReader) . ReaderEvent
+
+  AbstractDefaultSelectionsRequest "1" -left-> "1" ObservableReader : is set >
+  AbstractDefaultSelectionsResponse "1" --> "1" ObservableReader : returns <
+  AbstractDefaultSelectionsRequest -down[hidden]- AbstractDefaultSelectionsResponse
+'---- EVENT_READER_RELATION ----------------------------------------------------]
+}
+@enduml

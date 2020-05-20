@@ -1,0 +1,136 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml(id=SELECTION_SELECTION)
++class "<b>final</b> SeSelection" as SeSelection {
+  +SeSelection(MultiSeRequestProcessing multiSeRequestProcessing,
+    ChannelControl channelControl)
+
+  +int prepareSelection(AbstractSeSelectionRequest seSelectionRequest)
+
+  +SelectionsResult processExplicitSelection(SeReader seReader)
+
+  +AbstractDefaultSelectionsRequest getSelectionOperation()
+  +SelectionsResult processDefaultSelection(
+    AbstractDefaultSelectionsResponse selectionResponse)
+}
+@enduml
+
+@startuml(id=SELECTION_REQUEST_0_8)
++abstract AbstractSeSelectionRequest {
+  +AbstractSeSelectionRequest(SeSelector seSelector)
+
+  #<b>final</b> addApduRequest(ApduRequest apduRequest)
+  ~<b>final</b> SeRequest getSelectionRequest()
+  {abstract} #AbstractMatchingSe parse(SeResponse seResponse)
+
+  +SeSelector getSeSelector()
+  +AbstractApduResponseParser getCommandParser(SeResponse seResponse,
+  int commandIndex)
+}
+
++abstract AbstractMatchingSe {
+  #AbstractMatchingSe(SeResponse selectionResponse,
+    TransmissionMode transmissionMode, String extraInfo)
+
+  +<b>final</b> boolean isSelected()
+  +SelectionStatus getSelectionStatus()
+  +TransmissionMode getTransmissionMode()
+  +String getSelectionExtraInfo()
+}
+@enduml
+
+@startuml(id=SELECTION_REQUEST_0_9)
++abstract AbstractSeSelectionRequest {
+  +AbstractSeSelectionRequest(SeSelector seSelector)
+
+  #<b>final</b> addApduRequest(ApduRequest apduRequest)
+  ~<b>final</b> SeRequest getSelectionRequest()
+  {abstract} #AbstractMatchingSe parse(SeResponse seResponse)
+
+  +SeSelector getSeSelector()
+}
+
++abstract AbstractMatchingSe {
+  #AbstractMatchingSe(SeResponse selectionResponse,
+    TransmissionMode transmissionMode)
+
+  +TransmissionMode getTransmissionMode()
+  +boolean hasAtr()
+  +byte[] getAtrBytes()
+  +boolean hasFci()
+  +byte[] getFciBytes()
+}
+@enduml
+
+@startuml(id=SELECTION_REQUEST_ReaderAPI)
++abstract AbstractMatchingSe {
+  #AbstractMatchingSe(SeResponse selectionResponse)
+
+  +boolean hasAtr()
+  +byte[] getAtrBytes()
+  +boolean hasFci()
+  +byte[] getFciBytes()
+}
+@enduml
+
+@startuml(id=SELECTION_RESULT_0_8)
++class "<b>final</b> MatchingSelection" as MatchingSelection {
+  ~MatchingSelection(int selectionIndex, AbstractSeSelectionRequest
+    seSelectionRequest, AbstractMatchingSe matchingSe, SeResponse selectionSeResponse)
+  +AbstractMatchingSe getMatchingSe()
+  +AbstractApduResponseParser getResponseParser(int commandIndex)
+  +String getExtraInfo()
+  +int getSelectionIndex()
+}
+
++class "<b>final</b> SelectionsResult" as SelectionsResult {
+  ~SelectionsResult()
+  ~addMatchingSelection(MatchingSelection matchingSelection)
+
+  +boolean hasActiveSelection()
+  +MatchingSelection getActiveSelection()
+
+  +MatchingSelection getMatchingSelection(int selectionIndex)
+  +List<MatchingSelection> getMatchingSelections()
+}
+@enduml
+
+@startuml(id=SELECTION_RESULT_0_9)
++class "<b>final</b> SelectionsResult" as SelectionsResult {
+  ~SelectionsResult()
+  ~addMatchingSe(int selectionIndex, AbstractMatchingSe matchingSe)
+
+  +boolean hasActiveSelection()
+  +AbstractMatchingSe getActiveMatchingSe()
+
+  +AbstractMatchingSe getMatchingSe(int selectionIndex)
+  +Map<Integer, AbstractMatchingSe> getMatchingSelections()
+}
+@enduml
+
+@startuml(id=SELECTION_RESOURCE_0_8)
++class "SeResource<T extends AbstractMatchingSe>" as SeResource_T {
+  #SeResource(SeReader seReader, T matchingSe);
+  +SeReader getSeReader();
+  +T getMatchingSe();
+}
+@enduml
+
+@startuml(id=SELECTION_RESOURCE_0_9)
++class "<b>final</b> SeResource<T extends AbstractMatchingSe>" as SeResource_T {
+  #SeResource(SeReader seReader, T matchingSe);
+  +SeReader getSeReader();
+  +T getMatchingSe();
+}
+@enduml

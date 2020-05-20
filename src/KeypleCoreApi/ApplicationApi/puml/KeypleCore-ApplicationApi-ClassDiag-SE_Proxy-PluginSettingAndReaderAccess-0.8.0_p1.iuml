@@ -1,0 +1,35 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.core.seproxy #FFFFFF {
+
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_8
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_8
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+
+  SeProxyService "1" *-down-> "*" ReaderPlugin : plugins
+  SeProxyService "1" *--> "*" AbstractPluginFactory : registers
+  ReaderPlugin "1" *-right-> "*" SeReader : readers
+  AbstractPluginFactory "1" -right-> "1" ReaderPlugin : creates
+}
+
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SPECIFICPLUGIN
+
+AbstractPluginFactory <|-- SpecificPluginFactory : extends
+ReaderPlugin <|.. SpecificPlugin : implements
+SeReader <|.. SpecificReader : implements
+@enduml

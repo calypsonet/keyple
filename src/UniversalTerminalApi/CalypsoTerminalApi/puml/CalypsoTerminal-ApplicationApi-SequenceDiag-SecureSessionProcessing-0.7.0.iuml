@@ -1,0 +1,93 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+hide footbox
+
+actor PO
+participant "PO Reader" as POR
+participant "Ticketing\napplication" as TA
+participant "Calypso\nTerminal API" as KC
+participant "SAM Reader" as SMR
+actor SAM as SM
+
+== PO Identification ==
+
+TA->KC: transmit(SeRequest(AID,\nList<PoRequestOutSession>))
+POR<[#0000FF]-KC: PO 1: SeRequest(AID, List<ApduRequest>)
+PO<-POR: SelectApplication
+PO-->>POR: PO serial
+group 'x' PO commands outside session
+PO<-POR: ApduRequest
+PO-->>POR: ApduResponse
+end
+POR--[#0000FF]>KC: SeResponse(FCI, List<ApduResponse>)
+TA<--KC: SeResponse(PO_FCI, List<PoResponse>))
+
+== PO Secure Session ==
+
+TA->KC: **processOpening**(PO_FCI, OpenSessionRequest,\nList<PoRequestInSession>)
+KC-[#00FF00]>SMR: CSM 1: SeRequest(noAID,\nList<ApduRequest>)
+SMR->SM: SelectDiversifier
+SMR<<--SM: ack
+SMR->SM: GetChallenge
+SMR<<--SM: CSM challenge
+KC<<[#00FF00]--SMR: SeResponse(FCI, List<ApduResponse>)
+TA<<--KC: SessionStatus_Identified
+POR<[#0000FF]-KC: PO 2: SeRequest(AID, List<ApduRequest>)
+PO<-POR: OpenSession
+PO-->>POR: PO challenge
+group 'y' PO commands inside session
+PO<-POR: ApduRequest
+PO-->>POR: ApduResponse
+end
+POR--[#0000FF]>KC: SeResponse(FCI, List<ApduResponse>)
+
+TA<<--KC: SessionState_Open, List<PoResponse>
+
+TA->KC: **processClosing**(List<PoRequestInSession>,\nList<AnticipatedPoResponse>,\nPoRatificationCommand)
+
+KC-[#00FF00]>SMR: CSM 2: SeRequest(noAID,\nList<ApduRequest>)
+SMR->SM: DigestInit
+SMR<<--SM:ack
+group '2 * y' session MAC updates
+SMR->SM: DigestUpdate
+SMR<<--SM: ack
+SMR->SM: DigestUpdate
+SMR<<--SM: ack
+end
+group '2 * z' session MAC updates
+SMR->SM: DigestUpdate
+SMR<<--SM: ack
+SMR->SM: DigestUpdate
+SMR<<--SM: ack
+end
+SMR->SM: DigestClose
+SMR<<--SM: CSM certificate
+KC<<[#00FF00]--SMR: CSM certificate
+POR<[#0000FF]-KC: PO 3: SeRequest(AID,\nList<PoRequest>)
+group 'z' PO commands inside session
+PO<-POR: ApduRequest
+PO-->>POR: ApduResponse
+end
+PO<-POR: CloseSession
+PO-->>POR: PO certificate
+PO<-POR: Ratification
+PO-->>POR: ack
+POR--[#0000FF]>KC: SeResponse(FCI, List<ApduResponse>)
+KC-[#00FF00]>SMR: CSM 3: SeRequest(noAID, List<ApduRequest>)
+SMR->SM: ExternalAuthenticate
+SMR<<--SM: authentication status
+KC<<[#00FF00]--SMR: Authentification status
+TA<<--KC: SessionState_Closed, List<PoResponse>
+@enduml

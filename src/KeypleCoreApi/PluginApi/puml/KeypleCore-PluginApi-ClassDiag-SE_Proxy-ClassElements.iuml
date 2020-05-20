@@ -1,0 +1,446 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml(id=MESSAGE_PROXYREADER_0_8)
++interface ProxyReader {
+  +List<SeResponse> transmitSet(Set<SeRequest> seApplicationRequest,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+  +List<SeResponse> transmitSet(Set<SeRequest> seApplicationRequest)
+
+  +SeResponse transmit(SeRequest seApplicationRequest, ChannelControl channelControl)
+  +SeResponse transmit(SeRequest seApplicationRequest)
+}
+@enduml
+
+@startuml(id=MESSAGE_PROXYREADER_0_9)
++interface ProxyReader {
+  +List<SeResponse> transmitSeRequests(List<SeRequest> seApplicationRequest,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  +SeResponse transmitSeRequest(SeRequest seApplicationRequest, ChannelControl channelControl)
+}
+@enduml
+
+@startuml(id=MESSAGE_SEREQUEST_0_8)
++class "<b>final</b> SeRequest" as SeRequest {
+  -<b>final</b> Selector[0..1] selector
+  -<b>final</b> List<ApduRequest> apduRequests
+
+  +SeRequest(Selector[0..1] selector, List<ApduRequest> apduRequests)
+
+  +SeSelector getSeSelector()
+  +List<ApduRequest> getApduRequests()
+}
+
++class "<b>final</b> SeResponse" as SeResponse {
+  -<b>final</b> boolean channelPreviouslyOpen
+  -<b>final</b> boolean logicalChannelIsOpen
+  -<b>final</b> SelectionStatus selectionStatus
+  -<b>final</b> List<ApduResponse> apduResponses
+
+  +SeResponse(boolean logicalChannelIsOpen, boolean channelPreviouslyOpen,
+    SelectionStatus selectionStatus, List<ApduResponse> apduResponses)
+  +boolean wasChannelPreviouslyOpen()
+  +boolean isLogicalChannelOpen()
+  +SelectionStatus getSelectionStatus()
+  +List<ApduResponse> getApduResponses()
+  +String toString()
+  +boolean equals(Object o)
+  +int hashCode()
+}
+@enduml
+
+@startuml(id=MESSAGE_SEREQUEST_0_9)
++class "<b>final</b> SeRequest" as SeRequest {
+  -<b>final</b> Selector[0..1] selector
+  -<b>final</b> List<ApduRequest> apduRequests
+
+  +SeRequest(Selector[0..1] selector, List<ApduRequest> apduRequests)
+
+  +SeSelector getSeSelector()
+  +List<ApduRequest> getApduRequests()
+}
+
++class "<b>final</b> SeResponse" as SeResponse {
+  -<b>final</b> boolean channelPreviouslyOpen
+  -<b>final</b> boolean logicalChannelIsOpen
+  -<b>final</b> SelectionStatus selectionStatus
+  -<b>final</b> List<ApduResponse> apduResponses
+
+  +SeResponse(boolean logicalChannelIsOpen, boolean channelPreviouslyOpen,
+    SelectionStatus selectionStatus, List<ApduResponse> apduResponses)
+  +boolean wasChannelPreviouslyOpen()
+  +boolean isLogicalChannelOpen()
+  +SelectionStatus getSelectionStatus()
+  +List<ApduResponse> getApduResponses()
+}
+@enduml
+
+@startuml(id=MESSAGE_APDUREQUEST_0_8)
++class "<b>final</b> ApduRequest" as ApduRequest {
+  -byte[] bytes
+  -<b>final</b> boolean case4
+  -<b>final</b>Set<Integer> successfulStatusCodes
+  -String name
+
+
+  +ApduRequest(byte[] buffer, boolean case4, Set<Integer> successfulStatusCodes)
+  +ApduRequest(String name, byte[] buffer, boolean case4,
+    Set<Integer> successfulStatusCodes)
+  +ApduRequest(byte[] buffer, boolean case4)
+  +ApduRequest(String name, byte[] buffer, boolean case4)
+
+  +setName(final String name)
+
+  +byte[] getBytes()
+  +boolean isCase4()
+  +String getName()
+  +Set<Integer> getSuccessfulStatusCodes()
+}
+
++class "<b>final</b> ApduResponse" as ApduResponse {
+  -<b>final</b> byte[] bytes
+  -<b>final</b> boolean successful
+  +ApduResponse(byte[] buffer, Set<Integer> successfulStatusCodes)
+  +boolean isSuccessful()
+  +int getStatusCode()
+  +byte[] getBytes()
+
+  .. To review - array copy ..
+  +byte[] getDataOut()
+
+  .. To review - need ..
+  +boolean equals(Object o)
+  +int hashCode()
+}
+@enduml
+
+@startuml(id=MESSAGE_APDUREQUEST_0_9)
++class "<b>final</b> ApduRequest" as ApduRequest {
+  -byte[] bytes
+  -<b>final</b> boolean case4
+  -<b>final</b>Set<Integer> successfulStatusCodes
+  -String name
+
+  +ApduRequest(byte[] buffer, boolean case4)
+  +setName(<final> String name)
+  +setSuccessfulStatusCodes(Set<Integer> codes)
+
+  +byte[] getBytes()
+  +boolean isCase4()
+  +String getName()
+  +Set<Integer> getSuccessfulStatusCodes()
+}
+
++class "<b>final</b> ApduResponse" as ApduResponse {
+  -<b>final</b> byte[] bytes
+  -<b>final</b> boolean successful
+
+  +ApduResponse(byte[] buffer)
+  +setSuccessfulStatusCodes(Set<Integer> codes)
+
+  +byte[] getBytes()
+  +byte[] getDataOut()
+  +int getStatusCode()
+
+  +boolean isSuccessful()
+}
+@enduml
+
+@startuml(id=MESSAGE_APDUREQUEST_ReaderAPI)
++class "<b>final</b> ApduRequest" as ApduRequest {
+  -byte[] bytes
+  -<b>final</b> boolean case4
+
+  +ApduRequest(byte[] buffer, boolean case4)
+
+  +byte[] getBytes()
+  +boolean isCase4()
+}
+
++class "<b>final</b> ApduResponse" as ApduResponse {
+  -<b>final</b> byte[] bytes
+
+  +ApduResponse(byte[] buffer)
+
+  +byte[] getBytes()
+  +byte[] getDataOut()
+  +int getStatusCode()
+}
+@enduml
+
+@startuml(id=MESSAGE_STATUS_0_8)
++class SelectionStatus {
+  -<b>final</b> AnswerToReset atr
+  -<b>final</b> ApduResponse fci
+  -<b>final</b> boolean isMatching
+
+  +SelectionStatus(AnswerToReset atr, ApduResponse fci, boolean isMatching)
+  +AnswerToReset getAtr()
+  +ApduResponse getFci()
+  +boolean hasMatched()
+
+  +boolean equals(Object o)
+  +int hashCode()
+}
+
++class AnswerToReset {
+  -<b>final</b> byte[] atrBytes;
+
+  +AnswerToReset(byte[] atrBytes)
+  +byte[] getBytes()
+
+  +boolean equals(Object o)
+  +int hashCode()
+}
+@enduml
+
+@startuml(id=MESSAGE_STATUS_0_9)
++class SelectionStatus {
+  -<b>final</b> byte[] atr
+  -<b>final</b> ApduResponse fci
+  -<b>final</b> boolean isMatching
+
+  +SelectionStatus(AnswerToReset atr, ApduResponse fci, boolean isMatching)
+  +AnswerToReset getAtr()
+  +ApduResponse getFci()
+  +boolean hasMatched()
+}
+@enduml
+
+
+@startuml(id=PLUGIN_CONFIGURABLE_0_8_1)
+~abstract AbstractSeProxyComponent {
+  -<b>final</b> String name
+  ~AbstractSeProxyComponent(String name)
+  .. implements Nameable ..
+  +<b>final</b> String getName()
+  .. implements Configurable ..
+  +<b>final</b> setParameters(Map<String, String> parameters)
+}
+@enduml
+
+@startuml(id=PLUGIN_CONFIGURABLE_0_9)
+~abstract AbstractSeProxyComponent {
+  -<b>final</b> String name
+  ~AbstractSeProxyComponent(String name)
+  .. implements Nameable ..
+  +<b>final</b> String getName()
+  .. implements Configurable ..
+  +<b>final</b> String getParameters(parameter)
+  +<b>final</b> setParameters(Map<String, String> parameters)
+}
+@enduml
+
+@startuml(id=PLUGIN_PLUGIN_0_8_1)
++abstract AbstractPlugin {
+  #SortedSet<SeReader> readers
+
+  #{abstract} SortedSet<SeReader> initNativeReaders()
+
+  .. implements ReaderPlugin ..
+  +<b>final</b> SortedSet<SeReader> getReaders()
+  +<b>final</b> SortedSet<String> getReaderNames()
+  +<b>final</b> SeReader getReader(String name)
+
+  .. implements Comparable, fix in 0.9  ..
+  +<b>final</b> int compareTo(ReadersPlugin o)
+}
+@enduml
+
+@startuml(id=PLUGIN_PLUGIN_0_9)
++abstract AbstractPlugin {
+  #Set<SeReader> readers
+
+  #{abstract} Set<SeReader> initNativeReaders()
+
+  .. implements ReaderPlugin ..
+  +<b>final</b> Set<SeReader> getReaders()
+  +<b>final</b> Set<String> getReaderNames()
+  +<b>final</b> SeReader getReader(String name)
+}
+@enduml
+
+
+@startuml(id=PLUGIN_OBSERVALEPLUGIN)
++abstract AbstractObservablePlugin {
+  -List<PluginObserver> observers
+  -<b>final</b> final Object sync
+
+  #AbstractObservablePlugin(String name)
+
+  .. ObservablePlugin ..
+  +<b>final</b> addObserver(<b>final</b> PluginObserver observer)
+  +<b>final</b> removeObserver(<b>final</b> PluginObserver observer)
+  +<b>final</b> notifyObservers(<b>final</b> PluginEvent event)
+
+  .. To review - used by plugins Stub & Remote SE, to fix in 0.9 ..
+  +<b>final</b> +clearObservers()
+  +<b>final</b> int countObservers()
+
+  .. To be implemented by native ObservablePlugin ..
+  #{abstract} SortedSet<String> fetchNativeReadersNames()
+  #{abstract} SeReader fetchNativeReader(String name)
+
+  .. To review - used by unit test, to fix in 0.9 ..
+  #Boolean isMonitoring()
+}
+
++abstract AbstractThreadedObservablePlugin {
+  -{static}<b>final</b> long SETTING_THREAD_TIMEOUT_DEFAULT
+  -long threadWaitTimeout
+  -<b>final</b> SortedSet<String> nativeReadersames
+  -EventThread thread
+
+  #AbstractThreadedObservablePlugin(String name)
+
+  .. To be implemented by native ObservablePlugin ..
+  #{abstract} SortedSet<String> fetchNativeReadersNames()
+  #{abstract} SeReader fetchNativeReader(String name)
+
+  .. ObservablePlugin ..
+  +<b>final</b> addObserver(PluginObserver observer)
+  +<b>final</b> removeObserver(PluginObserver observer)
+  +<b>final</b> notifyObservers(final PluginEvent event)
+
+  .. To review - used by unit test, to fix in 0.9 ..
+  #Boolean isMonitoring()
+
+  .. To review - used by plugins Stub & Remote SE, to fix in 0.9 ..
+  +clearObservers()
+}
+@enduml
+
+@startuml(id=PLUGIN_ABSTRACTREADER_0_8_1)
++abstract AbstractReader {
+  -<b>final</b> String pluginName
+  #AbstractReader(String pluginName, String name)
+  #<b>final</b> String getPluginName()
+
+  .. implements ProxyReader ..
+  +<b>final</b> List<SeResponse> transmitSet(Set<SeRequest requestSet, MultiSeRequestProcessing
+    multiSeRequestProcessing, ChannelControl channelControl)
+  +<b>final</b> List<SeResponse> transmitSet(Set<SeRequest requestSet)
+
+  +<b>final</b> SeResponse transmit(SeRequest seRequest, ChannelControl channelControl)
+  +<b>final</b> SeResponse transmit(SeRequest seRequest)
+
+  .. To be implemented by AbstractLocalReader or VirtualReader ..
+  #{abstract} List<SeResponse> processSeRequestSet(Set<SeRequest> requestSet,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+  #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+
+  .. To review - implements Comparable, deprecated ..
+  .. Will be defined as simple Set in 0.9  ..
+  +<b>final</b> int compareTo(SeReader o)
+
+  .. To review - to move to AbstractLocalReader or to AbstractObservableLocalReader, to fix in 0.9 ..
+  #boolean forceClosing
+}
+@enduml
+
+@startuml(id=PLUGIN_LOCALREADER)
++abstract AbstractLocalReader {
+  -{static}<b>final</b> byte[] getResponseHackRequestBytes
+  -boolean logicalChannelIsOpen
+  -SeSelector.AidSelector.IsoAid aidCurrentlySelected
+  -SelectionStatus currentSelectionStatus
+  -long before
+  #Map<SeProtocol, String> protocolsMap
+
+  #AbstractLocalReader(String pluginName, String name)
+
+  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
+  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
+  -SeResponse processSeRequestLogical(SeRequest seRequest)
+  -ApduResponse processApduRequest(ApduRequest apduRequest)
+  -ApduResponse case4HackGetResponse(int originalStatusCode)  #{abstract} byte[] getATR()
+
+  .. implements SeReader ..
+  +boolean isSePresent()
+  +<b>final</b> addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +<b>final</b> setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
+
+  .. implements AbstractReader ..
+  #<b>final</b> List<SeResponse> processSeRequestSet(Set<SeRequest> requestSet,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+
+  .. To be implemented by native SeReader ..
+  #{abstract} boolean checkSePresence()
+  #{abstract} openPhysicalChannel()
+  #{abstract} closePhysicalChannel()
+  #{abstract} boolean isPhysicalChannelOpen()
+  #{abstract} byte[] transmitApdu(byte[] apduIn)
+
+  #{abstract} boolean protocolFlagMatches(SeProtocol protocolFlag)
+
+  .. To review in 0.9 ..
+  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
+  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+  ~<b>final</b> boolean isLogicalChannelOpen()
+  -closeLogicalChannel()
+  #closeLogicalAndPhysicalChannels()
+}
+@enduml
+
+@startuml(id=PLUGIN_OBSERVABLEREADER)
++abstract AbstractObservableLocalReader {
+  -DefaultSelectionsRequest[0..1] defaultSelectionsRequest
+  -ObservableReader.NotificationMode notificationMode
+  -ObservableReader.PollingMode currentPollingMode
+  -ObservableReaderStateService stateService
+
+  #AbstractObservableLocalReader(String pluginName, String readerName)
+
+  .. implements ObservableReader ..
+  +<b>final</b> addObserver(ReaderObserver observer)
+  +<b>final</b> removeObserver(ReaderObserver observer)
+  +<b>final</b> notifyObservers(final ReaderEvent event)
+
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode)
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode, ObservableReader.PollingMode pollingMode)
+
+  +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
+  +<b>final</b> stopSeDetection()
+  +<b>final</b> notifySeProcessed()
+
+  .. To be implemented by native ObservableReader ..
+  #{abstract} ObservableReaderStateService initStateService()
+
+  .. To review - overrides SeReader from AbstractLocalReader, to fix in 0.9 ..
+  +<b>final</b> boolean isSePresent()
+
+  .. To review - access for the package state - to fix in 0.9 ..
+  +<b>final</b> ReaderEvent processSeInserted()
+  +<b>final</b> processSeRemoved()
+
+  +ObservableReader.PollingMode getPollingMode()
+  #switchState(AbstractObservableState.MonitoringState stateId)
+
+  .. To review - access for unit test - to fix in 0.9 ..
+  +AbstractObservableState.MonitoringState getCurrentMonitoringState()
+
+  .. To review - access for the Android NFC plugin - to fix in 0.9 ..
+  +onEvent(InternalEvent event)
+
+  .. To review - access for AbstractLocalReader - to fix in 0.9 ..
+  #startRemovalSequence()
+
+  .. To review - used by Coppernic for not SmartRemoval, to fix in 0.9 ..
+  +boolean isSePresentPing()
+}
+@enduml

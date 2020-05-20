@@ -1,0 +1,48 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.seproxy #FFFFFF {
+
+  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9
+  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+
+  package message #FFFFFF {
+    together {
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_9
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_9
+    }
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_9
+
+    ProxyReader "1" -up- "+" SeRequest : sends >
+    ProxyReader "1" -down- "+" SeResponse : receives >
+    SeRequest "1" o-right-> "*" ApduRequest : apduRequests
+    SeResponse "0..1" o-right-> "*" ApduResponse : apduResponses
+    SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
+    SelectionStatus "1" o--> "0..1" ApduResponse : fci
+  }
+
+  SeSelector "0..1" <-right-o "1" SeRequest : selector
+  ChannelControl -right- ProxyReader
+}
+
+    class SeRequest <<Serializable>>
+    class SeResponse <<Serializable>>
+    class ApduRequest <<Serializable>>
+    class ApduResponse <<Serializable>>
+    class SelectionStatus <<Serializable>>
+
+@enduml

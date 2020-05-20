@@ -1,0 +1,72 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.core #FFFFFF {
+  package "seproxy" as seproxy_even #FFFFFF {
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTION
+
+    ChannelControl -up[hidden]- MultiSeRequestProcessing
+
+    package event #FFFFFF {
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_8
+    }
+  }
+
+  package selection #FFFFFF {
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_SELECTION
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_0_8
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESULT_0_8
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESOURCE_0_8
+
+    SeResource_T "1" *-right- "1" AbstractMatchingSe
+  }
+
+  package "seproxy" as seproxy_protocol #FFFFFF {
+    package protocol #FFFFFF {
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_MODE
+    }
+
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_8
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+
+  protocol -right[hidden]- SeSelector
+  }
+
+  SeSelection -up- SeReader : send <
+  ChannelControl -- SeSelection : set <
+  MultiSeRequestProcessing -- SeSelection : set <
+  SeSelection -up- AbstractDefaultSelectionsRequest : exports >
+  SeSelection -up- AbstractDefaultSelectionsResponse : imports >
+
+  SeSelection "1" o-down- "*" AbstractSeSelectionRequest
+  SeSelection "1" o-left- "0..1" SelectionsResult
+
+  SelectionsResult -up- SeReader : receives <
+
+  AbstractSeSelectionRequest "1" o-down- "1" SeSelector
+
+  SelectionsResult "1" o-down- "*" MatchingSelection
+  MatchingSelection "1" o-down- "1" AbstractMatchingSe
+
+  AbstractMatchingSe -- SeSelector : selects <
+
+  AbstractMatchingSe "1" *-down- "0..1" TransmissionMode
+
+  SeReader "0..1" --* "1" SeResource_T : connected to <
+}
+@enduml

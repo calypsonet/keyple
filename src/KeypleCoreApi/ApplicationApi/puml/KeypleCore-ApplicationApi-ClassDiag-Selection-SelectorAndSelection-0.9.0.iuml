@@ -1,0 +1,82 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.core #FFFFFF {
+  package "seproxy" as seproxy_even #FFFFFF {
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTION
+
+    ChannelControl -up[hidden]- MultiSeRequestProcessing
+
+    package event #FFFFFF {
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_9
+    }
+  }
+
+  package selection #FFFFFF {
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_SELECTION
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_0_9
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESULT_0_9
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESOURCE_0_9
+
+    SeResource_T "1" *-right- "1" AbstractMatchingSe
+
+    SeSelection "1" o-down- "*" AbstractSeSelectionRequest
+    SeSelection "1" o-left- "0..1" SelectionsResult
+
+    SelectionsResult "1" o-down- "*" AbstractMatchingSe
+    AbstractMatchingSe -right- AbstractSeSelectionRequest : selects <
+  }
+
+  package "seproxy" as seproxy_protocol #FFFFFF {
+    package protocol #FFFFFF {
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_MODE
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_SETTING
+
+      TransmissionMode "1" -left-* "1" SeProtocol
+      SeProtocol <|.down. SeCommonProtocols : implements
+    }
+
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9
+    SeProtocol "0..1" -right- "1" SeSelector : select <
+
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID
+    AidSelector +-down- FileOccurrence
+    AidSelector +-down- FileControlInformation
+    AidSelector "1" *-- "1" FileOccurrence
+    AidSelector "1" *-- "1" FileControlInformation
+    SeSelector +-down- AidSelector
+    SeSelector "1" o-- "0..1" AidSelector
+
+    SeSelector +-right- AtrSelector
+    SeSelector "1" o-- "0..1" AtrSelector
+  }
+
+  SeSelection -up- SeReader : send <
+  ChannelControl -- SeSelection : set <
+  MultiSeRequestProcessing -- SeSelection : set <
+  SeSelection -up- AbstractDefaultSelectionsRequest : exports >
+  SeSelection -up- AbstractDefaultSelectionsResponse : imports >
+
+  SelectionsResult -up- SeReader : receives <
+  SeReader "0..1" --* "1" SeResource_T : connected to <
+
+  AbstractSeSelectionRequest "1" o-down- "1" SeSelector
+  AbstractMatchingSe "1" *-- "0..1" TransmissionMode
+}
+@enduml
