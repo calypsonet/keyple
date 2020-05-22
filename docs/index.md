@@ -1,6 +1,6 @@
-# Universal Terminal API
-## [Reader Terminal Api](./UniversalTerminalApi/ReaderTerminalApi)
-## [Calypso Terminal Api](./UniversalTerminalApi/CalypsoTerminalApi)
+# Secure Element Terminal API
+## [Reader Api](./SecureElementTerminalApi/ReaderApi)
+## [Calypso Api](./SecureElementTerminalApi/CalypsoApi)
 # Eclipse Keyple API
 ## Keyple Core - Application API
 ### [current v0.9 (develop branch)](./KeypleCoreApi/ApplicationApi)
