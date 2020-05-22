@@ -30,8 +30,8 @@ package org.eclipse.keyple.core.seproxy #FFFFFF {
   ReaderPlugin <|-- ReaderPoolPlugin : extends
 
   package event #FFFFFF {
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_8_1
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8_1
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
   }
   ReaderPlugin <|-- ObservablePlugin : extends
   SeReader <|-- ObservableReader : extends

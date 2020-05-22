@@ -50,24 +50,29 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     ReaderPlugin <|.. AbstractPlugin : implements
     ProxyReader <|.. AbstractReader : implements
 
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_8_1
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_9_0
 
     AbstractSeProxyComponent <|-right- AbstractReader : extends
 
     package local #FFFFFF {
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_9_0
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER
 
       AbstractObservableLocalReader -up-|> AbstractLocalReader: extends
     }
     AbstractReader <|-down- AbstractLocalReader : extends
 '    AbstractThreadedObservablePlugin -right[hidden]-> AbstractObservableLocalReader
+
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_IMPL
+
+    AbstractObservablePlugin .down.|> ObservablePluginImpl : implements
+    AbstractObservableLocalReader .down.|> ObservableReaderImpl : implements
   }
 
   package event #FFFFFF {
     !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8_1
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_8_1
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8_1
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
     !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READEROBSERVER_0_8_1
 
 '    ObservablePlugin -right[hidden]-> ObservableReader
@@ -78,8 +83,10 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     ObservableReader "1" o-- "*" ReaderObserver : observes <
   }
 
-  AbstractThreadedObservablePlugin .down.|> ObservablePlugin : implements
-  AbstractObservableLocalReader .down.|> ObservableReader : implements
+'  AbstractObservablePlugin .down.|> ObservablePlugin : implements
+  ObservablePluginImpl -down-|> ObservablePlugin : extends
+'  AbstractObservableLocalReader .down.|> ObservableReader : implements
+  ObservableReaderImpl -down-|> ObservableReader : extends
 
   ReaderPlugin <|-- ObservablePlugin : extends
   SeReader <|-- ObservableReader : extends

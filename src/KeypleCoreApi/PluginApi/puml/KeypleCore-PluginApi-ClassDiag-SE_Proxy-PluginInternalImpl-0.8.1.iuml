@@ -60,7 +60,7 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     AbstractSeProxyComponent <|-right- AbstractReader : extends
 
     package local #FFFFFF {
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_8_1
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER
 
       AbstractObservableLocalReader -up-|> AbstractLocalReader: extends

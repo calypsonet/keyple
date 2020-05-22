@@ -13,8 +13,8 @@
 
 @startuml
 !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ObservablePluginAndReaderEvents-shared.iuml
-!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_8
-!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_8
-!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_8_1
-!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8_1
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_9
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
 @enduml

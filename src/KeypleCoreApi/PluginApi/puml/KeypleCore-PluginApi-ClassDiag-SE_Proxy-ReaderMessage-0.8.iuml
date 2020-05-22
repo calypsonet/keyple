@@ -15,15 +15,21 @@
 !include ../../ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
 package org.eclipse.keyple.seproxy #FFFFFF {
+  package event #FFFFFF {
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_8_0
+  }
 
-  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_8
-  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+  together {
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_8
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+  }
 
   package message #FFFFFF {
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_DEFAULTSELECTION_0_8_0
     together {
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_8
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_8
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_8
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_8
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_8
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_8
     }
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_8
 
@@ -34,10 +40,20 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
     SelectionStatus "1" o-right-> "0..1" AnswerToReset : atr
     SelectionStatus "1" o--> "0..1" ApduResponse : fci
+
+    DefaultSelectionsRequest "1" -down- "+" SeRequest : contains >
+    DefaultSelectionsResponse "1" -up- "+" SeResponse : contains >
   }
+
+  AbstractDefaultSelectionsRequest <|-right- DefaultSelectionsRequest : extends
+  AbstractDefaultSelectionsResponse <|-right- DefaultSelectionsResponse : extends
+  AbstractDefaultSelectionsRequest -down[hidden]----- AbstractDefaultSelectionsResponse
 
   SeSelector "0..1" <-right-o "1" SeRequest : selector
   ChannelControl -right- ProxyReader
+
+  SeSelector -down[hidden]-- ChannelControl
+  event -right[hidden]----- SeSelector
 }
 
     !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SERIALIZABLE

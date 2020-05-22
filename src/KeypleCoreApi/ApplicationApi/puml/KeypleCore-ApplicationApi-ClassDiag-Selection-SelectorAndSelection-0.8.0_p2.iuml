@@ -23,7 +23,7 @@ package org.eclipse.keyple.core #FFFFFF {
     ChannelControl -up[hidden]- MultiSeRequestProcessing
 
     package event #FFFFFF {
-      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_8
+      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_PUB
     }
   }
 

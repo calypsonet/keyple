@@ -1,3 +1,3 @@
-# Reader Terminal Api
+# Secure Element Reader Terminal Api
 
-![Global Architecture](img/ReaderTerminal_ApduApi_ClassDiag_Transmission_ReaderMessage.svg)
+![Global Architecture](img/SeReaderTerminal_ApduApi_ClassDiag_Transmission_ReaderMessage.svg)

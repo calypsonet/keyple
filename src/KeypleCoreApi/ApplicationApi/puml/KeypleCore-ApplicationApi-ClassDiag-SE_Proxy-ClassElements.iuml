@@ -15,9 +15,11 @@
 +class "<b>final</b> SeProxyService" as SeProxyService << Singleton >> {
   +{static}SeProxyService getInstance()
   +String getVersion()
+
   +registerPlugin(AbstractPluginFactory pluginFactory)
   +boolean isRegistered(String pluginName)
   +boolean unregisterPlugin(String pluginName)
+
   +ReaderPlugin getPlugin(String name)
   +SortedSet<ReaderPlugin> getPlugins()
 }
@@ -27,9 +29,11 @@
 +class "<b>final</b> SeProxyService" as SeProxyService << Singleton >> {
   +{static}SeProxyService getInstance()
   +String getVersion()
+
   +ReaderPlugin registerPlugin(AbstractPluginFactory pluginFactory)
   +boolean isRegistered(String pluginName)
   +boolean unregisterPlugin(String pluginName)
+
   +ReaderPlugin getPlugin(String name)
   +Set<ReaderPlugin> getPlugins()
 }
@@ -247,17 +251,28 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
+@startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_9_0)
++interface ObservablePlugin {
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
+}
+@enduml
+
+
 @startuml(id=SEPROXY_EVENTPLUGIN)
 +enum "EventType" as EventType_Plugin {
-  READER_CONNECTED("Reader connected")
-  READER_DISCONNECTED("Reader disconnected")
+  READER_CONNECTED
+  READER_DISCONNECTED
   +EventType(String name)
   +String getName()
 }
 
 +class "<b>final</b> PluginEvent" as PluginEvent {
-  +PluginEvent(String pluginName, String readerName, EventType eventType)
-  +PluginEvent(String pluginName, Set<String> readerNames, EventType eventType)
+  +PluginEvent(String pluginName, String readerName,
+    EventType eventType)
+  +PluginEvent(String pluginName, Set<String> readerNames,
+    EventType eventType)
+
   +String getPluginName()
   +SortedSet<String> getReaderNames()
   +EventType getEventType()
@@ -302,31 +317,43 @@ package plugin.specific #D7BDE2 {
   +removeObserver(<b>final</b> ReaderObserver observer)
   +notifyObservers(<b>final</b> ReaderEvent event)
 
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    NotificationMode notificationMode)
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    NotificationMode notificationMode, PollingMode pollingMode)
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +notifySeProcessed()
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+    NotificationMode notificationM, PollingMode[0..1] pollingM)
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEREADER_0_9_0)
++interface ObservableReader {
+  +addObserver(<b>final</b> ReaderObserver observer)
+  +removeObserver(<b>final</b> ReaderObserver observer)
 
   +startSeDetection(PollingMode pollingMode)
   +stopSeDetection()
   +notifySeProcessed()
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+    NotificationMode notificationM, PollingMode[0..1] pollingM)
 }
 @enduml
 
 @startuml(id=SEPROXY_EVENTREADER)
 +enum "EventType" as EventType_Reader {
-  IO_ERROR("SE Reader IO Error")
-  SE_INSERTED("SE insertion")
-  SE_MATCHED("SE matched")
-  SE_REMOVAL("SE removal")
-
+  IO_ERROR
+  SE_INSERTED
+  SE_MATCHED
+  SE_REMOVAL
   +EventType(String name)
   +String getName()
 }
 
 +class "<b>final</b> ReaderEvent" as ReaderEvent {
-  +ReaderEvent(String pluginName, String readerName, EventType eventType,
-    DefaultSelectionsResponse defaultSelectionsResponse)
+  +ReaderEvent(String pluginName, String readerName, EventType
+  eventType, DefaultSelectionsResponse[0..1] defaultSelectionsResponse)
+
   +String getPluginName()
   +String getReaderName()
   +EventType getEventType()
@@ -336,16 +363,15 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_READERNOTIFICATION)
 +enum NotificationMode {
-  ALWAYS("always")
-  MATCHED_ONLY("matched_only")
-
+  ALWAYS
+  MATCHED_ONLY
   +NotificationMode(String name)
   +String getName()
   +{static}NotificationMode get(String name)
 }
 
 +enum PollingMode {
-  REPEATING,
+  REPEATING
   SINGLESHOT
 }
 @enduml
@@ -362,7 +388,15 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_DEFAULTSELECTION_0_8)
+@startuml(id=SEPROXY_DEFAULTSELECTION_PUB)
++abstract AbstractDefaultSelectionsRequest {
+}
+
++abstract AbstractDefaultSelectionsResponse {
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_0_8_0)
 +abstract AbstractDefaultSelectionsRequest {
   {abstract} #Set<SeRequest> getSelectionSeRequestSet()
   {abstract} #MultiSeRequestProcessing getMultiSeRequestProcessing()
@@ -374,17 +408,27 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_DEFAULTSELECTION_0_9)
+@startuml(id=SEPROXY_DEFAULTSELECTION_0_9_0)
 +abstract AbstractDefaultSelectionsRequest {
-  {abstract} #List<SeRequest> getSelectionSeRequestSet()
-  {abstract} #MultiSeRequestProcessing getMultiSeRequestProcessing()
-  {abstract} #ChannelControl getChannelControl()
+  -<b>final</b> List<SeRequest> selectionSeRequests
+  -<b>final</b> MultiSeRequestProcessing multiSeRequestProcessing
+  -<b>final</b> ChannelControl channelControl
+  #DefaultSelectionsRequest(List<SeRequest> selectionSeRequests,
+      MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  #<b>final</b> List<SeRequest> getSelectionSeRequests()
+  #<b>final</b> MultiSeRequestProcessing getMultiSeRequestProcessing()
+  #<b>final</b> ChannelControl getChannelControl()
 }
 
 +abstract AbstractDefaultSelectionsResponse {
-  {abstract} #List<SeResponse> getSelectionSeResponseSet()
+  #List<SeResponse> selectionSeResponses
+  #DefaultSelectionsResponse(List<SeResponse> selectionSeResponses)
+
+  #<b>final</b> List<SeResponse> getSelectionSeResponses()
 }
 @enduml
+
 '---- READER EVENT -------------------------------------------------------------]
 
 '---- SE SELECTOR --------------------------------------------------------------[
@@ -395,7 +439,7 @@ package plugin.specific #D7BDE2 {
   +SeProtocol getSeProtocol()
   +AtrFilter getAtrFilter()
   +AidSelector getAidSelector()
-  +final String getExtraInfo()
+  +<b>final</b> String getExtraInfo()
 }
 @enduml
 

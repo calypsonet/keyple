@@ -24,10 +24,53 @@
 
 @startuml(id=MESSAGE_PROXYREADER_0_9)
 +interface ProxyReader {
-  +List<SeResponse> transmitSeRequests(List<SeRequest> seApplicationRequest,
+  +List<SeResponse> transmitSeRequests(List<SeRequest> seRequests,
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
 
-  +SeResponse transmitSeRequest(SeRequest seApplicationRequest, ChannelControl channelControl)
+  +SeResponse transmitSeRequest(SeRequest seRequest, ChannelControl channelControl)
+}
+@enduml
+
+@startuml(id=PLUGIN_OBSERVABLE_IMPL)
++interface ObservableReaderImpl {
+  +notifyObservers(<b>final</b> ReaderEvent event)
+}
+
++interface ObservablePluginImpl {
+  +notifyObservers(<b>final</b> PluginEvent event)
+}
+@enduml
+
+@startuml(id=MESSAGE_DEFAULTSELECTION_0_8_0)
++class "<b>final</b> DefaultSelectionsRequest" as DefaultSelectionsRequest {
+  -Set<SeRequest> selectionSeRequestSet
+  -MultiSeRequestProcessing multiSeRequestProcessing
+  -ChannelControl channelControl
+  +DefaultSelectionsRequest(Set<SeRequest> selectionSeRequestSet,
+    MultiSeRequestProcessing mode, ChannelControl channelControl)
+  +DefaultSelectionsRequest(Set<SeRequest> selectionSeRequestSet)
+
+  +MultiSeRequestProcessing getMultiSeRequestProcessing()
+  +ChannelControl getChannelControl()
+  +Set<SeRequest> getSelectionSeRequestSet()
+}
+
++class "<b>final</b> DefaultSelectionsResponse" as DefaultSelectionsResponse {
+  -List<SeResponse> selectionSeResponses
+  +DefaultSelectionsResponse(List<SeResponse> selectionSeResponseSet)
+
+  +List<SeResponse> getSelectionSeResponses()
+}
+@enduml
+
+@startuml(id=MESSAGE_DEFAULTSELECTION_0_9_0)
++class "<b>final</b> DefaultSelectionsRequest" as DefaultSelectionsRequest {
+  +DefaultSelectionsRequest(List<SeRequest> selectionSeRequests,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+}
+
++class "<b>final</b> DefaultSelectionsResponse" as DefaultSelectionsResponse {
+  +DefaultSelectionsResponse(List<SeResponse> selectionSeResponses)
 }
 @enduml
 
@@ -349,7 +392,33 @@
 }
 @enduml
 
-@startuml(id=PLUGIN_LOCALREADER)
+@startuml(id=PLUGIN_ABSTRACTREADER_0_9_0)
++abstract AbstractReader {
+  -<b>final</b> String pluginName
+  #AbstractReader(String pluginName, String name)
+  #<b>final</b> String getPluginName()
+
+  .. implements ProxyReader ..
+  +<b>final</b> List<SeResponse> transmitSeRequests(List<SeRequest seRequests, MultiSeRequestProcessing
+    multiSeRequestProcessing, ChannelControl channelControl)
+
+  +<b>final</b> SeResponse transmitSeRequests(SeRequest seRequest, ChannelControl channelControl)
+
+  .. To be implemented by AbstractLocalReader or VirtualReader ..
+  #{abstract} List<SeResponse> processSeRequests(List<SeRequest> seRequests,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+  #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+
+  .. To review - implements Comparable, deprecated ..
+  .. Will be defined as simple Set in 0.9  ..
+  +<b>final</b> int compareTo(SeReader o)
+
+  .. To review - to move to AbstractLocalReader or to AbstractObservableLocalReader, to fix in 0.9 ..
+  #boolean forceClosing
+}
+@enduml
+
+@startuml(id=PLUGIN_LOCALREADER_0_8_1)
 +abstract AbstractLocalReader {
   -{static}<b>final</b> byte[] getResponseHackRequestBytes
   -boolean logicalChannelIsOpen
@@ -373,6 +442,52 @@
 
   .. implements AbstractReader ..
   #<b>final</b> List<SeResponse> processSeRequestSet(Set<SeRequest> requestSet,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+
+  .. To be implemented by native SeReader ..
+  #{abstract} boolean checkSePresence()
+  #{abstract} openPhysicalChannel()
+  #{abstract} closePhysicalChannel()
+  #{abstract} boolean isPhysicalChannelOpen()
+  #{abstract} byte[] transmitApdu(byte[] apduIn)
+
+  #{abstract} boolean protocolFlagMatches(SeProtocol protocolFlag)
+
+  .. To review in 0.9 ..
+  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
+  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+  ~<b>final</b> boolean isLogicalChannelOpen()
+  -closeLogicalChannel()
+  #closeLogicalAndPhysicalChannels()
+}
+@enduml
+
+@startuml(id=PLUGIN_LOCALREADER_0_9_0)
++abstract AbstractLocalReader {
+  -{static}<b>final</b> byte[] getResponseHackRequestBytes
+  -boolean logicalChannelIsOpen
+  -SeSelector.AidSelector.IsoAid aidCurrentlySelected
+  -SelectionStatus currentSelectionStatus
+  -long before
+  #Map<SeProtocol, String> protocolsMap
+
+  #AbstractLocalReader(String pluginName, String name)
+
+  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
+  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
+  -SeResponse processSeRequestLogical(SeRequest seRequest)
+  -ApduResponse processApduRequest(ApduRequest apduRequest)
+  -ApduResponse case4HackGetResponse(int originalStatusCode)  #{abstract} byte[] getATR()
+
+  .. implements SeReader ..
+  +boolean isSePresent()
+  +<b>final</b> addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +<b>final</b> setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
+
+  .. implements AbstractReader ..
+  #<b>final</b> List<SeResponse> processSeRequests(Lis<SeRequest> seRequests,
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
 
   #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
