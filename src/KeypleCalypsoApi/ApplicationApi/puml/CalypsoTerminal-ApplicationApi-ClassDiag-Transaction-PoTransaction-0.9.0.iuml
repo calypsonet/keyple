@@ -14,102 +14,120 @@
 @startuml
 !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
-'package org.keyple.calypso #FFFFFF {
-together {
-'  package transaction #FFFFFF {
-  together {
+package org.keyple.calypso #FFFFFF {
+'together {
+  package transaction #FFFFFF {
+'  together {
+
+    +class "static <b>final</b> PoSecuritySettingBuilder" as PoSecuritySettingBuilder {
+      -final SamResource samResource
+      -List<Byte> authorizedKvcList
+      -final EnumMap<AccessLevel, Byte> defaultKif
+      -final EnumMap<AccessLevel, Byte> defaultKvc
+      -final EnumMap<AccessLevel, Byte> defaultKeyRecordNumber
+      ModificationMode sessionModificationMode = ATOMIC
+      RatificationMode ratificationMode = CLOSE_RATIFIED
+
+      +PoSecuritySettingsBuilder(SamResource samResource)
+
+      +PoSecuritySettingsBuilder sessionModificationMode(ModificationMode sessionModificationMode)
+      +PoSecuritySettingsBuilder ratificationMode(RatificationMode ratificationMode)
+      +PoSecuritySettingsBuilder sessionDefaultKif(AccessLevel sessionAccessLevel, byte kif)
+      +PoSecuritySettingsBuilder sessionDefaultKvc(AccessLevel sessionAccessLevel, byte kvc)
+      +PoSecuritySettingsBuilder sessionDefaultKeyRecordNumber(AccessLevel sessionAccessLevel,
+        byte keyRecordNumber)
+      +PoSecuritySettingsBuilder sessionAuthorizedKvcList(List<Byte> authorizedKvcList)
+
+      +PoSecuritySettings build()
+    }
+
+    note as N1
+    Default values in PoTransaction if PoSecuritySetting doesn't specify it:
+      - session ModificationMode as ATOMIC
+      - session RatificationMode as CLOSE_RATIFIED
+      - PinTransmissionMode as ENCRYPTED if PoSecurity defined
+      - any KIF/KVC values are authorized
+      - no verification is done for: HCE token expiration, revoked PO or SAM
+    end note
+
+    PoSecuritySettingBuilder .right. N1
+
+    +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
+      +PoSecuritySetting(SamResource samResource);
+'      +setPoRevokedService(PoRevokedService revokedPo)
+'      +setSamRevokedService(SamRevokedService revokedSam)
+'      +setPoHceService(PoHceService expiredHce)
+      #PoRevokedService getPoRevokedService()
+      #SamRevokedService getSamRevokedService()
+      #PoHceService getPoHceService()
+
+      +loadProperties(Properties propertyFile)
+
+      #ModificationMode getSessionModificationMode()
+      #RatificationMode getSessionRatificationMode()
+      #Byte getSessionDefaultKif(AccessLevel level)
+      #Byte getSessionDefaultKvc(AccessLevel level)
+      #Byte getSessionDefaultKeyRecordNumber(AccessLevel level)
+      #Boolean isSessionKvcAuthorized(byte kvc)
+
+'      +setPinTransmissionMode(PinTransmissionMode mode)
+      #PinTransmissionMode getPinTransmissionMode()
+
+'      +setSvGetLogReadMode(LogRead readRule)
+'      +setSvNegativeBalanceMode(NegativeBalance authorization)
+'      +setSvAuthorizedKvcList(byte[] kvc)
+      #LogRead getSvGetLogReadMode()
+      #NegativeBalance getSvNegativeBalance()
+      #Boolean isSvKvcAuthorized(byte kvc)
+    }
+
+    'PoSecuritySettingBuilder -down-+ PoSecuritySetting : build >
+    PoSecuritySettingBuilder -down- PoSecuritySetting : build >
+
+    together {
+      +interface SamRevokedService {
+        +isSamRevoked(byte[] 4bytesSerial, byte[][0..1] 3bytesCounter)
+      }
+
+      +class "SeResource<CalypsoSam>" as SamResource {
+        +SeResource(<color:red>SeReader seReader</color>,
+          CalypsoSam sam);
+      }
+
+      +class "<b>final</b> CalypsoSam" as CalypsoSam {
+        ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
+
+        +SamRevision getSamRevision()
+        +byte[] getSerialNumber()
+        +byte getPlatform()
+        +byte getApplicationType()
+        +byte getApplicationSubType()
+        +byte getSoftwareIssuer()
+      }
+    }
+   PoSecuritySetting "1" o-right- "0..1" SamRevokedService
+   PoSecuritySetting "1 " o-right- " 0..1" SamResource
+   SamRevokedService -down[hidden]- SamResource
+   SamResource "1" o-down- "1" CalypsoSam
 
     together {
       +interface PoRevokedService {
         +isPoRevoked(byte[] 8bytesSerial)
       }
 
-      note as N1
-      Default values in PoTransaction if PoSecuritySetting doesn't specify it:
-        - session ModificationMode as ATOMIC
-        - session RatificationMode as CLOSE_RATIFIED
-        - PinTransmissionMode as ENCRYPTED if PoSecurity defined
-        - any KIF/KVC values are authorized
-        - no verification is done for: HCE token expiration, revoked PO or SAM
-      end note
-
-      +interface SamRevokedService {
-        +isSamRevoked(byte[] 4bytesSerial, byte[][0..1] 3bytesCounter)
-      }
-
-      PoRevokedService -right[hidden]- N1
-      SamRevokedService -left[hidden]- N1
-    }
-
-    together {
       +interface PoHceService {
         +boolean isCalypsoSerialExpired(byte[] 2bytesExpirationData)
       }
 
-      +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
-        +PoSecuritySetting(SamResource samResource);
-        +setPoRevokedService(PoRevokedService revokedPo)
-        +setSamRevokedService(SamRevokedService revokedSam)
-        +setPoHceService(PoHceService expiredHce)
-        #PoRevokedService getPoRevokedService()
-        #SamRevokedService getSamRevokedService()
-        #PoHceService getPoHceService()
-
-        +loadProperties(Properties propertyFile)
-
-        +setSessionModificationMode(ModificationMode mode)
-        +setSessionRatificationMode(RatificationMode mode)
-        +setSessionDefaultKif(AccessLevel level, byte kif)
-        +setSessionDefaultKvc(AccessLevel level, byte kvc)
-        +setSessionAuthorizedKvcList(byte[] kvc)
-        #ModificationMode getSessionModificationMode()
-        #RatificationMode getSessionRatificationMode()
-        #Byte getSessionDefaultKif(AccessLevel level)
-        #Byte getSessionDefaultKvc(AccessLevel level)
-        #Boolean isSessionKvcAuthorized(byte kvc)
-
-        +setPinTransmissionMode(PinTransmissionMode mode)
-        #PinTransmissionMode getPinTransmissionMode()
-
-        +setSvGetLogReadMode(LogRead readRule)
-        +setSvNegativeBalanceMode(NegativeBalance authorization)
-        +setSvAuthorizedKvcList(byte[] kvc)
-        #LogRead getSvGetLogReadMode()
-        #NegativeBalance getSvNegativeBalance()
-        #Boolean isSvKvcAuthorized(byte kvc)
-      }
-
-      +class "SeResource<CalypsoSam>" as SamResource {
+      +class "SeResource<CalypsoPo>" as PoResource {
         +SeResource(<color:red>SeReader seReader</color>,
-        CalypsoSam sam);
+          CalypsoPo po);
       }
-
-      PoHceService "0..1 " -right-o " 1" PoSecuritySetting
-      PoSecuritySetting "1 " o-right- " 0..1" SamResource
     }
-
-    +class "SeResource<CalypsoPo>" as PoResource {
-      +SeResource(<color:red>SeReader seReader</color>,
-      CalypsoPo po);
-    }
-
-
+    PoRevokedService "0..1" -right-o "1" PoSecuritySetting
+    PoHceService "0..1 " -right-o " 1" PoSecuritySetting
     PoRevokedService -down[hidden]- PoHceService
     PoHceService -down[hidden]- PoResource
-
-    +class "<b>final</b> CalypsoSam" as CalypsoSam {
-      ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
-
-      +SamRevision getSamRevision()
-      +byte[] getSerialNumber()
-      +byte getPlatform()
-      +byte getApplicationType()
-      +byte getApplicationSubType()
-      +byte getSoftwareIssuer()
-    }
-
-    SamRevokedService -down[hidden]- SamResource
-    SamResource "1" o-down- "1" CalypsoSam
 
     +class PoTransaction {
       +PoTransaction(PoResource poResource, PoSecuritySetting[0..1] securitySetting)
@@ -235,9 +253,6 @@ together {
       SvSetting +-right- NegativeBalance
     }
 
-    PoSecuritySetting .up. N1
-    PoRevokedService "0..1" --o "1" PoSecuritySetting
-    PoSecuritySetting "1" o-- "0..1" SamRevokedService
 
     PoResource "1" --o "1" PoTransaction
     PoTransaction "1" o-up- "0..1" PoSecuritySetting
@@ -278,4 +293,5 @@ together {
   AuthenticationMode -down[hidden]- SelectFileControl
   ChannelControl -left[hidden]- SelectFileControl
 }
+
 @enduml
