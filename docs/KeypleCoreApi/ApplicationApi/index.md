@@ -1,5 +1,5 @@
-#Keyple Core Application Api - version 0.9 (current 'develop' branch)
-##Reader Access
+# Keyple Core Application Api - version 0.9 (current 'develop' branch)
+## Reader Access
 With Keyple, smart card readers are managed through plugins in order to integrate specific reader solutions.
 The singleton Secure Element Proxy Service provides the unique name list of registered plugins. There are three kinds of plugin:
  - The ‘Reader Plugin’ is the generic interface to list the readers of a plugin, or to access to a specific reader with its name.
@@ -13,18 +13,18 @@ A reader is identified through its unique name in a plugin. There are two kinds 
 
 (The SE APDU transmission is managed at the low-level plugin API through the ProxyReader interface.)
 
-###Specific Plugin
+### Specific Plugin
 To hide plugin native implementation classes, the reader plugins are registered to the SE Proxy Service through related specific plugin factory.
 ![Specific Plugin v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_SpecificPluginAndReader_0_9_0.svg)
 
-###Reader Notifications
+### Reader Notifications
 ![Reader Notifications v0.9.0](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_ObservablePluginAndReaderEvents_0_9_0.svg)
 
-####Plugin event
+#### Plugin event
 Several ‘Plugin Observers’ could be registered to an Observable Plugin. In case of reader connection / disconnection, the observable plugin notifies sequentially the registered observers with the corresponding plugin event.
 The observable plugin is a blocking API, the thread managing the issuance of the plugin event waits the acknowledge of the observer currently notified.
 
-####Reader event
+#### Reader event
 Several ‘Reader Observers’ could be registered to an Observable Reader.
 An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured different default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
  - If the notification mode is defined as ‘always’, then in case of SE insertion, the observable reader will notify a SE matched reader event in case of successful selection, or a simple SE inserted reader event if not.
@@ -34,7 +34,7 @@ When the processing of an inserted or matched SE is finished, a reader observer 
 
 Several ‘Reader Observers’ could be registered to an Observable Reader. In case of SE insertion / match / removal, the observable reader notifies sequentially the registered observers with the corresponding reader event. The observable reader could be a blocking API, the thread managing the issuance of the plugin event could wait the acknowledge of the notified observers.
 
-####Observable reader states
+#### Observable reader states
 An observable reader is active only if at least one reader observer is registered. When active, an observable read could switch between four internal states: ‘Wait for Start Detection’, ‘Wait for SE Insertion’, ‘Wait for SE Processing’, & ‘Wait for SE Removal’.
 
 The states could be switched:
