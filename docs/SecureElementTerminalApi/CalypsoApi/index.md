@@ -1,4 +1,4 @@
-# Calypso Terminal Api
+# Calypso Terminal API
 
 ## Global Architecture
 

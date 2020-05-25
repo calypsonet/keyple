@@ -1,4 +1,4 @@
-# Secure Element Terminal API
+# Secure Element Terminal APIs
 ## [Reader Api](./SecureElementTerminalApi/ReaderApi)
 ## [Calypso Api](./SecureElementTerminalApi/CalypsoApi)
 
@@ -11,6 +11,11 @@
 
 <BR/><BR/>
 ## API history of Eclipse Keyple
-### [evolutions of the Keyple Core Application API](./KeypleCoreApi/ApplicationApi/old.md)
-### [evolutions of the Keyple Core Plugin API](./KeypleCoreApi/PluginApi/old.md)
-### [evolutions of the Keyple Calypso Application API](./KeypleCalypsoApi/ApplicationApi/old.md)
+### API evolutions
+#### [Keyple Core Application API](./KeypleCoreApi/ApplicationApi/old.md)
+#### [Keyple Core Plugin API](./KeypleCoreApi/PluginApi/old.md)
+#### [Keyple Calypso Application API](./KeypleCalypsoApi/ApplicationApi/old.md)
+### Keyple 0.8 User Guides
+#### [Core Application API](https://eclipse.github.io/keyple-java/KeypleCore_UserGuide.html)
+#### [Calypso Application API](https://eclipse.github.io/keyple-java/KeypleCalypso_UserGuide.html)
+#### [Remote SE Plugin first prototype](https://eclipse.github.io/keyple-java/KeypleRemoteSe_UserGuide.html)

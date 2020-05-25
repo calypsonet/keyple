@@ -1,4 +1,4 @@
-# Secure Element Reader Terminal Api
+# Secure Element Reader Terminal API
 
 Secure Element reader (SeReader) is a high-level public interface to handle a smart card reader. Its extension proxy reader (ProxyReader) provides the methods:
 
