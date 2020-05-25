@@ -1,13 +1,16 @@
 # Secure Element Terminal API
 ## [Reader Api](./SecureElementTerminalApi/ReaderApi)
 ## [Calypso Api](./SecureElementTerminalApi/CalypsoApi)
+
+<BR/><BR/>
 # Eclipse Keyple API
-## Keyple Core - Application API
-### [current v0.9 (develop branch)](./KeypleCoreApi/ApplicationApi)
-#### [older versions](./KeypleCoreApi/ApplicationApi/old.md)
-## Keyple Core - Plugin API
-### [current v0.9 (develop branch)](./KeypleCoreApi/PluginApi)
-#### [older versions](./KeypleCoreApi/PluginApi/old.md)
-## Keyple Calypso - Application API
-### [current v0.9 (develop branch)](./KeypleCalypsoApi/ApplicationApi)
-#### [older versions](./KeypleCalypsoApi/ApplicationApi/old.md)
+(version 0.9 - current 'develop' branch)
+## [Keyple Core - Application API](./KeypleCoreApi/ApplicationApi)
+## [Keyple Core - Plugin API](./KeypleCoreApi/PluginApi)
+## [Keyple Calypso - Application API](./KeypleCalypsoApi/ApplicationApi)
+
+<BR/><BR/>
+## API history of Eclipse Keyple
+### [evolutions of the Keyple Core Application API](./KeypleCoreApi/ApplicationApi/old.md)
+### [evolutions of the Keyple Core Plugin API](./KeypleCoreApi/PluginApi/old.md)
+### [evolutions of the Keyple Calypso Application API](./KeypleCalypsoApi/ApplicationApi/old.md)
