@@ -57,7 +57,7 @@ link PinTransmissionMode to SvSetting--><!--MD5=[3429ec821e60fb1fffd23386c89f33c
 link PoTransaction to SelectFileControl--><path d="M1021.5,1922.141 C1033.85,1955.555 1041,1990.615 1041,2027 C1041,2027 1041,2027 1041,2319 C1041,2362.351 1009.78,2399.25 977.706,2425.719 " fill="none" id="PoTransaction-SelectFileControl" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[30641f45b0628209a5479aad6dfa6f2f]
 link PoTransaction to ChannelControl--><path d="M1043.16,1889.091 C1064.83,1931.813 1078,1977.955 1078,2027 C1078,2027 1078,2027 1078,2319 C1078,2357.799 1078,2402.205 1078,2432.767 " fill="none" id="PoTransaction-ChannelControl" style="stroke: #A80036; stroke-width: 1.0;"/><!--MD5=[75cf09f748786ce5d6dd001ad977eb2a]
 link AuthenticationMode to SelectFileControl--><!--MD5=[816c1fefc9463d481f66103582bcea7c]
-link SelectFileControl to ChannelControl--><!--MD5=[c7393e64a0d51a2741ee5397537637c0]
+link SelectFileControl to ChannelControl--><!--MD5=[54026879c8586cb2c42c91557095c7a3]
 @startuml
 skinparam ClassBorderColor #D4AC0D
 skinparam stereotypeABorderColor #A9DCDF
@@ -65,6 +65,9 @@ skinparam stereotypeIBorderColor #B4A7E5
 skinparam stereotypeCBorderColor #ADD1B2
 skinparam stereotypeEBorderColor #EB93DF
 skinparam shadowing false
+
+skinparam StateBorderColor #D4AC0D
+skinparam ActivityBorderColor #D4AC0D
 
 skinparam ClassBackgroundColor<<red>> #FDEDEC
 skinparam ClassBorderColor<<red>> #E74C3C
