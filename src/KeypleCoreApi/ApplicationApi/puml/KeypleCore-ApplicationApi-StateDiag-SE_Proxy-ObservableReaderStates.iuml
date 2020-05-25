@@ -13,7 +13,7 @@ WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE matched'
 WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : notifySeProcessed()
 WaitForSeRemoval -up[#Red]-> WaitForSeInsertion : notifies 'SE removed'\n&& (PollingMode == Repeating)
 WaitForSeRemoval -up[#Red]-> WaitForStartDetection : notifies 'SE removed'\n&& (PollingMode == SingleShot)
-WaitForSeProcessing -[#Pink]-> WaitForSeInsertion : notifies 'SE removed'\n&& (Observable Reader\nwith the capability\nto detect the removal\nat any time)
+WaitForSeProcessing -[#Red,dashed]-> WaitForSeInsertion : notifies 'SE removed'\n&& (Observable Reader\nwith the capability\nto detect the removal\nat any time)
 }
 
 SE_ObservationActivated -up[#Blue]-> WaitForObserver : removeObserver(ReaderObserver)\n&& (nb observer == 0)

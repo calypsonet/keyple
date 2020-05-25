@@ -1,4 +1,5 @@
-# Keyple Core Application Api - version 0.9 (current 'develop' branch)
+# Keyple Core Application API
+version 0.9 (current 'develop' branch)
 ## Reader Access
 With Keyple, smart card readers are managed through plugins in order to integrate specific reader solutions.
 The singleton Secure Element Proxy Service provides the unique name list of registered plugins. There are three kinds of plugin:
@@ -28,7 +29,7 @@ The observable plugin is a blocking API, the thread managing the issuance of the
 Several ‘Reader Observers’ could be registered to an Observable Reader.
 An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured different default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
  - If the notification mode is defined as ‘always’, then in case of SE insertion, the observable reader will notify a SE matched reader event in case of successful selection, or a simple SE inserted reader event if not.
- - If the notification mode is defined as ‘matched only’, then in case of SE insertion, simple SE inserted reader event aren’t notified.
+ - If the notification mode is defined as ‘matched only’, then in case of SE insertion, simple SE inserted reader events aren’t notified.
 
 When the processing of an inserted or matched SE is finished, a reader observer has to notify the observable reader in order to prepare the observable reader to detect the removal of the SE.
 
@@ -55,12 +56,28 @@ Some reader plugin solution could have the capability to notify a SE removal als
 
 ## SE Selection
 
-### Selection scenarii
+### Selection scenarios
 Depending on the SE transaction use case, or on the reader capability, there are two ways to manage the selection of a SE:
- - Either on a SE reader, a selection could be operated directely by transmitting the selection request.
- - Otherwise, on an Observable Reader, a default selection could be defined. In this case the selection is operated implicitely by the observable reader in case of SE insertion. 
- 
+ - Either on a SE reader, a selection could be operated directly by transmitting the selection request. In this case the same entity manages both the SE selection and the SE processing.
+ - Otherwise, on an Observable Reader, a default selection could be defined. The selection is operated implicitly on SE insertion reader event. In this case, the SE selection is managed by the observable reader, but the SE processing is managed by a reader observer.
+
 ![Selection v0.9](img/KeypleCore_ApplicationApi_ActivityDiag_Selection_Scenarii.svg)
+
+### Selection setting and processing
+A SE Selection request is defined with a SE Selector. A SE Selector could be defined with tree optional levels of selection.
+ - The selection could be limited to match specific SE communication protocols.
+ - The SE ATR could be filtered to match a specific regular expression.
+ - If an AID is defined, the local reader transmits a Select Application APDU command to the SE.
+ 
+Depending on the Keyple SE extension library, a SE request could be completed with specific SE commands to operate at the selection (for example, a Select File for a specific DF LID, the read of a specific file).
+
+For terminal managing several kinds of SE applications, a SE Selection could be prepared with several SE selection request to operqate sequentially with SE.
+
+According to the defined 'multi SE request processing' mode, the SE selection could stop at the first selection request matching SE application, otherwise all the prepared SE selection request could be operated.
+ - Before the new processing of SE selection request, the logical channel previously opened is closed.
+ - The 'channel control' defines if the logical channel should be kept open or close after the last processed SE selection request.
+
+The result of a SE request selection is a card image of a matching SE. For a SE selection with multiple requests, several matching SE could be provided.
 
 ![SE Selection v0.9](img/KeypleCore_ApplicationApi_ClassDiag_Selection_SelectorAndSelection_0_9_0.svg)
 

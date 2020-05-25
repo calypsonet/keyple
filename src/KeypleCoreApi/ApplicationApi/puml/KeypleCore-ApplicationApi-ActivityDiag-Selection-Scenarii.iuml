@@ -12,6 +12,8 @@
 '---------------------------------------------------------------------------------
 
 @startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
 start
 partition "Reader initialization" {
 	:register plugin;
