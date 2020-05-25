@@ -86,7 +86,7 @@ together {
 
     together {
       +interface SamRevokedService {
-        +isSamRevoked(byte[] 4bytesSerial, byte[][0..1] 3bytesCounter)
+        +boolean isSamRevoked(byte[] 4bytesSerial, byte[][0..1] 3bytesCounter)
       }
 
       +class "SeResource<CalypsoSam>" as SamResource {
@@ -112,7 +112,7 @@ together {
 
     together {
       +interface PoRevokedService {
-        +isPoRevoked(byte[] 8bytesSerial)
+        +boolean isPoRevoked(byte[] 8bytesSerial)
       }
 
       +interface PoHceService {
