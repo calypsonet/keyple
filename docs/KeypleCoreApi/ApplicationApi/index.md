@@ -1,5 +1,6 @@
 # Keyple Core Application API
 version 0.9 (current 'develop' branch)
+
 ## Reader Access
 With Keyple, smart card readers are managed through plugins in order to integrate specific reader solutions.
 The singleton Secure Element Proxy Service provides the unique name list of registered plugins. There are three kinds of plugin:
