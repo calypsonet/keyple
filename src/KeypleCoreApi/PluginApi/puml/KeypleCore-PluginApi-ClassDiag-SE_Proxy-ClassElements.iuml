@@ -31,12 +31,12 @@
 }
 @enduml
 
-@startuml(id=PLUGIN_OBSERVABLE_IMPL)
-+interface ObservableReaderImpl {
+@startuml(id=PLUGIN_OBSERVABLE_NOTIFIER)
++interface ObservableReaderNotifier {
   +notifyObservers(<b>final</b> ReaderEvent event)
 }
 
-+interface ObservablePluginImpl {
++interface ObservablePluginNotifier {
   +notifyObservers(<b>final</b> PluginEvent event)
 }
 @enduml

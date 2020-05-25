@@ -35,7 +35,7 @@ package org.eclipse.keyple.core.seproxy #FFFFFF {
 
 SpecificTerminal -down-> SeProxyService : uses >
 
-!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL
+!include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_8_0
 Nameable <|-up- ReaderPlugin : extends
 Nameable <|-- SeReader : extends
 Configurable <|-up- ReaderPlugin : extends

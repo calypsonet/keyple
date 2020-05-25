@@ -95,7 +95,7 @@ package java.io <<Node>> #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_UTIL)
+@startuml(id=SEPROXY_UTIL_0_8_0)
 package util #FFFFFF {
   +interface Nameable {
     +String getName()
@@ -109,7 +109,7 @@ package util #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_UTIL_0_9)
+@startuml(id=SEPROXY_UTIL_0_9_0)
 ~interface ProxyElement {
   +String getName()
 
@@ -498,7 +498,7 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_SELECTOR_COMPL)
+@startuml(id=SEPROXY_SELECTOR_COMPL_0_8_0)
 +enum FileOccurrence {
   FIRST
   LAST
@@ -513,9 +513,33 @@ package plugin.specific #D7BDE2 {
   NO_RESPONSE
 }
 
-+class "<b>final</b> AtrSelector" as AtrSelector <<static>> {
++class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
   +AtrFilter(String atrRegex)
-  +void setAtrRegex(String atrRegex) ????
+  +setAtrRegex(String atrRegex)
+
+  +String getAtrRegex()
+  +boolean atrMatches(byte[] atr)
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_COMPL_0_9_0)
++enum FileOccurrence {
+  FIRST
+  LAST
+  NEXT
+  PREVIOUS
+}
+
++enum FileControlInformation {
+  FCI
+  FCP
+  FMD
+  NO_RESPONSE
+}
+
++class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
+  +AtrFilter(String atrRegex)
+
   +String getAtrRegex()
   +boolean atrMatches(byte[] atr)
 }

@@ -54,7 +54,7 @@ package org.eclipse.keyple.core #FFFFFF {
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9
     SeProtocol "0..1" -right- "1" SeSelector : select <
 
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL_0_9_0
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID
     AidSelector +-down- FileOccurrence
     AidSelector +-down- FileControlInformation
@@ -63,8 +63,8 @@ package org.eclipse.keyple.core #FFFFFF {
     SeSelector +-down- AidSelector
     SeSelector "1" o-- "0..1" AidSelector
 
-    SeSelector +-right- AtrSelector
-    SeSelector "1" o-- "0..1" AtrSelector
+    SeSelector +-right- AtrFilter
+    SeSelector "1" o-- "0..1" AtrFilter
   }
 
   SeSelection -up- SeReader : send <

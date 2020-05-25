@@ -17,7 +17,7 @@ reverse link ReaderPlugin to ReaderPoolPlugin--><path d="M391.588,427.548 C369.4
 reverse link ReaderPlugin to ObservablePlugin--><path d="M472,435.669 C472,478.804 472,534.153 472,570.206 " fill="none" id="ReaderPlugin&lt;-ObservablePlugin" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="465,435.613,472,415.613,479,435.613,465,435.613" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="473" y="466.4951">extends</text><!--MD5=[9bde350185f61a8992bbce085951af21]
 reverse link SeReader to ObservableReader--><path d="M827.696,442.195 C828.649,467.182 829.731,495.56 830.727,521.665 " fill="none" id="SeReader&lt;-ObservableReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="820.698,442.38,826.931,422.128,834.688,441.847,820.698,442.38" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="829" y="466.4951">extends</text><!--MD5=[6ff42eee2d93b23b3557b0570faf0c26]
 reverse link ProxyElement to ReaderPlugin--><path d="M591.712,224.515 C564.089,257.97 532.26,296.518 508.369,325.454 " fill="none" id="ProxyElement&lt;-ReaderPlugin" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="586.34,220.027,604.472,209.062,597.135,228.941,586.34,220.027" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="552" y="285.4951">extends</text><!--MD5=[e474867e38445a864bdbc7a2e090866a]
-reverse link ProxyElement to SeReader--><path d="M710.124,224.743 C734.608,255.595 762.502,290.745 784.672,318.682 " fill="none" id="ProxyElement&lt;-SeReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="704.629,229.08,697.68,209.062,715.596,220.377,704.629,229.08" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="760" y="285.4951">extends</text><!--MD5=[1adfb0d01945e841ec974f5cd12437ef]
+reverse link ProxyElement to SeReader--><path d="M710.124,224.743 C734.608,255.595 762.502,290.745 784.672,318.682 " fill="none" id="ProxyElement&lt;-SeReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="704.629,229.08,697.68,209.062,715.596,220.377,704.629,229.08" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="760" y="285.4951">extends</text><!--MD5=[c5698405b638c35feebf43aff8ab31f5]
 @startuml
 skinparam ClassBorderColor #D4AC0D
 skinparam stereotypeABorderColor #A9DCDF
@@ -25,6 +25,8 @@ skinparam stereotypeIBorderColor #B4A7E5
 skinparam stereotypeCBorderColor #ADD1B2
 skinparam stereotypeEBorderColor #EB93DF
 skinparam shadowing false
+
+skinparam StateBorderColor #D4AC0D
 
 skinparam ClassBackgroundColor<<red>> #FDEDEC
 skinparam ClassBorderColor<<red>> #E74C3C

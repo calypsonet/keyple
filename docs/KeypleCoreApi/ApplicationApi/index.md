@@ -55,6 +55,11 @@ Some reader plugin solution could have the capability to notify a SE removal als
 
 ## SE Selection
 
+### Selection scenarii
+Depending on the SE transaction use case, or on the reader capability, there are two ways to manage the selection of a SE:
+ - Either on a SE reader, a selection could be operated directely by transmitting the selection request.
+ - Otherwise, on an Observable Reader, a default selection could be defined. In this case the selection is operated implicitely by the observable reader in case of SE insertion. 
+ 
 ![Selection v0.9](img/KeypleCore_ApplicationApi_ActivityDiag_Selection_Scenarii.svg)
 
 ![SE Selection v0.9](img/KeypleCore_ApplicationApi_ClassDiag_Selection_SelectorAndSelection_0_9_0.svg)
