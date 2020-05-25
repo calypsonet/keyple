@@ -1,0 +1,26 @@
+@startuml
+!include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+hide empty description
+
+state SE_ObservationDisabled {
+[*] --[#Black]> WaitForObserver
+}
+
+state SE_ObservationActivated {
+WaitForStartDetection -right[#Blue]-> WaitForSeInsertion : startSeDetection(PollingMode)
+WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE inserted'\n&& (NotificationMode == always)
+WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE matched'
+WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : notifySeProcessed()
+WaitForSeRemoval -up[#Red]-> WaitForSeInsertion : notifies 'SE removed'\n&& (PollingMode == Repeating)
+WaitForSeRemoval -up[#Red]-> WaitForStartDetection : notifies 'SE removed'\n&& (PollingMode == SingleShot)
+WaitForSeProcessing -[#Pink]-> WaitForSeInsertion : notifies 'SE removed'\n&& (Observable Reader\nwith the capability\nto detect the removal\nat any time)
+}
+
+SE_ObservationActivated -up[#Blue]-> WaitForObserver : removeObserver(ReaderObserver)\n&& (nb observer == 0)
+WaitForObserver -down[#Blue]-> WaitForStartDetection : addObserver(ReaderObserver)
+SE_ObservationActivated -[#Blue]> SE_ObservationActivated : removeObserver(ReaderObserver)\n&& (nb observer > 0)
+
+SE_ObservationActivated -[#Blue]-> WaitForStartDetection : stopSeDetection()
+SE_ObservationDisabled : number of observer == 0
+SE_ObservationActivated : number of observer > 0
+@enduml

@@ -20,6 +20,8 @@ skinparam stereotypeCBorderColor #ADD1B2
 skinparam stereotypeEBorderColor #EB93DF
 skinparam shadowing false
 
+skinparam StateBorderColor #D4AC0D
+
 ' Red
 skinparam ClassBackgroundColor<<red>> #FDEDEC
 skinparam ClassBorderColor<<red>> #E74C3C
