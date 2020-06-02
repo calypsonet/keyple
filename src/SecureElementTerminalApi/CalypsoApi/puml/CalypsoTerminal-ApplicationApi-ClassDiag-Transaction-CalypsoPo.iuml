@@ -14,71 +14,10 @@
 @startuml
 !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
-'package org.keyple.calypso.transaction #FFFFFF {
 together {
-  +class "<b>final</b> CalypsoPo" as CalypsoPo {
-    ~CalypsoPo(<color:red>SeResponse selectionResponse</color>)
-    +String getDfName()
-    +byte[] getDfNameBytes()
-    #byte[] getCalypsoSerialNumber()
-    #boolean isSerialNumberExpiring()
-    #byte[] getSerialNumberExpirationBytes()
-    +String getApplicationSerialNumber()
-    +byte[] getApplicationSerialNumberBytes()
+  !include ../../../KeypleCalypsoApi/ApplicationApi/puml/KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_CALYPSOPO_CalypsoAPI
+  !include ../../../KeypleCalypsoApi/ApplicationApi/puml/KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_DF
 
-    +String getAtr()
-    +String getStartupInfo()
-    +PoRevision getRevision()
-    #PoClass getPoClass()
-    #boolean isModificationCounterInByte()
-    #int getModificationCounter()
-    +byte getSessionModification()
-    +byte getApplicationType()
-    +byte getApplicationSubtype()
-    +byte getSoftwareIssuer()
-    +byte getSoftwareVersion()
-    +byte getSoftwareRevision()
-
-    +boolean isDeselectRatificationSupported()
-    +boolean isPinFeatureAvailable()
-    +boolean isSvFeatureAvailable()
-    +boolean isConfidentialSessionSupported()
-    +boolean isPublicAuthenticationSupported()
-
-    +boolean isDfInvalidated()
-    +boolean isDfRatified()
-
-    +boolean isPinBlocked()
-    +int getPinAttemptRemaining()
-
-    +int getSvBalance()
-    +int getSvLastTnum()
-    +SvLoadLogRecord getSvLoadLogRecord()
-    +SvDebitLogRecord getSvDebitLogLastRecord()
-    +List<SvDebitLogRecord> getSvDebitLogAllRecords()
-
-    +DirectoryHeader getDirectoryHeader()
-    +ElementaryFile getFileBySfi(byte sfi)
-    +ElementaryFile getFileByLid(short lid)
-    +Map<Byte, ElementaryFile> getAllFiles()
-  }
-
-  +enum AccessLevel {
-    SESSION_LVL_PERSO("perso", byte 0x01),
-    SESSION_LVL_LOAD("load", byte 0x02),
-    SESSION_LVL_DEBIT("debit", byte 0x03)
-  }
-
-  +class DirectoryHeader {
-    +short getLid()
-    +byte[] getAccessConditions()
-    +byte[] getKeyIndexes()
-
-    +boolean areKifAvailable()
-    +Byte getKif(AccessLevel)
-    +boolean areKvcAvailable()
-    +Byte getKvc(AccessLevel)
-  }
   AccessLevel -down- DirectoryHeader
 
 /'
@@ -95,99 +34,14 @@ together {
 '/
 
   together {
-    +class SvLoadLogRecord {
-      +int getAmount()
-      +int getBalance()
-      +int getLoadTime()
-      +byte[] getLoadTimeBytes()
-      +int getLoadDate()
-      +byte[] getLoadDateBytes()
-      +String getFreeByte()
-      +byte[] getFreeByteBytes()
-      +long getSamId()
-      +byte[] getSamIdBytes()
-      +int getSvTNum()
-      +byte[] getSvTNumBytes()
-    }
-
-    +class SvDebitLogRecord {
-      +int getAmount()
-      +int getBalance()
-      +int getDebitTime()
-      +byte[] getDebitTimeBytes()
-      +int getDebitDate()
-      +byte[] getDebitDateBytes()
-      +long getSamId()
-      +byte[] getSamIdBytes()
-      +int getSvTNum()
-      +byte[] getSvTNumBytes()
-    }
-
+    !include ../../../KeypleCalypsoApi/ApplicationApi/puml/KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_SV
     SvLoadLogRecord -[hidden]down-> SvDebitLogRecord
   }
 
   together {
-
-    +class ElementaryFile {
-      +byte getSfi()
-      +FileHeader getHeader()
-      +FileData getData()
-    }
-
-    note as N1
-       - For a Counter File - the number of record is
-      always 1.
-
-       - For a Binary File - the number of record is
-       always 1, the size of the record size is
-       corresponding to the size of the file.
-    end note
-
-    +enum FileType {
-      BINARY,
-      LINEAR,
-      CYCLIC,
-      SIMULATED_COUNTER,
-      COUNTERS
-    }
-
-    +class FileHeader {
-      +short getLid()
-      +int getRecordsNumber()
-      +int getRecordSize()
-      +FileType getType()
-
-      +boolean isShared()
-      +Short getSharedReference()
-      +byte[] getAccessConditions()
-      +byte[] getKeyIndexes()
-    }
+    !include ../../../KeypleCalypsoApi/ApplicationApi/puml/KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_EF
 
     FileType --+ FileHeader
-
-    note as N2
-       - By default getContent() returns the
-      bytes of the record 1 (for a binary file
-      it means all the bytes of the file).
-
-       - By default the dataOffset is 0 to
-      indicate the first byte of the record
-      (00h for the APDU command).
-
-       - If datalengh is absent, all the known
-      bytes are returned.
-    end note
-
-    +class FileData {
-      +byte[] getContent()
-      +byte[] getContent(int numRecord)
-      +byte[] getContent(int numRecord, int dataOffset, int dataLength)
-      +SortedMap<Integer, byte[]> getAllRecordsData()
-
-      +int getContentAsCounterValue(int numCounter)
-      +SortedMap<Integer, Integer> getAllCountersValue()
-    }
-
     ElementaryFile "1" *-- "0..1" FileHeader
     ElementaryFile "1" *-down- "0..1" FileData
     FileHeader -[hidden]right--> FileData

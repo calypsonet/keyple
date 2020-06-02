@@ -10,6 +10,7 @@ state SE_ObservationActivated {
 WaitForStartDetection -right[#Blue]-> WaitForSeInsertion : startSeDetection(PollingMode)
 WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE inserted'\n&& (NotificationMode == always)
 WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE matched'
+WaitForSeInsertion -down[#Red]-> WaitForSeRemoval : 'SE inserted' not notified\n&& ((NotificationMode == match_only)\n&& selection failed)
 WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : notifySeProcessed()
 WaitForSeRemoval -up[#Red]-> WaitForSeInsertion : notifies 'SE removed'\n&& (PollingMode == Repeating)
 WaitForSeRemoval -up[#Red]-> WaitForStartDetection : notifies 'SE removed'\n&& (PollingMode == SingleShot)

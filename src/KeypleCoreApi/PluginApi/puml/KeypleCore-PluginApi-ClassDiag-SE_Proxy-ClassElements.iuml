@@ -31,6 +31,16 @@
 }
 @enduml
 
+@startuml(id=MESSAGE_PROXYREADER_ReaderAPI)
++interface ProxyReader {
+  +List<SeResponse> transmitSeRequests(List<SeRequest> seRequests,
+    ChannelControl channelControl)
+
+  +SeResponse transmitSeRequest(SeRequest seRequest,
+    ChannelControl channelControl)
+}
+@enduml
+
 @startuml(id=PLUGIN_OBSERVABLE_NOTIFIER)
 +interface ObservableReaderNotifier {
   +notifyObservers(<b>final</b> ReaderEvent event)
@@ -38,6 +48,12 @@
 
 +interface ObservablePluginNotifier {
   +notifyObservers(<b>final</b> PluginEvent event)
+}
+@enduml
+
+@startuml(id=PLUGIN_OBSERVABLE_NOTIFIER_ReaderAPI)
++interface ObservableReaderNotifier {
+  +notifyObservers(<b>final</b> ReaderEvent event)
 }
 @enduml
 

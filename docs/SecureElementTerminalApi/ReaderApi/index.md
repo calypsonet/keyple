@@ -12,4 +12,15 @@ According to the channel control parameter the logical channel could be kept ope
  - If the channel is kept open, the SE response could then be used to initialize the image of a selected SE (AbstractMatchingSe).
  - If several SE requests are defined for a transmission, in case the selector of a SE request has matched an application in the SE, if the channel is kept open, then the pending SE requests aren’t transmitted to the SE.
 
-![Global Architecture](img/SeReaderTerminal_ApduApi_ClassDiag_Transmission_ReaderMessage.svg)
+![Reader API](img/SeReaderTerminal_ApduApi_ClassDiag_Transmission_ReaderMessage.svg)
+
+Internal states of an Observable Reader:
+
+The states could be switched,
+ - due to an explicit API request (blue arrows), the call of an Observable Reader method:
+   - a request to start or stop the detection,
+   - or a notification to indicates to the reader that the processing of the SE is finished.
+ - Or because of an external event (red arrows), the insertion or the remove of a SE:
+   - the insertion a SE causing the observable reader to notify a 'SE inserted' reader event,
+   - the removal of a SE causing the observable reader to notify a 'SE removed' reader event.
+![ObservableReader States](img/SeReaderTerminal_EventApi_StateDiag_ObservableReaderStates.svg)

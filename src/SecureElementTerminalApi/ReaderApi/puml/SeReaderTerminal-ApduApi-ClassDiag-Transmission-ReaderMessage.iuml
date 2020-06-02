@@ -17,12 +17,17 @@
 package ReaderApi.high.forTicketingApplication #FFFFFF {
   !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID_ReaderAPI
   !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+      !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_ReaderAPI
   hide AtrSelector
+'  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
   together {
-  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
-  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_ReaderAPI
-  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_ReaderAPI
-  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+    !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_ReaderAPI
+'    together {
+      !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+      !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_ReaderAPI
+
+'    }
+    !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
   }
 '  AbstractMatchingSe -right[hidden]-> SeSelector
 '  SeSelector -right[hidden]-> SeReader
@@ -32,19 +37,24 @@ package ReaderApi.high.forTicketingApplication #FFFFFF {
   AidSelector "1" *-- "1" FileControlInformation
   SeSelector +-up- AidSelector
   SeSelector "1" o-- "0..1" AidSelector
+'  SeSelector -right[hidden]-> ChannelControl
+  ChannelControl -right[hidden]-> SeReader
+'  SeReader <|-right- ObservableReader : extends
+'  SeReade -right[hidden]-> AbstractMatchingSe
+'  ObservableReader -up[hidden]-> AbstractMatchingSe
+'  FileOccurrence -right[hidden]-> AbstractMatchingSe
 }
 
 package ReaderApi.low.forSeSolutionLib #FFFFFF {
-
 '  SeSelector -right[hidden]-> ProxyReader
-
-
+  !include ../../../KeypleCoreApi/PluginApi/puml/KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER_ReaderAPI
   !include ../../../KeypleCoreApi/PluginApi/puml/KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
   together {
     !include ../../../KeypleCoreApi/PluginApi/puml/KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_9
   }
   SeSelector "0..1" <-down-o "1" SeRequest : selector
-  AbstractMatchingSe "0..1" <-down-o "1" SeResponse : selector
+'  AbstractMatchingSe "0..1" <-down-o "1" SeResponse : selector
+  AbstractMatchingSe "0..1" <--o "1" SeResponse : selected
 
   ProxyReader "1" -down- "+" SeRequest : sends >
   ProxyReader "1" -down- "+" SeResponse : receives >
@@ -64,7 +74,12 @@ package ReaderApi.low.forSeSolutionLib #FFFFFF {
   SeReader <|-down- ProxyReader : extends
 
   ChannelControl -down- ProxyReader
-
+ObservableReader <|-- ObservableReaderNotifier : extends
+'ObservableReader -up[hidden]-> AbstractMatchingSe
+'FileOccurrence -right[hidden]-> AbstractMatchingSe
+'  SeReader <|-right- ObservableReader : extends
+'  ObservableReader -|> SeReader
+SeReader <|-up- ObservableReader
   class SeRequest <<Serializable>>
   class SeResponse <<Serializable>>
 @enduml

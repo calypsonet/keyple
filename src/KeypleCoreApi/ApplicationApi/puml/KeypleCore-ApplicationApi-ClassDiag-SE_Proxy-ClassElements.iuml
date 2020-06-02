@@ -340,6 +340,14 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
+@startuml(id=SEPROXY_OBSERVABLEREADER_ReaderAPI)
++interface ObservableReader {
+  +startSeDetection()
+  +stopSeDetection()
+  +notifySeProcessed()
+}
+@enduml
+
 @startuml(id=SEPROXY_EVENTREADER)
 +enum "EventType" as EventType_Reader {
   IO_ERROR
