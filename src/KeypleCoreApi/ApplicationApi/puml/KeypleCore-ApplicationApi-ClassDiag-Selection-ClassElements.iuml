@@ -114,6 +114,8 @@
   +boolean hasActiveSelection()
   +AbstractMatchingSe getActiveMatchingSe()
 
+  +int getActiveSelectionIndex()
+  +boolean hasSelectionMatched(int selectionIndex)
   +AbstractMatchingSe getMatchingSe(int selectionIndex)
   +Map<Integer, AbstractMatchingSe> getMatchingSelections()
 }

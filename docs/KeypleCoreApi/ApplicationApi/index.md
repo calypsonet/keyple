@@ -65,14 +65,15 @@ Depending on the SE transaction use case, or on the reader capability, there are
 ![Selection v0.9](img/KeypleCore_ApplicationApi_ActivityDiag_Selection_Scenarii.svg)
 
 ### Selection setting and processing
-A SE Selection request is defined with a SE Selector. A SE Selector could be defined with tree optional levels of selection.
+A SE Selection request is defined with a SE Selector. A SE Selector could be defined with tree optional levels of selection filter.
  - The selection could be limited to match specific SE communication protocols.
  - The SE ATR could be filtered to match a specific regular expression.
  - If an AID is defined, the local reader transmits a Select Application APDU command to the SE.
- 
+For a SE Selector defined without any filter, the selection will be always succesful is a SE is present in the reader.
+
 Depending on the Keyple SE extension library, a SE request could be completed with specific SE commands to operate at the selection (for example, a Select File for a specific DF LID, the read of a specific file).
 
-For terminal managing several kinds of SE applications, a SE Selection could be prepared with several SE selection request to operqate sequentially with SE.
+For terminal managing several kinds of SE applications, a SE Selection could be prepared with several SE selection request to operate sequentially with the SE.
 
 According to the defined 'multi SE request processing' mode, the SE selection could stop at the first selection request matching SE application, otherwise all the prepared SE selection request could be operated.
  - Before the new processing of SE selection request, the logical channel previously opened is closed.
