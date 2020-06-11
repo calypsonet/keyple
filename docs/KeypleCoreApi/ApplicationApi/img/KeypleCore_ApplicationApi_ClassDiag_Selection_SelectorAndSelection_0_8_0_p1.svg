@@ -20,7 +20,7 @@ reverse link SeSelector to AtrFilter--><path d="M445.754,455.698 C453.065,456.60
 reverse link SeProtocol to TransmissionMode--><path d="M267.297,739.821 C255.733,760.251 242.181,784.257 230,806 C204.965,850.688 176.396,902.225 157.604,936.2 " fill="none" id="SeProtocol&lt;-TransmissionMode" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="273.851,728.249,267.4136,731.4986,267.9373,738.6906,274.3747,735.4411,273.851,728.249" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="7" x="262.9226" y="749.1692">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="7" x="153.6507" y="925.5085">1</text><!--MD5=[009dd821b618541acedfd889e51c7fb4]
 reverse link SeProtocol to SeCommonProtocols--><path d="M324.285,746.153 C333.665,763.819 344.587,784.389 355.955,805.799 " fill="none" id="SeProtocol&lt;-SeCommonProtocols" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="none" points="317.961,749.17,314.764,728.222,330.326,742.604,317.961,749.17" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="67" x="340" y="772.4951">implements</text><!--MD5=[85c6f18c96ceb47132f2d645c1ed1753]
 link TransmissionMode to SeCommonProtocols--><!--MD5=[848abd0da787c3898c4771a3838e6941]
-reverse link SeSelector to SeProtocol--><path d="M295,582.261 C295,606.409 295,631.916 295,651.938 " fill="none" id="SeSelector&lt;-SeProtocol" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#FFFFFF" points="295,569.029,291,575.029,295,581.029,299,575.029,295,569.029" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="7" x="287.6172" y="590.5847">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="270.9719" y="641.0031">0..1</text><!--MD5=[83179cf8ec797b227fc39abd7b81e3a0]
+reverse link SeSelector to SeProtocol--><path d="M295,582.261 C295,606.409 295,631.916 295,651.938 " fill="none" id="SeSelector&lt;-SeProtocol" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#FFFFFF" points="295,569.029,291,575.029,295,581.029,299,575.029,295,569.029" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="7" x="287.6172" y="590.5847">1</text><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="22" x="270.9719" y="641.0031">0..1</text><!--MD5=[6424b70d37f76f43e7d9ee74933c0245]
 @startuml
 skinparam ClassBorderColor #D4AC0D
 skinparam stereotypeABorderColor #A9DCDF
@@ -30,6 +30,7 @@ skinparam stereotypeEBorderColor #EB93DF
 skinparam shadowing false
 
 skinparam StateBorderColor #D4AC0D
+skinparam ActivityBorderColor #D4AC0D
 
 skinparam ClassBackgroundColor<<red>> #FDEDEC
 skinparam ClassBorderColor<<red>> #E74C3C

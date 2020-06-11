@@ -18,8 +18,8 @@
 }
 @enduml
 
-@startuml(id=TRANSACTION_PO_SHORT_0_8)
-+class CalypsoPo {
+@startuml(id=TRANSACTION_PO_SHORT_0_8_0)
++class "<b>final</b> CalypsoPo" as CalypsoPo {
   +CalypsoPo(SeResponse selectionResponse)
   +String getDfName()
   +String getApplicationSerialNumber()
@@ -29,14 +29,14 @@
 }
 @enduml
 
-@startuml(id=TRANSACTION_PO_SHORT_0_9)
-+class "<b>final</b> CalypsoPo" as CalypsoPo {
+@startuml(id=TRANSACTION_PO_SHORT_0_9_0)
++class CalypsoPo {
   ~CalypsoPo(SeResponse selectionResponse)
-  +String getDfName()
-  +String getApplicationSerialNumber()
-  +String getAtr()
-  +String getStartupInfo()
-  +PoRevision getRevision()
+  +<b>final</b> String getDfName()
+  +<b>final</b> String getApplicationSerialNumber()
+  +<b>final</b> String getAtr()
+  +<b>final</b> String getStartupInfo()
+  +<b>final</b> PoRevision getRevision()
 }
 @enduml
 
@@ -76,18 +76,31 @@
 
 @startuml(id=TRANSACTION_SELECTION_0_9)
 +class "<b>final</b> PoSelector" as PoSelector {
-  +PoSelector(SeProtocol seProtocol, AtrFilter atrFilter,
-    AidSelector aidToSelect, InvalidatedPo invalidatedPo)
+  -PoSelector(PoSelectorBuilder builder)
+  +{static} PoSelectorBuilder builder()
 }
 
-+class "<b>final</b> PoSelectionRequest" as PoSelectionRequest {
++class PoSelectorBuilder {
+  -InvalidatedPo invalidatedPo = REJECT
+  -PoSelectorBuilder()
+  +PoSelector build()
+
+  +PoSelectorBuilder seProtocol(SeProtocol seProtocol)
+  +PoSelectorBuilder atrFilter(AtrFilter atrFilter)
+  +PoSelectorBuilder aidSelector(AidSelector aidSelector)
+
+  +PoSelectorBuilder invalidatedPo(InvalidatedPo invalidatedPo)
+}
+
+
++class PoSelectionRequest {
   +PoSelectionRequest(PoSelector seSelector)
 
-  +prepareSelectFile(byte[] path)
-  +prepareSelectFile(shord lid)
-  +prepareSelectFile(SelectControl selectControl)
+  +<b>final</b> prepareSelectFile(byte[] path)
+  +<b>final</b> prepareSelectFile(shord lid)
+  +<b>final</b> prepareSelectFile(SelectControl selectControl)
 
-  +prepareReadRecordFile(byte sfi, int recordNumber)
+  +<b>final</b> prepareReadRecordFile(byte sfi, int recordNumber)
 
   #CalypsoPo parse(SeResponse seResponse)
 }
@@ -98,7 +111,7 @@
 
 @startuml(id=TRANSACTION_SECURITYSETTING_0_9_0)
 +class "static <b>final</b> PoSecuritySettingBuilder" as PoSecuritySettingBuilder {
-  -final SamResource samResource
+  -final SeResource<CalypsoSam> samResource
   -List<Byte> authorizedKvcList
   -final EnumMap<AccessLevel, Byte> defaultKif
   -final EnumMap<AccessLevel, Byte> defaultKvc
@@ -106,17 +119,17 @@
   ModificationMode sessionModificationMode = ATOMIC
   RatificationMode ratificationMode = CLOSE_RATIFIED
 
-  +PoSecuritySettingsBuilder(SamResource samResource)
+  +PoSecuritySettingBuilder(SeResource<CalypsoSam> samResource)
 
-  +PoSecuritySettingsBuilder sessionModificationMode(ModificationMode sessionModificationMode)
-  +PoSecuritySettingsBuilder ratificationMode(RatificationMode ratificationMode)
-  +PoSecuritySettingsBuilder sessionDefaultKif(AccessLevel sessionAccessLevel, byte kif)
-  +PoSecuritySettingsBuilder sessionDefaultKvc(AccessLevel sessionAccessLevel, byte kvc)
-  +PoSecuritySettingsBuilder sessionDefaultKeyRecordNumber(AccessLevel sessionAccessLevel,
+  +PoSecuritySettingBuilder sessionModificationMode(ModificationMode sessionModificationMode)
+  +PoSecuritySettingBuilder ratificationMode(RatificationMode ratificationMode)
+  +PoSecuritySettingBuilder sessionDefaultKif(AccessLevel sessionAccessLevel, byte kif)
+  +PoSecuritySettingBuilder sessionDefaultKvc(AccessLevel sessionAccessLevel, byte kvc)
+  +PoSecuritySettingBuilder sessionDefaultKeyRecordNumber(AccessLevel sessionAccessLevel,
     byte keyRecordNumber)
-  +PoSecuritySettingsBuilder sessionAuthorizedKvcList(List<Byte> authorizedKvcList)
+  +PoSecuritySettingBuilder sessionAuthorizedKvcList(List<Byte> authorizedKvcList)
 
-  +PoSecuritySettings build()
+  +PoSecuritySetting build()
 }
 
 +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
@@ -161,17 +174,17 @@ end note
   ModificationMode sessionModificationMode = ATOMIC
   RatificationMode ratificationMode = CLOSE_RATIFIED
 
-  +PoSecuritySettingsBuilder(SamResource samResource)
+  +PoSecuritySettingBuilder(SamResource samResource)
 
-  +PoSecuritySettingsBuilder sessionModificationMode(ModificationMode sessionModificationMode)
-  +PoSecuritySettingsBuilder ratificationMode(RatificationMode ratificationMode)
-  +PoSecuritySettingsBuilder sessionDefaultKif(AccessLevel sessionAccessLevel, byte kif)
-  +PoSecuritySettingsBuilder sessionDefaultKvc(AccessLevel sessionAccessLevel, byte kvc)
-  +PoSecuritySettingsBuilder sessionDefaultKeyRecordNumber(AccessLevel sessionAccessLevel,
+  +PoSecuritySettingBuilder sessionModificationMode(ModificationMode sessionModificationMode)
+  +PoSecuritySettingBuilder ratificationMode(RatificationMode ratificationMode)
+  +PoSecuritySettingBuilder sessionDefaultKif(AccessLevel sessionAccessLevel, byte kif)
+  +PoSecuritySettingBuilder sessionDefaultKvc(AccessLevel sessionAccessLevel, byte kvc)
+  +PoSecuritySettingBuilder sessionDefaultKeyRecordNumber(AccessLevel sessionAccessLevel,
     byte keyRecordNumber)
-  +PoSecuritySettingsBuilder sessionAuthorizedKvcList(List<Byte> authorizedKvcList)
+  +PoSecuritySettingBuilder sessionAuthorizedKvcList(List<Byte> authorizedKvcList)
 
-  +PoSecuritySettings build()
+  +PoSecuritySetting build()
 }
 
 +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
@@ -259,7 +272,8 @@ end note
   +<b>final</b> prepareReadRecordFile(byte sfi, int recordNumber)
   'exception si recordSize erronée
   +<b>final</b> prepareReadRecordFile(byte sfi, int firstRecordNumber, int numberOfRecords, int recordSize))
-  +<b>final</b> prepareReadSubRecordFile(byte sfi, int firstRecordNumber, int numberOfRecord, int recordOffset, int recordLength)
+  +<b>final</b> prepareReadSubRecordFile(byte sfi, int firstRecordNumber, int numberOfRecord, int recordOffset,
+    int recordLength)
   +<b>final</b> prepareReadBinaryFile(byte sfi, int dataLength, int[0..1] dataOffset)
   'compteur simulé : exception si countersNumber<>1 et si countersNumber <> 1
   +<b>final</b> prepareReadCounterFile(byte sfi, int countersNumber)
@@ -271,7 +285,8 @@ end note
   +<b>final</b> prepareIncreaseCounter(byte sfi, int counterNumber, int incValue)
   +<b>final</b> prepareDecreaseCounter(byte sfi, int counterNumber, int decValue)
   +<b>final</b> prepareSetCounter(byte sfi, int counterNumber, int newValue)
-  +<b>final</b> int prepareSearchRecord(byte sfi, byte offset, SearchOffsetMode offsetMode, byte[] searchData, Byte[] searchMask, SearchReadMode readMode)
+  +<b>final</b> int prepareSearchRecord(byte sfi, byte offset, SearchOffsetMode offsetMode, byte[] searchData,
+    Byte[] searchMask, SearchReadMode readMode)
   +<b>final</b> int[] getSearchResult(int searchRequestNumber)
 
   +<b>final</b> prepareInvalidate()

@@ -35,11 +35,11 @@ A transaction with a Calypso PO is fully managed through the PoTransaction objec
 
 ![Global Architecture](../../SecureElementTerminalApi/CalypsoApi/img/CalypsoTerminal_ApplicationApi_ClassDiag_Transaction_Global.svg)
 
-## Calypso card image
+### Calypso card image
 
 ![Calypso PO card image](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_CalypsoPo_0_9_0.svg)
 
-## Calypso transaction
+### Calypso transaction
 
 Most of the process methods have a ‘Channel Control’ parameter in order to define if the logical with the selected Calypso has to be kept open or to be closed after the processing of the prepared PO commands.
  - processPoCommands is used to transmit a set of prepared PO commands outside of a secure session.
@@ -48,4 +48,8 @@ Most of the process methods have a ‘Channel Control’ parameter in order to d
  - processClosing issues first the last prepared PO commands and transmits a Close Secure Session.
  - prepareManageSession allows to change authenticate or change the encryption mode.
 
-![Calypso card image](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_PoTransaction_0_9_0.svg)
+![Calypso transaction](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_PoTransaction_0_9_0.svg)
+
+## Data model extension
+
+![Calypso transaction](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_SpecificPoTransaction_0_9_0.svg)

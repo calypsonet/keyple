@@ -40,7 +40,7 @@ package org.eclipse.keyple #FFFFFF {
 
   package calypso.transaction #FFFFFF {
     !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_INVALIDATED
-    !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_SHORT
+    !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_SHORT_0_8_0
     !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_SELECTION_0_8
 
     PoAidSelector "1" *-left- "1" InvalidatedPo

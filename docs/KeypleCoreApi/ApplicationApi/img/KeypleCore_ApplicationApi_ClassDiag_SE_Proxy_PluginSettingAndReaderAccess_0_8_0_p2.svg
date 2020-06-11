@@ -20,7 +20,7 @@ reverse link Nameable to SeReader--><path d="M554.542,733.172 C566.214,717.473 5
 link ReaderPlugin to Configurable--><path d="M553.207,627.598 C588.533,655.816 634.709,692.7 672.785,723.115 " fill="none" id="ReaderPlugin-&gt;Configurable" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="677.294,717.758,688.552,735.709,668.557,728.696,677.294,717.758" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="622" y="680.4951">extends</text><!--MD5=[4041f5451312927f98f72078ec6163bb]
 reverse link Configurable to SeReader--><path d="M786.348,718.969 C793.821,707.51 801.335,695.511 808,684 C817.179,668.147 826.358,650.386 834.3,634.255 " fill="none" id="Configurable&lt;-SeReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="792.053,723.032,775.151,735.813,780.394,715.282,792.053,723.032" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="817" y="680.4951">extends</text><!--MD5=[1e3cb17105e1bb1ece1cc559abf685ba]
 reverse link Comparable to ReaderPlugin--><path d="M718.408,166.074 C706.987,247.715 681.948,405.202 653,453 C632.629,486.636 600.229,515.525 570.306,537.343 " fill="none" id="Comparable&lt;-ReaderPlugin" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="711.489,165.003,721.136,146.137,725.36,166.901,711.489,165.003" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="709" y="367.9951">extends</text><!--MD5=[78d3bddb9583ba0db02a971cfde2af88]
-reverse link Comparable to SeReader--><path d="M748.465,164.459 C757.28,183.904 766.879,206.715 774,228 C809.324,333.585 835.869,461.613 848.949,530.947 " fill="none" id="Comparable&lt;-SeReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="742.115,167.404,740.032,146.317,754.81,161.503,742.115,167.404" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="834" y="367.9951">extends</text><!--MD5=[2d4ddbe23dfb95e81d738399a961d62e]
+reverse link Comparable to SeReader--><path d="M748.465,164.459 C757.28,183.904 766.879,206.715 774,228 C809.324,333.585 835.869,461.613 848.949,530.947 " fill="none" id="Comparable&lt;-SeReader" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="none" points="742.115,167.404,740.032,146.317,754.81,161.503,742.115,167.404" style="stroke: #A80036; stroke-width: 1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacingAndGlyphs" textLength="46" x="834" y="367.9951">extends</text><!--MD5=[01e83fe2c1ada4ccd4034ebd42282c8c]
 @startuml
 skinparam ClassBorderColor #D4AC0D
 skinparam stereotypeABorderColor #A9DCDF
@@ -30,6 +30,7 @@ skinparam stereotypeEBorderColor #EB93DF
 skinparam shadowing false
 
 skinparam StateBorderColor #D4AC0D
+skinparam ActivityBorderColor #D4AC0D
 
 skinparam ClassBackgroundColor<<red>> #FDEDEC
 skinparam ClassBorderColor<<red>> #E74C3C

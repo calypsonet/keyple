@@ -51,20 +51,25 @@ package org.eclipse.keyple.core #FFFFFF {
       SeProtocol <|.down. SeCommonProtocols : implements
     }
 
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9
-    SeProtocol "0..1" -right- "1" SeSelector : select <
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_BUILDER_0_9_0
+
+    SeProtocol "0..1" -right- SeSelectorBuilder : set >
 
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL_0_9_0
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID_0_9_0
     AidSelector +-down- FileOccurrence
     AidSelector +-down- FileControlInformation
-    AidSelector "1" *-- "1" FileOccurrence
-    AidSelector "1" *-- "1" FileControlInformation
-    SeSelector +-down- AidSelector
-    SeSelector "1" o-- "0..1" AidSelector
+    AidSelector +-- "1+" AidSelectorBuilder : build <
+    AidSelectorBuilder "1" *-left- "0..1" FileOccurrence : set <
+    AidSelectorBuilder "1" *-right- "0..1" FileControlInformation : set <
 
-    SeSelector +-right- AtrFilter
-    SeSelector "1" o-- "0..1" AtrFilter
+    SeSelectorBuilder o-down- "0..1" AidSelector : set <
+    SeSelectorBuilder o-up- "0..1" AtrFilter : set <
+
+    SeSelector +-- AidSelector
+    SeSelector +-left- AtrFilter
+    SeSelector +-- "1+" SeSelectorBuilder : build <
   }
 
   SeSelection -up- SeReader : send <

@@ -17,13 +17,13 @@
 package org.eclipse.keyple.core.seproxy #FFFFFF {
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_9
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_9_0
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY_0_9_0
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
 
-  SeProxyService "1" *--> "*" AbstractPluginFactory : registers
+  SeProxyService "1" *--> "*" PluginFactory : registers
   SeProxyService "1" *-down-> "*" ReaderPlugin : plugins
-  AbstractPluginFactory "1" -right-> "1" ReaderPlugin : creates
+  PluginFactory "1" -right-> "1" ReaderPlugin : creates
   ReaderPlugin "1" *-right-> "*" SeReader : readers
 
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_POOLPLUGIN

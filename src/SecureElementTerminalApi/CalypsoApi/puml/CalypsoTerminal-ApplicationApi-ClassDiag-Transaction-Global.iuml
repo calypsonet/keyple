@@ -29,16 +29,16 @@ together {
   +class "<b>final</b> PoSecuritySetting" as PoSecuritySetting {
   }
 
-  +class "<b>final</b> CalypsoPo" as CalypsoPo {
+  +class CalypsoPo {
     ~CalypsoPo(<color:red>SeResponse selectionResponse</color>)
 
-    +String getDfName()
-    +String getApplicationSerialNumber()
-    +String getStartupInfo()
+    +<b>final</b> String getDfName()
+    +<b>final</b> String getApplicationSerialNumber()
+    +<b>final</b> String getStartupInfo()
 
-    +<color:royalBlue><b><i>boolean is_Xxx()</i></b></color>
+    +<b>final</b> <color:royalBlue><b><i>boolean is_Xxx()</i></b></color>
 
-    +<color:royalBlue><b><i>Xxx getData_Xxx()</i></b></color>
+    +<b>final</b> <color:royalBlue><b><i>Xxx getData_Xxx()</i></b></color>
   }
 
   +class PoTransaction {

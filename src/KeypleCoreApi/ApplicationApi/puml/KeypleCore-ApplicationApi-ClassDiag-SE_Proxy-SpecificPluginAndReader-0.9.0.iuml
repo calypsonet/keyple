@@ -20,22 +20,22 @@ package external.terminalapplication #3399FF {
 
 package org.eclipse.keyple.core.seproxy #FFFFFF {
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_9
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY_0_9_0
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
 
   SeProxyService "1" *-down-> "*" ReaderPlugin : plugins
   ReaderPlugin "1" *-right-> "*" SeReader : readers
 
-  SeProxyService "1" *--> "*" AbstractPluginFactory : registers
-  AbstractPluginFactory "1" -right-> "1" ReaderPlugin : creates
+  SeProxyService "1" *--> "*" PluginFactory : registers
+  PluginFactory "1" -right-> "1" ReaderPlugin : creates
 }
 
 !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SPECIFICPLUGIN
 
 SpecificTerminal -down-> SeProxyService : uses >
 
-AbstractPluginFactory <|-down- SpecificPluginFactory : extends
+PluginFactory <|.down. SpecificPluginFactory : implements
 ReaderPlugin <|.. SpecificPlugin : implements
 SeReader <|.. SpecificReader : implements
 @enduml
