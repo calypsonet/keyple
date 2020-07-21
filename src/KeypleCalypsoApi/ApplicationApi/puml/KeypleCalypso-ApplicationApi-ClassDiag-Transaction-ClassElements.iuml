@@ -109,6 +109,48 @@
 }
 @enduml
 
+@startuml(id=TRANSACTION_SELECTION_SAM_0_9)
++class "<b>final</b> SamSelector" as SamSelector {
+  -SamSelector(SamSelectorBuilder builder)
+  +{static} SamSelectorBuilder builder()
+}
+
++class SamSelectorBuilder {
+  +SamSelectorBuilder()
+  +SamSelectorBuilder seProtocol(SeProtocol seProtocol)
+  +SamSelectorBuilder atrFilter(AtrFilter atrFilter)
+  +SamSelectorBuilder aidSelector(AidSelector aidSelector)
+
+  +SamSelectorBuilder samRevision(SamRevision samRevision)
+  +SamSelectorBuilder serialNumber(String serialNumber)
+  +SamSelectorBuilder samIdentifier(SamIdentifier samIdentifier)
+  +SamSelectorBuilder samUnlock(byte[] lock)
+
+  +SamSelector build()
+}
+
+
++class SamSelectionRequest {
+  +SamSelectionRequest(SamSelector seSelector)
+
+  #CalypsoSam parse(SeResponse seResponse)
+}
+
++class "<b>final</b> SeResource<CalypsoSam>" as SamResource {
+}
+
+      +class "<b>final</b> CalypsoSam" as CalypsoSam {
+        ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
+
+        +SamRevision getSamRevision()
+        +byte[] getSerialNumber()
+        +byte getPlatform()
+        +byte getApplicationType()
+        +byte getApplicationSubType()
+        +byte getSoftwareIssuer()
+      }
+@enduml
+
 @startuml(id=TRANSACTION_SECURITYSETTING_0_9_0)
 +class "static <b>final</b> PoSecuritySettingBuilder" as PoSecuritySettingBuilder {
   -final SeResource<CalypsoSam> samResource
@@ -309,8 +351,8 @@ end note
   +<b>final</b> processCancel(ChannelControl channel)
 
   +<b>final</b> prepareCheckPinStatus()
-  +<b>final</b> prepareVerifyPin(String pin)
-  +<b>final</b> prepareVerifyPin(byte[] pin)
+  +<b>final</b> processVerifyPin(String pin)
+  +<b>final</b> processVerifyPin(byte[] pin)
 
   +<b>final</b> prepareSvGet(SvSetting.Operation operation, SvSetting.Action action)
   +<b>final</b> prepareSvReload(int amount, int date, int time, String free)
@@ -339,15 +381,15 @@ end note
   +<b>final</b> prepareIncreaseCounter(byte sfi, int counterNumber, int incValue)
   +<b>final</b> prepareDecreaseCounter(byte sfi, int counterNumber, int decValue)
   +<b>final</b> prepareSetCounter(byte sfi, int counterNumber, int newValue)
-  +<b>final</b> int prepareSearchRecord(byte sfi, byte offset, SearchOffsetMode offsetMode, byte[] searchData, Byte[] searchMask, SearchReadMode readMode)
-  +<b>final</b> int[] getSearchResult(int searchRequestNumber)
+'  +<b>final</b> int prepareSearchRecord(byte sfi, byte offset, SearchOffsetMode offsetMode, byte[] searchData, Byte[] searchMask, SearchReadMode readMode)
+'  +<b>final</b> int[] getSearchResult(int searchRequestNumber)
 
   +<b>final</b> prepareInvalidate()
   +<b>final</b> prepareRehabilitate()
 
-  +<b>final</b> prepareChangeKey(AccessLevel level)
-  +<b>final</b> prepareChangePin(String pin)
-  +<b>final</b> prepareChangePin(byte[] pin)
+'  +<b>final</b> prepareChangeKey(AccessLevel level)
+'  +<b>final</b> prepareChangePin(String pin)
+'  +<b>final</b> prepareChangePin(byte[] pin)
 }
 @enduml
 
@@ -364,8 +406,8 @@ end note
   +<b>final</b> SessionSecureData getSessionSecureData()
 
   +<b>final</b> prepareCheckPinStatus()
-  +<b>final</b> prepareVerifyPin(String pin)
-  +<b>final</b> prepareVerifyPin(byte[] pin)
+  +<b>final</b> processVerifyPin(String pin)
+  +<b>final</b> processVerifyPin(byte[] pin)
 
   +<b>final</b> prepareSvGet(SvSetting.Operation operation, SvSetting.Action action)
   +<b>final</b> prepareSvReload(int amount, int date, int time, String free)
@@ -601,6 +643,28 @@ together {
   +<b>final</b> SvLoadLogRecord getSvLoadLogRecord()
   +<b>final</b> SvDebitLogRecord getSvDebitLogLastRecord()
   +<b>final</b> List<SvDebitLogRecord> getSvDebitLogAllRecords()
+
+  +<b>final</b> DirectoryHeader getDirectoryHeader()
+  +<b>final</b> ElementaryFile getFileBySfi(byte sfi)
+  +<b>final</b> ElementaryFile getFileByLid(short lid)
+  +<b>final</b> Map<Byte, ElementaryFile> getAllFiles()
+}
+@enduml
+
+@startuml(id=TRANSACTION_CALYPSOPO_SPECIFIC)
++class SpecificPo {
+  ~CalypsoPo(<color:red>SeResponse selectionResponse</color>)
+
+
+  +<b>final</b> DirectoryHeader getDirectoryHeader()
+  +<b>final</b> ElementaryFile getFileBySfi(byte sfi)
+  +<b>final</b> ElementaryFile getFileByLid(short lid)
+  +<b>final</b> Map<Byte, ElementaryFile> getAllFiles()
+}
+
++class CalypsoPo {
+  ~CalypsoPo(<color:red>SeResponse selectionResponse</color>)
+
 
   +<b>final</b> DirectoryHeader getDirectoryHeader()
   +<b>final</b> ElementaryFile getFileBySfi(byte sfi)

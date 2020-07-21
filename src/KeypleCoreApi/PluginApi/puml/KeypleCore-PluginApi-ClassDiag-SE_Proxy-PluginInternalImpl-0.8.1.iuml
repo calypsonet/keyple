@@ -22,11 +22,10 @@ package org.eclipse.keyple.seproxy #FFFFFF {
   !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
   ReaderPlugin "1" *-right-> "*" SeReader : readers
 
-  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL
+  !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_8_0
 
   package message #FFFFFF {
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_8
-'    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
   }
 
   ReaderPlugin -down-|> Nameable : extends
@@ -61,7 +60,7 @@ package org.eclipse.keyple.seproxy #FFFFFF {
 
     package local #FFFFFF {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_8_1
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER_0_8_1
 
       AbstractObservableLocalReader -up-|> AbstractLocalReader: extends
     }

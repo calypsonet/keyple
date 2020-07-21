@@ -15,6 +15,15 @@
 !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
 package org.eclipse.keyple #FFFFFF {
+  package "calypso.transaction" as transaction_sam #FFFFFF {
+    !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_SELECTION_SAM_0_9
+
+    SamSelector +-up- "1+" SamSelectorBuilder : build <
+    SamSelectionRequest "1" o-up- "1" SamSelector
+    SamSelectionRequest -down- CalypsoSam : selects >
+    SamResource "1" *-up- "1" CalypsoSam
+  }
+
   package core #FFFFFF {
     package seproxy #FFFFFF {
       !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
@@ -56,19 +65,10 @@ package org.eclipse.keyple #FFFFFF {
   CalypsoPo -left-|> AbstractMatchingSe : extends
   PoResource .left.|> SeResource_T : <<bind>>T::CalypsoPo
 
-/'
-  package "calypso.transaction" as transaction_sam #FFFFFF {
-    !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_PO_SHORT_0_9_0
-    !include KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_SELECTION_0_9
-
-    InvalidatedPo -left-+ PoSelector
-    PoSelector +-up- "1+" PoSelectorBuilder : build <
-    InvalidatedPo "0..1" -down-o "1" PoSelectorBuilder : set >
-
-    PoSelectionRequest "1" o-up- "1" PoSelector
-    PoSelectionRequest -down- CalypsoPo : selects >
-    PoResource -- CalypsoPo
-  }
-'/
+  SeSelectorBuilder <|-right- SamSelectorBuilder : extends
+  SeSelector <|-right- SamSelector : extends
+  AbstractSeSelectionRequest <|-right- SamSelectionRequest : extends
+  AbstractMatchingSe <|-right- CalypsoSam : extends
+  SeResource_T <|.right. SamResource : <<bind>>T::CalypsoSam
 }
 @enduml

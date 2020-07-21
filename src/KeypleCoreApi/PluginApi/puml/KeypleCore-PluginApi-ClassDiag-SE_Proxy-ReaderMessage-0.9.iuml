@@ -20,7 +20,8 @@ package org.eclipse.keyple.seproxy #FFFFFF {
   }
 
   together {
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
     !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
   }
 
@@ -34,31 +35,71 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_9
 
     ProxyReader "1" -up- "+" SeRequest : sends >
-    ProxyReader "1" -down- "+" SeResponse : receives >
+    ProxyReader "1" -down-- "+" SeResponse : receives >
     SeRequest "1" o-right-> "*" ApduRequest : apduRequests
     SeResponse "0..1" o-right-> "*" ApduResponse : apduResponses
     SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
     SelectionStatus "1" o--> "0..1" ApduResponse : fci
 
-    DefaultSelectionsRequest "1" -down- "+" SeRequest : contains >
+    DefaultSelectionsRequest "1" -down-- "+" SeRequest : contains >
     DefaultSelectionsResponse "1" -up- "+" SeResponse : contains >
   }
 
   AbstractDefaultSelectionsRequest <|-right- DefaultSelectionsRequest : extends
   AbstractDefaultSelectionsResponse <|-right- DefaultSelectionsResponse : extends
-  AbstractDefaultSelectionsRequest -down[hidden]----- AbstractDefaultSelectionsResponse
+  AbstractDefaultSelectionsRequest -down[hidden]------ AbstractDefaultSelectionsResponse
 
   SeSelector "0..1" <-right-o "1" SeRequest : selector
-  ChannelControl -right- ProxyReader
+  SeReader <|-right- ProxyReader : extends
+  ChannelControl "1" -- "1" ProxyReader : sets <
 
-  SeSelector -down[hidden]-- ChannelControl
+'  SeSelector -down[hidden]-- SeReader
+'  SeReader -down[hidden]- ChannelControl
+
+  SeSelector -down[hidden]- ChannelControl
+  ChannelControl -down[hidden]-- SeReader
+
+
+'  SeSelector -down[hidden]-- ChannelControl
   event -right[hidden]----- SeSelector
 }
-
+/'
     class SeRequest <<Serializable>>
     class SeResponse <<Serializable>>
     class ApduRequest <<Serializable>>
     class ApduResponse <<Serializable>>
     class SelectionStatus <<Serializable>>
+'/
+
+' Red
+skinparam ClassBackgroundColor<<redL>> #FDEDEC
+skinparam ClassBorderColor<<redB>> #E74C3C
+'hide <<red>> stereotype
+
+' Orange
+skinparam ClassBackgroundColor<<orangeL>> #FDF2E9
+skinparam ClassBorderColor<<orangeB>> #E67E22
+'hide <<orange>> stereotype
+
+class SeRequest <<Send>>
+class ApduRequest <<Send>>
+class DefaultSelectionsRequest <<Send>>
+class SeSelector <<Send>>
+class ChannelControl <<Send>>
+hide <<Send>> stereotype
+
+class SeResponse <<Receive>>
+class ApduResponse <<Receive>>
+class DefaultSelectionsResponse <<Receive>>
+class SelectionStatus <<Receive>>
+hide <<Receive>> stereotype
+
+skinparam class {
+  BackgroundColor<<Send>> #FDF2E9
+  BorderColor<<Send>> #E67E22
+  BackgroundColor<<Receive>> #FDEDEC
+  BorderColor<<Receive>> #E74C3C
+}
+
 
 @enduml

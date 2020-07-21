@@ -27,6 +27,8 @@
 
 @startuml(id=SEPROXY_SERVICE_0_9)
 +class "<b>final</b> SeProxyService" as SeProxyService << Singleton >> {
+  -<b>final</b> {static}SeProxyService uniqueInstance
+  -<b>final</b> ConcurrentMap<String, ReaderPlugin> plugins
   +{static}SeProxyService getInstance()
   +String getVersion()
 
@@ -35,7 +37,7 @@
   +boolean unregisterPlugin(String pluginName)
 
   +ReaderPlugin getPlugin(String name)
-  +Set<ReaderPlugin> getPlugins()
+  +ConcurrentMap<String, ReaderPlugin> getPlugins()
 }
 @enduml
 

@@ -319,17 +319,27 @@
 
 @startuml(id=PLUGIN_PLUGIN_0_9)
 +abstract AbstractPlugin {
-  #Set<SeReader> readers
+  #ConcurrentMap<String, SeReader> readers
 
-  #{abstract} Set<SeReader> initNativeReaders()
+  #{abstract} AbstractPlugin(String name)
 
   .. implements ReaderPlugin ..
-  +<b>final</b> Set<SeReader> getReaders()
   +<b>final</b> Set<String> getReaderNames()
   +<b>final</b> SeReader getReader(String name)
+  +<b>final</b> ConcurrentMap<String, SeReader> getReaders()
+
+  .. to be implemented by native plugin ..
+  #{abstract} Map<String, SeReader> initNativeReaders()
 }
 @enduml
 
+@startuml(id=PLUGIN_POOLPLUGIN_0_9_0)
++abstract AbstractPoolPlugin {
+
+  #AbstractPoolPlugin(String name)
+
+}
+@enduml
 
 @startuml(id=PLUGIN_OBSERVALEPLUGIN)
 +abstract AbstractObservablePlugin {
@@ -486,47 +496,47 @@
   -boolean logicalChannelIsOpen
   -SeSelector.AidSelector.IsoAid aidCurrentlySelected
   -SelectionStatus currentSelectionStatus
-  -long before
+'  -long before
   #Map<SeProtocol, String> protocolsMap
-
   #AbstractLocalReader(String pluginName, String name)
 
-  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
-  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
-  -SeResponse processSeRequestLogical(SeRequest seRequest)
-  -ApduResponse processApduRequest(ApduRequest apduRequest)
-  -ApduResponse case4HackGetResponse(int originalStatusCode)  #{abstract} byte[] getATR()
-
-  .. implements SeReader ..
-  +boolean isSePresent()
+'  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
+'  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
+'  -SeResponse processSeRequestLogical(SeRequest seRequest)
+'  -ApduResponse processApduRequest(ApduRequest apduRequest)
+'  -ApduResponse case4HackGetResponse(int originalStatusCode)  #{abstract} byte[] getATR()
+'
+  .. implements the public interface SeReader ..
+  +<b>final</b> boolean isSePresent()
   +<b>final</b> addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
   +<b>final</b> setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
 
-  .. implements AbstractReader ..
-  #<b>final</b> List<SeResponse> processSeRequests(Lis<SeRequest> seRequests,
+  .. implements abstract methods of abstract class AbstractReader ..
+  #<b>final</b> List<SeResponse> processSeRequests(List<SeRequest> seRequests,
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
 
   #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
 
-  .. To be implemented by native SeReader ..
-  #{abstract} boolean checkSePresence()
-  #{abstract} openPhysicalChannel()
-  #{abstract} closePhysicalChannel()
-  #{abstract} boolean isPhysicalChannelOpen()
-  #{abstract} byte[] transmitApdu(byte[] apduIn)
+  .. abstract methods to be implemented by <color:blue>native</color> SeReader ..
+  #{abstract} boolean <color:blue>protocolFlagMatches</color>(SeProtocol protocolFlag)
 
-  #{abstract} boolean protocolFlagMatches(SeProtocol protocolFlag)
+  #{abstract} boolean <color:blue>checkSePresence</color>()
 
-  .. To review in 0.9 ..
-  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
-  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
-  ~<b>final</b> boolean isLogicalChannelOpen()
-  -closeLogicalChannel()
-  #closeLogicalAndPhysicalChannels()
+  #{abstract} <color:blue>openPhysicalChannel</color>()
+  #{abstract} <color:blue>closePhysicalChannel</color>()
+  #{abstract} boolean <color:blue>isPhysicalChannelOpen</color>()
+
+  #{abstract} byte[] <color:blue>transmitApdu</color>(byte[] apduIn)
+'  .. internal ..
+'  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
+'  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+'  ~<b>final</b> boolean isLogicalChannelOpen()
+'  -closeLogicalChannel()
+'  ~closeLogicalAndPhysicalChannels()
 }
 @enduml
 
-@startuml(id=PLUGIN_OBSERVABLEREADER)
+@startuml(id=PLUGIN_OBSERVABLEREADER_0_8_1)
 +abstract AbstractObservableLocalReader {
   -DefaultSelectionsRequest[0..1] defaultSelectionsRequest
   -ObservableReader.NotificationMode notificationMode
@@ -573,5 +583,48 @@
 
   .. To review - used by Coppernic for not SmartRemoval, to fix in 0.9 ..
   +boolean isSePresentPing()
+}
+@enduml
+
+@startuml(id=PLUGIN_OBSERVABLEREADER_0_9_0)
++abstract AbstractObservableLocalReader {
+  -DefaultSelectionsRequest[0..1] defaultSelectionsRequest
+  -ObservableReader.NotificationMode notificationMode
+  -ObservableReader.PollingMode currentPollingMode
+  -ObservableReaderStateService stateService
+
+  #AbstractObservableLocalReader(String pluginName, String readerName)
+
+  .. implements the public interface ObservableReader ..
+  +<b>final</b> addObserver(ReaderObserver observer)
+  +<b>final</b> removeObserver(ReaderObserver observer)
+
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode)
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode, ObservableReader.PollingMode pollingMode)
+
+  +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
+  +<b>final</b> stopSeDetection()
+  +<b>final</b> notifySeProcessed()
+
+  .. implements the public interface ObservableReaderNotifier ..
+  +<b>final</b> notifyObservers(final ReaderEvent event)
+
+  .. abstract method to be implemented by <color:blue>native</color> ObservableReader ..
+  #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()
+
+  .. To be overridden by native ObservableReader not thread-based ..
+  .. access for the Android NFC plugin - to fix in 0.9 ..
+  #onEvent(InternalEvent event)
+
+'  .. internal ..
+'  ~startRemovalSequence()
+'  ~<b>final</b> ReaderEvent processSeInserted()
+'  ~<b>final</b> processSeRemoved()
+'  ~ObservableReader.PollingMode getPollingMode()
+'  ~switchState(AbstractObservableState.MonitoringState stateId)
+'  ~AbstractObservableState.MonitoringState getCurrentMonitoringState()
+'  ~boolean isSePresentPing()
 }
 @enduml
