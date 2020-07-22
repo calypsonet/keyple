@@ -409,7 +409,7 @@
 @enduml
 
 @startuml(id=PLUGIN_OBSERVALEPLUGIN_0_9)
-+abstract AbstractObservablePlugin {
++abstract AbstractObservablePlugin << <color:red>internal / dedicated</color> for RemoteSePlugin >>{
   -List<PluginObserver> observers
   -<b>final</b> final Object sync
   --
