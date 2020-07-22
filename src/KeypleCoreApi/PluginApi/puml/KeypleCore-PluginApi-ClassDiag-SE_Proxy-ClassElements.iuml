@@ -281,6 +281,7 @@
 @startuml(id=PLUGIN_CONFIGURABLE_0_8_1)
 ~abstract AbstractSeProxyComponent {
   -<b>final</b> String name
+  --
   ~AbstractSeProxyComponent(String name)
   .. implements Nameable ..
   +<b>final</b> String getName()
@@ -292,10 +293,12 @@
 @startuml(id=PLUGIN_CONFIGURABLE_0_9)
 ~abstract AbstractSeProxyComponent {
   -<b>final</b> String name
+  --
   ~AbstractSeProxyComponent(String name)
-  .. implements Nameable ..
+  .. partial implementation of the package interface ProxyElement ..
   +<b>final</b> String getName()
-  .. implements Configurable ..
+
+  +{abstract} <color:blue>setParameter</color>(String key, String value)
   +<b>final</b> String getParameters(parameter)
   +<b>final</b> setParameters(Map<String, String> parameters)
 }
@@ -421,26 +424,24 @@
 @startuml(id=PLUGIN_ABSTRACTREADER_0_9_0)
 +abstract AbstractReader {
   -<b>final</b> String pluginName
+  .. To review - to move to AbstractLocalReader ..
+  #boolean forceClosing
+  --
   #AbstractReader(String pluginName, String name)
-  #<b>final</b> String getPluginName()
-
-  .. implements ProxyReader ..
+'
+  .. implementation of tbe public interface ProxyReader ..
   +<b>final</b> List<SeResponse> transmitSeRequests(List<SeRequest seRequests, MultiSeRequestProcessing
     multiSeRequestProcessing, ChannelControl channelControl)
 
-  +<b>final</b> SeResponse transmitSeRequests(SeRequest seRequest, ChannelControl channelControl)
-
-  .. To be implemented by AbstractLocalReader or VirtualReader ..
+  +<b>final</b> SeResponse transmitSeRequest(SeRequest seRequest, ChannelControl channelControl)
+'
+  .. protected abstract methods to be implemented by AbstractLocalReader or VirtualReader ..
   #{abstract} List<SeResponse> processSeRequests(List<SeRequest> seRequests,
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
   #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
-
-  .. To review - implements Comparable, deprecated ..
-  .. Will be defined as simple Set in 0.9  ..
-  +<b>final</b> int compareTo(SeReader o)
-
-  .. To review - to move to AbstractLocalReader or to AbstractObservableLocalReader, to fix in 0.9 ..
-  #boolean forceClosing
+  .. internal process ..
+  #<b>final</b> String getPluginName()
 }
 @enduml
 
@@ -452,7 +453,7 @@
   -SelectionStatus currentSelectionStatus
   -long before
   #Map<SeProtocol, String> protocolsMap
-
+  --
   #AbstractLocalReader(String pluginName, String name)
 
   -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
@@ -497,42 +498,45 @@
   -SeSelector.AidSelector.IsoAid aidCurrentlySelected
   -SelectionStatus currentSelectionStatus
 '  -long before
-  #Map<SeProtocol, String> protocolsMap
-  #AbstractLocalReader(String pluginName, String name)
-
-'  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
-'  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
-'  -SeResponse processSeRequestLogical(SeRequest seRequest)
-'  -ApduResponse processApduRequest(ApduRequest apduRequest)
-'  -ApduResponse case4HackGetResponse(int originalStatusCode)  #{abstract} byte[] getATR()
-'
-  .. implements the public interface SeReader ..
+  -Map<SeProtocol, String> protocolsMap
+  --
+  #AbstractLocalReader(String pluginName, String name)'
+  .. implementation of the public interface SeReader ..
   +<b>final</b> boolean isSePresent()
   +<b>final</b> addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
   +<b>final</b> setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
-
-  .. implements abstract methods of abstract class AbstractReader ..
+'
+  .. implementation of the protected abstract methods of the class AbstractReader ..
   #<b>final</b> List<SeResponse> processSeRequests(List<SeRequest> seRequests,
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
 
   #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
-
-  .. abstract methods to be implemented by <color:blue>native</color> SeReader ..
+'
+  .. protected abstract methods to be implemented by <color:blue>native</color> SeReader ..
   #{abstract} boolean <color:blue>protocolFlagMatches</color>(SeProtocol protocolFlag)
-
   #{abstract} boolean <color:blue>checkSePresence</color>()
 
   #{abstract} <color:blue>openPhysicalChannel</color>()
   #{abstract} <color:blue>closePhysicalChannel</color>()
   #{abstract} boolean <color:blue>isPhysicalChannelOpen</color>()
 
+  #{abstract} byte[] <color:blue>getATR</color>()
   #{abstract} byte[] <color:blue>transmitApdu</color>(byte[] apduIn)
-'  .. internal ..
-'  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
-'  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
-'  ~<b>final</b> boolean isLogicalChannelOpen()
-'  -closeLogicalChannel()
-'  ~closeLogicalAndPhysicalChannels()
+  .. internal process ..
+  #<b>final</b> Map<SeProtocol, String> getProtocolsMap()
+
+  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
+  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
+  -SeResponse processSeRequestLogical(SeRequest seRequest)
+  -ApduResponse processApduRequest(ApduRequest apduRequest)
+  -ApduResponse case4HackGetResponse(int originalStatusCode)
+
+  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
+  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+  ~<b>final</b> boolean isLogicalChannelOpen()
+  -closeLogicalChannel()
+  ~closeLogicalAndPhysicalChannels()
+  ~boolean forceClosing
 }
 @enduml
 
@@ -542,9 +546,8 @@
   -ObservableReader.NotificationMode notificationMode
   -ObservableReader.PollingMode currentPollingMode
   -ObservableReaderStateService stateService
-
+  --
   #AbstractObservableLocalReader(String pluginName, String readerName)
-
   .. implements ObservableReader ..
   +<b>final</b> addObserver(ReaderObserver observer)
   +<b>final</b> removeObserver(ReaderObserver observer)
@@ -558,7 +561,7 @@
   +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
   +<b>final</b> stopSeDetection()
   +<b>final</b> notifySeProcessed()
-
+'
   .. To be implemented by native ObservableReader ..
   #{abstract} ObservableReaderStateService initStateService()
 
@@ -592,10 +595,10 @@
   -ObservableReader.NotificationMode notificationMode
   -ObservableReader.PollingMode currentPollingMode
   -ObservableReaderStateService stateService
-
+  --
   #AbstractObservableLocalReader(String pluginName, String readerName)
-
-  .. implements the public interface ObservableReader ..
+'
+  .. implementation of the public interface ObservableReader ..
   +<b>final</b> addObserver(ReaderObserver observer)
   +<b>final</b> removeObserver(ReaderObserver observer)
 
@@ -607,24 +610,23 @@
   +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
   +<b>final</b> stopSeDetection()
   +<b>final</b> notifySeProcessed()
-
-  .. implements the public interface ObservableReaderNotifier ..
+'
+  .. implementation the public interface ObservableReaderNotifier ..
   +<b>final</b> notifyObservers(final ReaderEvent event)
-
-  .. abstract method to be implemented by <color:blue>native</color> ObservableReader ..
+'
+  .. protected abstract method to be implemented by <color:blue>native</color> ObservableReader ..
   #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()
-
-  .. To be overridden by native ObservableReader not thread-based ..
-  .. access for the Android NFC plugin - to fix in 0.9 ..
-  #onEvent(InternalEvent event)
-
-'  .. internal ..
-'  ~startRemovalSequence()
-'  ~<b>final</b> ReaderEvent processSeInserted()
-'  ~<b>final</b> processSeRemoved()
-'  ~ObservableReader.PollingMode getPollingMode()
-'  ~switchState(AbstractObservableState.MonitoringState stateId)
-'  ~AbstractObservableState.MonitoringState getCurrentMonitoringState()
-'  ~boolean isSePresentPing()
+'
+  .. protected method that could be overridden by <color:blue>native</color> not thread-based ObservableReader ..
+  #<color:blue>onEvent</color>(InternalEvent event)
+'
+  .. internal process ..
+  ~startRemovalSequence()
+  ~<b>final</b> ReaderEvent processSeInserted()
+  ~<b>final</b> processSeRemoved()
+  ~ObservableReader.PollingMode getPollingMode()
+  ~switchState(AbstractObservableState.MonitoringState stateId)
+  ~AbstractObservableState.MonitoringState getCurrentMonitoringState()
+  ~boolean isSePresentPing()
 }
 @enduml
