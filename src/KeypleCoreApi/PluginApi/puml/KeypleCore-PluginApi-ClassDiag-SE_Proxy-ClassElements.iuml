@@ -42,18 +42,36 @@
 @enduml
 
 @startuml(id=PLUGIN_OBSERVABLE_NOTIFIER)
-+interface ObservableReaderNotifier {
-  +notifyObservers(<b>final</b> ReaderEvent event)
-}
-
 +interface ObservablePluginNotifier {
   +notifyObservers(<b>final</b> PluginEvent event)
+}
+
++interface ObservableReaderNotifier {
+  +notifyObservers(<b>final</b> ReaderEvent event)
 }
 @enduml
 
 @startuml(id=PLUGIN_OBSERVABLE_NOTIFIER_ReaderAPI)
 +interface ObservableReaderNotifier {
   +notifyObservers(<b>final</b> ReaderEvent event)
+}
+@enduml
+
+@startuml(id=PLUGIN_SMART_READER)
++interface SmartSelectionReader {
+  +ApduResponse <color:blue>openChannelForAid</color>(AidSelector aidSelector)
+}
+@enduml
+
+@startuml(id=PLUGIN_SMART_OBSERVABLE)
++interface SmartInsertionReader  {
+  +boolean <color:blue>waitForCardPresent</color>()
+  +<color:blue>stopWaitForCard</color>()
+}
+
++interface SmartRemovalReader {
+  +boolean <color:blue>waitForCardAbsentNative</color>()
+  +<color:blue>stopWaitForCardRemoval</color>()
 }
 @enduml
 
@@ -323,47 +341,45 @@
 @startuml(id=PLUGIN_PLUGIN_0_9)
 +abstract AbstractPlugin {
   #ConcurrentMap<String, SeReader> readers
-
+  --
   #{abstract} AbstractPlugin(String name)
-
-  .. implements ReaderPlugin ..
+'
+  .. implementation of the public interface ReaderPlugin ..
   +<b>final</b> Set<String> getReaderNames()
   +<b>final</b> SeReader getReader(String name)
   +<b>final</b> ConcurrentMap<String, SeReader> getReaders()
-
-  .. to be implemented by native plugin ..
-  #{abstract} Map<String, SeReader> initNativeReaders()
+'
+  .. protected abstract method to be implemented by <color:blue>native</color> ReaderPlugin ..
+  #{abstract} Map<String, SeReader> <color:blue>initNativeReaders</color>()
 }
 @enduml
 
 @startuml(id=PLUGIN_POOLPLUGIN_0_9_0)
 +abstract AbstractPoolPlugin {
-
   #AbstractPoolPlugin(String name)
-
 }
 @enduml
 
-@startuml(id=PLUGIN_OBSERVALEPLUGIN)
+@startuml(id=PLUGIN_OBSERVALEPLUGIN_0_8_1)
 +abstract AbstractObservablePlugin {
   -List<PluginObserver> observers
   -<b>final</b> final Object sync
-
+  --
   #AbstractObservablePlugin(String name)
-
+'
   .. ObservablePlugin ..
-  +<b>final</b> addObserver(<b>final</b> PluginObserver observer)
-  +<b>final</b> removeObserver(<b>final</b> PluginObserver observer)
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
   +<b>final</b> notifyObservers(<b>final</b> PluginEvent event)
-
+'
   .. To review - used by plugins Stub & Remote SE, to fix in 0.9 ..
-  +<b>final</b> +clearObservers()
+  +clearObservers()
   +<b>final</b> int countObservers()
-
+'
   .. To be implemented by native ObservablePlugin ..
   #{abstract} SortedSet<String> fetchNativeReadersNames()
   #{abstract} SeReader fetchNativeReader(String name)
-
+'
   .. To review - used by unit test, to fix in 0.9 ..
   #Boolean isMonitoring()
 }
@@ -373,23 +389,64 @@
   -long threadWaitTimeout
   -<b>final</b> SortedSet<String> nativeReadersames
   -EventThread thread
-
+  --
   #AbstractThreadedObservablePlugin(String name)
-
+'
   .. To be implemented by native ObservablePlugin ..
   #{abstract} SortedSet<String> fetchNativeReadersNames()
   #{abstract} SeReader fetchNativeReader(String name)
-
+'
   .. ObservablePlugin ..
   +<b>final</b> addObserver(PluginObserver observer)
   +<b>final</b> removeObserver(PluginObserver observer)
-  +<b>final</b> notifyObservers(final PluginEvent event)
-
+'
   .. To review - used by unit test, to fix in 0.9 ..
   #Boolean isMonitoring()
-
+'
   .. To review - used by plugins Stub & Remote SE, to fix in 0.9 ..
-  +clearObservers()
+  +<b>final</b> clearObservers()
+}
+@enduml
+
+@startuml(id=PLUGIN_OBSERVALEPLUGIN_0_9)
++abstract AbstractObservablePlugin {
+  -List<PluginObserver> observers
+  -<b>final</b> final Object sync
+  --
+  #AbstractObservablePlugin(String name)
+'
+  .. ObservablePlugin ..
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
+  +<b>final</b> notifyObservers(<b>final</b> PluginEvent event)
+'
+  .. internal processing ..
+  .. To review - used by plugins Stub & Remote SE ..
+  #clearObservers()
+  #<b>final</b> int countObservers()
+}
+
++abstract AbstractThreadedObservablePlugin {
+  -{static}<b>final</b> long SETTING_THREAD_TIMEOUT_DEFAULT
+  -long threadWaitTimeout
+  -<b>final</b> SortedSet<String> nativeReadersames
+  -EventThread thread
+  --
+  #AbstractThreadedObservablePlugin(String name)
+'
+  .. Override of the implentation of the public interface ObservablePlugin ..
+  +<b>final</b> addObserver(<b>final</b> PluginObserver observer)
+  +<b>final</b> removeObserver(<b>final</b> PluginObserver observer)
+
+  .. protected abstract methods to be implemented by <color:blue>native</color> ObservablePlugin ..
+  #{abstract} SortedSet<String> <color:blue>fetchNativeReadersNames</color>()
+  #{abstract} SeReader <color:blue>fetchNativeReader</color>(String name)
+'
+  .. internal process ..
+  .. To review - used by plugins Stub & Remote SE ..
+  #<b>final</b> clearObservers()
+  .. To review - used by unit test ..
+  #Boolean isMonitoring()
 }
 @enduml
 
@@ -551,7 +608,7 @@
   .. implements ObservableReader ..
   +<b>final</b> addObserver(ReaderObserver observer)
   +<b>final</b> removeObserver(ReaderObserver observer)
-  +<b>final</b> notifyObservers(final ReaderEvent event)
+  +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)
 
   +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
     ObservableReader.NotificationMode notificationMode)
@@ -612,7 +669,7 @@
   +<b>final</b> notifySeProcessed()
 '
   .. implementation the public interface ObservableReaderNotifier ..
-  +<b>final</b> notifyObservers(final ReaderEvent event)
+  +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)
 '
   .. protected abstract method to be implemented by <color:blue>native</color> ObservableReader ..
   #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()

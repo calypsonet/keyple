@@ -35,7 +35,7 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_CONFIGURABLE_0_9
     together {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_PLUGIN_0_9
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_0_9
     }
     AbstractPlugin-right-|> AbstractSeProxyComponent : extends
 '    AbstractPlugin <|-down-- AbstractThreadedObservablePlugin : extends
@@ -51,6 +51,9 @@ package org.eclipse.keyple.seproxy #FFFFFF {
 
     AbstractSeProxyComponent <|-right- AbstractReader : extends
 
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_READER
+    ProxyReader <|-- SmartSelectionReader : extends
+
 '    package local #FFFFFF {
     together {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_9_0
@@ -59,6 +62,7 @@ package org.eclipse.keyple.seproxy #FFFFFF {
       AbstractObservableLocalReader -up-|> AbstractLocalReader: extends
     }
     AbstractReader <|-down- AbstractLocalReader : extends
+    SmartSelectionReader-right[hidden]-> AbstractLocalReader
 '    AbstractThreadedObservablePlugin -right[hidden]-> AbstractObservableLocalReader
 
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER
@@ -67,6 +71,10 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     AbstractObservablePlugin ..|> ObservablePluginNotifier : implements
     AbstractThreadedObservablePlugin -down[hidden]-> ObservablePluginNotifier
     AbstractObservableLocalReader .down.|> ObservableReaderNotifier : implements
+
+    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_OBSERVABLE
+    ObservableReaderNotifier <|-left- SmartInsertionReader : extends
+    ObservableReaderNotifier <|-right- SmartRemovalReader : extends
   }
 
   package event #FFFFFF {

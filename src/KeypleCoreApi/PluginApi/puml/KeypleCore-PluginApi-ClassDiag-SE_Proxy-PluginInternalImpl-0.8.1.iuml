@@ -41,7 +41,7 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_CONFIGURABLE_0_8_1
     together {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_PLUGIN_0_8_1
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_0_8_1
     }
     AbstractPlugin-right-|> AbstractSeProxyComponent : extends
 '    AbstractPlugin <|-down-- AbstractThreadedObservablePlugin : extends
