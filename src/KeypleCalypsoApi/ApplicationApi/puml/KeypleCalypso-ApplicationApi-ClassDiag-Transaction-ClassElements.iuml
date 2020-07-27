@@ -344,11 +344,12 @@ end note
 +class PoTransaction {
   +PoTransaction(PoResource poResource, PoSecuritySetting[0..1] securitySetting)
 
-  +<b>final</b> processPoCommands(ChannelControl channel)
+  +<b>final</b> prepareReleaseChannel()
+
+  +<b>final</b> processPoCommands()
   +<b>final</b> processOpening(AccessLevel level)
-  +<b>final</b> processPoCommandsInSession()
-  +<b>final</b> processClosing(ChannelControl channel)
-  +<b>final</b> processCancel(ChannelControl channel)
+  +<b>final</b> processClosing()
+  +<b>final</b> processCancel()
 
   +<b>final</b> prepareCheckPinStatus()
   +<b>final</b> processVerifyPin(String pin)
@@ -397,11 +398,12 @@ end note
 +class PoTransaction {
   +PoTransaction(PoResource poResource, PoSecuritySetting[0..1] securitySetting)
 
-  +<b>final</b> processPoCommands(ChannelControl channel)
+  +<b>final</b> prepareReleaseChannel()
+
+  +<b>final</b> processPoCommands()
   +<b>final</b> processOpening(AccessLevel level)
-  +<b>final</b> processPoCommandsInSession()
-  +<b>final</b> processClosing(ChannelControl channel)
-  +<b>final</b> processCancel(ChannelControl channel)
+  +<b>final</b> processClosing()
+  +<b>final</b> processCancel()
   +<b>final</b> prepareManageSession(EncryptionMode encMode, AuthenticationMode authMode)
   +<b>final</b> SessionSecureData getSessionSecureData()
 
@@ -523,10 +525,12 @@ together {
   CURRENT_DF
 }
 
+/'
 +enum ChannelControl {
   KEEP_OPEN
   CLOSE_AFTER
 }
+'/
 @enduml
 
 @startuml(id=TRANSACTION_CALYPSOPO_0_8_0)

@@ -11,7 +11,7 @@ WaitForStartDetection -right[#Blue]-> WaitForSeInsertion : startSeDetection(Poll
 WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE inserted'\n&& (NotificationMode == always)
 WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : notifies 'SE matched'
 WaitForSeInsertion -down[#Red]-> WaitForSeRemoval : 'SE inserted' not notified\n&& ((NotificationMode == match_only)\n&& selection failed)
-WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : notifySeProcessed()
+WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : "release SE channel"
 WaitForSeRemoval -up[#Red]-> WaitForSeInsertion : notifies 'SE removed'\n&& (PollingMode == Repeating)
 WaitForSeRemoval -up[#Red]-> WaitForStartDetection : notifies 'SE removed'\n&& (PollingMode == SingleShot)
 WaitForSeProcessing -[#Red,dashed]-> WaitForSeInsertion : notifies 'SE removed'\n&& (Observable Reader\nwith the capability\nto detect the removal\nat any time)

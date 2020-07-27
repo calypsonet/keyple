@@ -92,8 +92,8 @@ together {
 
   !include ../../../KeypleCalypsoApi/ApplicationApi/puml/KeypleCalypso-ApplicationApi-ClassDiag-Transaction-ClassElements.iuml!TRANSACTION_POTRANSACTION_EXTPARAM
   PoTransaction -- SelectFileControl
-  PoTransaction -- ChannelControl
+'  PoTransaction -- ChannelControl
   AuthenticationMode -down[hidden]- SelectFileControl
-  ChannelControl -left[hidden]- SelectFileControl
+'  ChannelControl -left[hidden]- SelectFileControl
 }
 @enduml

@@ -669,7 +669,7 @@
 
   +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
   +<b>final</b> stopSeDetection()
-  +<b>final</b> notifySeProcessed()
+'  +<b>final</b> notifySeProcessed()
 '
   .. implementation the public interface ObservableReaderNotifier ..
   +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)

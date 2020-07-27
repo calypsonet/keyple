@@ -345,7 +345,7 @@ package plugin.specific #D7BDE2 {
 
   +startSeDetection(PollingMode pollingMode)
   +stopSeDetection()
-  +notifySeProcessed()
+'  +notifySeProcessed()
 
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
     NotificationMode notificationM, PollingMode[0..1] pollingM)
@@ -356,7 +356,7 @@ package plugin.specific #D7BDE2 {
 +interface ObservableReader {
   +startSeDetection()
   +stopSeDetection()
-  +notifySeProcessed()
+'  +notifySeProcessed()
 }
 @enduml
 
