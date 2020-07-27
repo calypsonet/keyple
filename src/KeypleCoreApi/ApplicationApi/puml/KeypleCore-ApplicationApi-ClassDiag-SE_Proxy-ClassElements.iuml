@@ -264,9 +264,10 @@ package plugin.specific #D7BDE2 {
 +interface ObservablePlugin {
   +addObserver(<b>final</b> PluginObserver observer)
   +removeObserver(<b>final</b> PluginObserver observer)
+  +clearObservers()
+  +int countObservers()
 }
 @enduml
-
 
 @startuml(id=SEPROXY_EVENTPLUGIN)
 +enum "EventType" as EventType_Plugin {
@@ -339,6 +340,8 @@ package plugin.specific #D7BDE2 {
 +interface ObservableReader {
   +addObserver(<b>final</b> ReaderObserver observer)
   +removeObserver(<b>final</b> ReaderObserver observer)
+  +clearObservers()
+  +int countObservers()
 
   +startSeDetection(PollingMode pollingMode)
   +stopSeDetection()
