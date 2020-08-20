@@ -1,0 +1,86 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../../KeypleCoreApi/Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package ReaderApi.high.forTicketingApplication #FFFFFF {
+  !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID_ReaderAPI
+  !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+  !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_ReaderAPI
+  hide AtrSelector
+'  !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
+  together {
+    !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_ReaderAPI
+'    together {
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_ReaderAPI
+
+'    }
+    !include ../../../KeypleCoreApi/Application/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
+  }
+'  AbstractMatchingSe -right[hidden]-> SeSelector
+'  SeSelector -right[hidden]-> SeReader
+  AidSelector +-right- FileOccurrence
+  AidSelector +-left- FileControlInformation
+  AidSelector "1" *-- "1" FileOccurrence
+  AidSelector "1" *-- "1" FileControlInformation
+  SeSelector +-up- AidSelector
+  SeSelector "1" o-- "0..1" AidSelector
+'  SeSelector -right[hidden]-> ChannelControl
+  ChannelControl -right[hidden]-> SeReader
+'  SeReader <|-right- ObservableReader : extends
+'  SeReade -right[hidden]-> AbstractMatchingSe
+'  ObservableReader -up[hidden]-> AbstractMatchingSe
+'  FileOccurrence -right[hidden]-> AbstractMatchingSe
+}
+
+package ReaderApi.low.forSeSolutionLib #FFFFFF {
+'  SeSelector -right[hidden]-> ProxyReader
+  !include ../../../KeypleCoreApi/Plugin/puml/KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER_ReaderAPI
+  !include ../../../KeypleCoreApi/SeChannel/puml/KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
+
+  together {
+    !include ../../../KeypleCoreApi/SeChannel/puml/KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_9
+  }
+  SeSelector "0..1" <-down-o "1" SeRequest : selector
+'  AbstractMatchingSe "0..1" <-down-o "1" SeResponse : selector
+  AbstractMatchingSe "0..1" <--o "1" SeResponse : selected
+
+  ProxyReader "1" -down- "+" SeRequest : sends >
+  ProxyReader "1" -down- "+" SeResponse : receives >
+  SeRequest -right[hidden]-> SeResponse
+
+  together {
+    !include ../../../KeypleCoreApi/SeChannel/puml/KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_ReaderAPI
+  }
+  SeRequest "1" o-down-> "*" ApduRequest : apduRequests
+  SeResponse "0..1" o-down-> "*" ApduResponse : apduResponses
+  ApduRequest -right[hidden]-> ApduResponse
+
+  !include ../../../KeypleCoreApi/SeChannel/puml/KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_9
+  SeResponse "1" o--> "0..1" SelectionStatus : selectionStatus
+  SelectionStatus "1" o--> "0..1" ApduResponse : fci
+
+  SeReader <|-down- ProxyReader : extends
+
+  ChannelControl -down- ProxyReader
+ObservableReader <|-- ObservableReaderNotifier : extends
+'ObservableReader -up[hidden]-> AbstractMatchingSe
+'FileOccurrence -right[hidden]-> AbstractMatchingSe
+'  SeReader <|-right- ObservableReader : extends
+'  ObservableReader -|> SeReader
+SeReader <|-up- ObservableReader
+  class SeRequest <<Serializable>>
+  class SeResponse <<Serializable>>
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+!include ../../../KeypleCoreApi/Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+hide empty description
+[*] -down-> WaitForStartDetection
+WaitForStartDetection -right[#Blue]-> WaitForSeInsertion : startSeDetection()
+
+WaitForSeInsertion -down[#Red]-> WaitForSeProcessing : 'SE inserted'\nnotification
+WaitForSeInsertion -left[#Blue]-> WaitForStartDetection : stopSeDetection()
+
+WaitForSeProcessing -left[#Blue]-> WaitForSeRemoval : notifySeProcessed()
+WaitForSeProcessing -[#Blue]-> WaitForStartDetection : stopSeDetection()
+WaitForSeProcessing -[#Red,dashed]-> WaitForSeInsertion : 'SE removed' notification\n(for Observable Reader\nwith the capability\nto detect the removal\nat any time)
+
+WaitForSeRemoval -up[#Red]-> WaitForSeInsertion : 'SE removed'\nnotification
+WaitForSeRemoval -up[#Blue]-> WaitForStartDetection : stopSeDetection()
+@enduml

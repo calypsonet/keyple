@@ -1,0 +1,94 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.seproxy #FFFFFF {
+
+  package message #FFFFFF {
+    !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_DEFAULTSELECTION_0_9_0
+    together {
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
+      !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_9
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_9
+    }
+    !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_9
+
+    ProxyReader "1" -up- "+" SeRequest : sends >
+    ProxyReader "1" -down- "+" SeResponse : receives >
+    ProxyReader "1" -left- "1" ChannelControl : sets >
+
+    SeRequest "1" o-left-> "*" ApduRequest : apduRequests
+
+    SeResponse "0..1" o-left-> "*" ApduResponse : apduResponses
+    SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
+    SelectionStatus "1" o--> "0..1" ApduResponse : fci
+
+    DefaultSelectionsRequest "1" -down- "+" SeRequest : contains >
+    DefaultSelectionsResponse "1" -up- "+" SeResponse : contains >
+  }
+
+'  together {
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+'  }
+
+  message -right[hidden]- SeSelector
+  SeRequest "1" o-right-|> "0..1" SeSelector : selector
+  ProxyReader -right-|> SeReader : extends
+
+  SeSelector -down[hidden]- SeReader
+
+  package event #FFFFFF {
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_9_0
+
+    AbstractDefaultSelectionsRequest -down[hidden]--- AbstractDefaultSelectionsResponse
+  }
+
+  SeSelector -right[hidden]- event
+  DefaultSelectionsRequest -right-|> AbstractDefaultSelectionsRequest : extends
+  DefaultSelectionsResponse -right-|> AbstractDefaultSelectionsResponse : extends
+}
+
+' Red
+skinparam ClassBackgroundColor<<redL>> #FDEDEC
+skinparam ClassBorderColor<<redB>> #E74C3C
+'hide <<red>> stereotype
+
+' Orange
+skinparam ClassBackgroundColor<<orangeL>> #FDF2E9
+skinparam ClassBorderColor<<orangeB>> #E67E22
+'hide <<orange>> stereotype
+
+class SeRequest <<Send>>
+class ApduRequest <<Send>>
+class DefaultSelectionsRequest <<Send>>
+class SeSelector <<Send>>
+class ChannelControl <<Send>>
+hide <<Send>> stereotype
+
+class SeResponse <<Receive>>
+class ApduResponse <<Receive>>
+class DefaultSelectionsResponse <<Receive>>
+class SelectionStatus <<Receive>>
+hide <<Receive>> stereotype
+
+skinparam class {
+  BackgroundColor<<Send>> #FDF2E9
+  BorderColor<<Send>> #E67E22
+  BackgroundColor<<Receive>> #FDEDEC
+  BorderColor<<Receive>> #E74C3C
+}
+@enduml

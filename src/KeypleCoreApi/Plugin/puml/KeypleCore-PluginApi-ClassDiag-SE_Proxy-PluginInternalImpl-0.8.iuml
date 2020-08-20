@@ -1,0 +1,228 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.seproxy #FFFFFF {
+
+package "event" as event_observer #FFFFFF {
+interface PluginObserver
+interface ReaderObserver
+}
+
+package plugin #FFFFFF {
+
+'!include ./KeypleClassDiagram_SeProxy_Elements.iuml!OBSERVABLE_PATTERN
+package org.eclipse.keyple.util <<Node>> #FFFFFF {
+  +class Observable<T> {
+    #<b>final</b> Collection<Observer<T> observers
+    -boolean changed
+    +Observable()
+    +addObserver(<b>final</b> Observer<T> observer)
+    +removeObserver(<b>final</b> Observer<T> observer)
+    +clearObservers()
+    +setChanged()
+    +clearChanged()
+    +boolean hasChanged()
+    +int countObservers()
+    +notifyObservers()
+    +notifyObservers(<b>final</b> T event)
+  }
+
+  +interface Observer<T> {
+    +update(T event)
+  }
+
+  Observable +-up- Observer
+
+  Observer "1" o-down- "*" Observable : observes <
+  (Observable, Observer) . T
+}
+
+
+
+
+'!include ./KeypleClassDiagram_SeProxy_Elements.iuml!FACTORIZE_EVENT_READER
++abstract AbstractReader {
+  -long before
+  #<b>final</b> String pluginName;
+  #<b>final</b> String name
+  #boolean forceClosing
+  #AbstractReader(String pluginName, String name)
+  +<b>final</b> String getPluginName()
+  +<b>final</b> String getName()
+  +<b>final</b> int compareTo(SeReader o)
+  +<b>final</b> setParameters(Map<String, String> parameters)
+
+  +<b>final</b> List<SeResponse> transmitSet(Set<SeRequest requestSet, MultiSeRequestProcessing
+    multiSeRequestProcessing, ChannelControl channelControl)
+  +<b>final</b> List<SeResponse> transmitSet(Set<SeRequest requestSet)
+  #{abstract} List<SeResponse> processSeRequestSet(Set<SeRequest> requestSet,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+  +<b>final</b> SeResponse transmit(SeRequest seRequest, ChannelControl channelControl)
+  +<b>final</b> SeResponse transmit(SeRequest seRequest)
+  #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+
+  +<b>final</b> notifySeProcessed()
+  +addObserver(ReaderObserver observer)
+  +removeObserver(ReaderObserver observer)
+  +<b>final</b> notifyObservers(final ReaderEvent event)
+}
+
+interface "Observer<ReaderEvent>" as Observer_ReaderEvent
+class "Observable<ReaderEvent>" as Observable_ReaderEvent
+
+'Observable_ReaderEvent -left- Observable
+Observable_ReaderEvent -up- Observable
+AbstractReader -up-|> Observable_ReaderEvent : extends
+
+'!include ./KeypleClassDiagram_SeProxy_Elements.iuml!FACTORIZE_PLUGIN
+abstract AbstractPlugin {
+  -<b>final</b> String name
+  #SortedSet<SeReader> readers
+  #AbstractPlugin(String name)
+  +<b>final</b> String getName()
+  +<b>final</b> SortedSet<SeReader> getReaders()
+  +<b>final</b> SortedSet<String> getReaderNames()
+  #{abstract} SortedSet<SeReader> initNativeReaders()
+  +<b>final</b> int compareTo(ReadersPlugin o)
+  +<b>final</b> SeReader getReader(String name)
+  +<b>final</b> setParameters(Map<String, String> parameters)
+
+  +addObserver(PluginObserver observer)
+  +removeObserver(PluginObserver observer)
+  +<b>final</b> notifyObservers(final PluginEvent event)
+}
+
++abstract AbstractThreadedObservablePlugin {
+  #AbstractThreadedObservablePlugin(String name)
+  #{abstract} SortedSet<String> fetchNativeReadersNames()
+  #{abstract} SeReader fetchNativeReader(String name)
+
+  +<b>final</b> addObserver(PluginObserver observer)
+  +<b>final</b> removeObserver(PluginObserver observer)
+  +clearObservers()
+
+  #Boolean isMonitoring()
+  -{static}<b>final</b> long SETTING_THREAD_TIMEOUT_DEFAULT
+  -long threadWaitTimeout
+  -<b>final</b> SortedSet<String> nativeReadersames
+  -EventThread thread
+}
+
+class "Observable<PluginEvent>" as Observable_PluginEvent
+interface "Observer<PluginEvent>" as Observer_PluginEvent
+
+'Observable_PluginEvent -right- Observable
+Observable_PluginEvent -up- Observable
+AbstractPlugin -up-|> Observable_PluginEvent : extends
+
+Observer -up- Observer_PluginEvent
+PluginObserver -down-|> Observer_PluginEvent : extends
+Observer -up- Observer_ReaderEvent
+ReaderObserver -down-|> Observer_ReaderEvent : extends
+
+Observable_PluginEvent -right[hidden]--> Observable_ReaderEvent
+AbstractPlugin -right[hidden]--> AbstractReader
+
+'AbstractPlugin <|-down- AbstractThreadedObservablePlugin : extends
+AbstractPlugin <|-left- AbstractThreadedObservablePlugin : extends
+
+package local #FFFFFF {
+
+'!include ./KeypleClassDiagram_SeProxy_Elements.iuml!FACTORIZE_LOCAL_READER
++abstract AbstractLocalReader {
+  -{static}<b>final</b> byte[] getResponseHackRequestBytes
+  -boolean logicalChannelIsOpen
+  -SeSelector.AidSelector.IsoAid aidCurrentlySelected
+  -SelectionStatus currentSelectionStatus
+  -long before
+  #Map<SeProtocol, String> protocolsMap
+
+  #AbstractLocalReader(String pluginName, String name)
+  +isSePresent()
+  #{abstract} boolean checkSePresence()
+  #closeLogicalAndPhysicalChannels()
+  #{abstract} byte[] getATR()
+  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
+  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
+
+  #SelectionStatus openLogicalChannel(SeSelector seSelector)
+  #<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+  <b>final</b> boolean isLogicalChannelOpen()
+  -closeLogicalChannel()
+
+  #{abstract} openPhysicalChannel()
+  #{abstract} closePhysicalChannel()
+  #{abstract} boolean isPhysicalChannelOpen()
+
+  +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +setSeProtocolSetting(Map<SeProtocol, String> seProtocolSettings)
+
+  #{abstract} boolean protocolFlagMatches(SeProtocol protocolFlag)
+
+  #<b>final</b> List<SeResponse> processSeRequestSet(Set<SeRequest> requestSet,
+    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+  -SeResponse processSeRequestLogical(SeRequest seRequest)
+
+  -ApduResponse processApduRequest(ApduRequest apduRequest)
+  -ApduResponse case4HackGetResponse(int originalStatusCode)
+  #{abstract} byte[] transmitApdu(byte[] apduIn)
+}
+
++abstract AbstractObservableLocalReader {
+  -DefaultSelectionsRequest defaultSelectionsRequest
+  -ObservableReader.NotificationMode notificationMode
+  -ObservableReader.PollingMode currentPollingMode
+  -ObservableReaderStateService stateService
+
+  #AbstractObservableLocalReader(String pluginName, String readerName)
+  -{abstract} ObservableReaderStateService initStateService()
+
+  +boolean isSePresent()
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode)
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
+    ObservableReader.NotificationMode notificationMode, ObservableReader.PollingMode pollingMode)
+
+  +startSeDetection(ObservableReader.PollingMode pollingMode)
+  +stopSeDetection()
+  #startRemovalSequence()
+  +boolean isSePresentPing()
+
+  +<b>final</b> ReaderEvent processSeInserted()
+  +<b>final</b> processSeRemoved()
+
+  +ObservableReader.PollingMode getPollingMode()
+  #switchState(AbstractObservableState.MonitoringState stateId)
+  +AbstractObservableState.MonitoringState getCurrentMonitoringState()
+  +onEvent(InternalEvent event)
+}
+
+'AbstractLocalReader <|-down- AbstractSelectionLocalReader : extends
+'AbstractObservableLocalReader -right-|> AbstractSelectionLocalReader: extends
+AbstractObservableLocalReader -right-|> AbstractLocalReader: extends
+
+'AbstractReader <|-right- AbstractLocalReader : extends
+AbstractReader <|-down- AbstractLocalReader : extends
+}
+}
+
+}
+@enduml
+
+

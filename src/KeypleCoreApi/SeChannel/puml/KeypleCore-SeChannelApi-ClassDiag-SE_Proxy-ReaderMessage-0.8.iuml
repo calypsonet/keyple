@@ -1,0 +1,65 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
+
+package org.eclipse.keyple.seproxy #FFFFFF {
+  package event #FFFFFF {
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_8_0
+  }
+
+  together {
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_8
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
+  }
+
+  package message #FFFFFF {
+    !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_DEFAULTSELECTION_0_8_0
+    together {
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_8
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_8
+      !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_8
+    }
+    !include KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_8
+
+    ProxyReader "1" -up- "+" SeRequest : sends >
+    ProxyReader "1" -down- "+" SeResponse : receives >
+    SeRequest "1" o-right-> "*" ApduRequest : apduRequests
+    SeResponse "0..1" o-right-> "*" ApduResponse : apduResponses
+    SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
+    SelectionStatus "1" o-right-> "0..1" AnswerToReset : atr
+    SelectionStatus "1" o--> "0..1" ApduResponse : fci
+
+    DefaultSelectionsRequest "1" -down- "+" SeRequest : contains >
+    DefaultSelectionsResponse "1" -up- "+" SeResponse : contains >
+  }
+
+  AbstractDefaultSelectionsRequest <|-right- DefaultSelectionsRequest : extends
+  AbstractDefaultSelectionsResponse <|-right- DefaultSelectionsResponse : extends
+  AbstractDefaultSelectionsRequest -down[hidden]----- AbstractDefaultSelectionsResponse
+
+  SeSelector "0..1" <-right-o "1" SeRequest : selector
+  ChannelControl -right- ProxyReader
+
+  SeSelector -down[hidden]-- ChannelControl
+  event -right[hidden]----- SeSelector
+}
+
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SERIALIZABLE
+    ApduRequest .down.|> Serializable : implements
+    ApduResponse .up.|> Serializable : implements
+    SeRequest ..|> Serializable : implements
+    SeResponse ..|> Serializable : implements
+
+@enduml
