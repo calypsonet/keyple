@@ -28,7 +28,7 @@ package org.eclipse.keyple.core #FFFFFF {
   }
 
   package selection #FFFFFF {
-    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_SELECTION
+    !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_SELECTION_0_8
     !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_0_8
     !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESULT_0_8
     !include KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_RESOURCE_0_8

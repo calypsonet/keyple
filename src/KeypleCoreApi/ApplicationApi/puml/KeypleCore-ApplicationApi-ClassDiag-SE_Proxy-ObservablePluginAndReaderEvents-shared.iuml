@@ -38,7 +38,6 @@ package org.eclipse.keyple.core.seproxy #FFFFFF {
 '---- EVENT_PLUGIN_RELATION ----------------------------------------------------]
 
 '---- EVENT_READER -------------------------------------------------------------[
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER
     EventType_Reader -up--+ ReaderEvent
     ReaderEvent "1" o-down- "0..1" AbstractDefaultSelectionsResponse : contains >
 

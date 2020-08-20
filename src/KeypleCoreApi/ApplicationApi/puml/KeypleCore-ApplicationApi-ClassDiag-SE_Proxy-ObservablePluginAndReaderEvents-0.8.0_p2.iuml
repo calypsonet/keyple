@@ -16,7 +16,7 @@
 
 package org.eclipse.keyple.core.seproxy.event #FFFFFF {
 '---- EVENT_READER -------------------------------------------------------------[
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER_0_8
 
   EventType_Reader --+ ReaderEvent
 

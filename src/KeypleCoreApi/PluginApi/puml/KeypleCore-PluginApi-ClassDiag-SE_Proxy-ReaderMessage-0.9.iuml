@@ -15,61 +15,52 @@
 !include ../../ApplicationApi/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
 package org.eclipse.keyple.seproxy #FFFFFF {
-  package event #FFFFFF {
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_9_0
-  }
-
-  together {
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
-    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
-  }
 
   package message #FFFFFF {
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_DEFAULTSELECTION_0_9_0
     together {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
+      !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_SEREQUEST_0_9
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_APDUREQUEST_0_9
     }
     !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_STATUS_0_9
 
     ProxyReader "1" -up- "+" SeRequest : sends >
-    ProxyReader "1" -down-- "+" SeResponse : receives >
-    SeRequest "1" o-right-> "*" ApduRequest : apduRequests
-    SeResponse "0..1" o-right-> "*" ApduResponse : apduResponses
+    ProxyReader "1" -down- "+" SeResponse : receives >
+    ProxyReader "1" -left- "1" ChannelControl : sets >
+
+    SeRequest "1" o-left-> "*" ApduRequest : apduRequests
+
+    SeResponse "0..1" o-left-> "*" ApduResponse : apduResponses
     SeResponse "1" o-down-> "0..1" SelectionStatus : selectionStatus
     SelectionStatus "1" o--> "0..1" ApduResponse : fci
 
-    DefaultSelectionsRequest "1" -down-- "+" SeRequest : contains >
+    DefaultSelectionsRequest "1" -down- "+" SeRequest : contains >
     DefaultSelectionsResponse "1" -up- "+" SeResponse : contains >
   }
 
-  AbstractDefaultSelectionsRequest <|-right- DefaultSelectionsRequest : extends
-  AbstractDefaultSelectionsResponse <|-right- DefaultSelectionsResponse : extends
-  AbstractDefaultSelectionsRequest -down[hidden]------ AbstractDefaultSelectionsResponse
+'  together {
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+'  }
 
-  SeSelector "0..1" <-right-o "1" SeRequest : selector
-  SeReader <|-right- ProxyReader : extends
-  ChannelControl "1" -- "1" ProxyReader : sets <
+  message -right[hidden]- SeSelector
+  SeRequest "1" o-right-|> "0..1" SeSelector : selector
+  ProxyReader -right-|> SeReader : extends
 
-'  SeSelector -down[hidden]-- SeReader
-'  SeReader -down[hidden]- ChannelControl
+  SeSelector -down[hidden]- SeReader
 
-  SeSelector -down[hidden]- ChannelControl
-  ChannelControl -down[hidden]-- SeReader
+  package event #FFFFFF {
+    !include ../../ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_DEFAULTSELECTION_0_9_0
 
+    AbstractDefaultSelectionsRequest -down[hidden]--- AbstractDefaultSelectionsResponse
+  }
 
-'  SeSelector -down[hidden]-- ChannelControl
-  event -right[hidden]----- SeSelector
+  SeSelector -right[hidden]- event
+  DefaultSelectionsRequest -right-|> AbstractDefaultSelectionsRequest : extends
+  DefaultSelectionsResponse -right-|> AbstractDefaultSelectionsResponse : extends
 }
-/'
-    class SeRequest <<Serializable>>
-    class SeResponse <<Serializable>>
-    class ApduRequest <<Serializable>>
-    class ApduResponse <<Serializable>>
-    class SelectionStatus <<Serializable>>
-'/
 
 ' Red
 skinparam ClassBackgroundColor<<redL>> #FDEDEC
@@ -100,6 +91,4 @@ skinparam class {
   BackgroundColor<<Receive>> #FDEDEC
   BorderColor<<Receive>> #E74C3C
 }
-
-
 @enduml

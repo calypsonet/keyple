@@ -40,7 +40,7 @@ PluginEvent . (ObservablePlugin, PluginObserver)
 '---- EVENT_PLUGIN_RELATION ----------------------------------------------------]
 
 '---- EVENT_READER -------------------------------------------------------------[
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_EVENTREADER_0_8
 
 'EventType_Reader -down-+ ReaderEvent
 EventType_Reader -up-+ ReaderEvent

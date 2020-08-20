@@ -15,7 +15,8 @@
 !include KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
 package org.eclipse.keyple.core.seproxy #FFFFFF {
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL_0_8_0
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_ATR_0_8
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID
   AidSelector +-up- FileOccurrence
 

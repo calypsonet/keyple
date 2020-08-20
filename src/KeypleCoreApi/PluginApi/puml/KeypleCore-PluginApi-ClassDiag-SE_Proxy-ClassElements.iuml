@@ -609,12 +609,11 @@
   .. implements ObservableReader ..
   +<b>final</b> addObserver(ReaderObserver observer)
   +<b>final</b> removeObserver(ReaderObserver observer)
+
   +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)
 
-  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    ObservableReader.NotificationMode notificationMode)
-  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    ObservableReader.NotificationMode notificationMode, ObservableReader.PollingMode pollingMode)
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+      NotificationMode notificationM, PollingMode[0..1] pollingM)
 
   +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
   +<b>final</b> stopSeDetection()
@@ -662,14 +661,12 @@
   +<b>final</b> clearObservers()
   +<b>final</b> int countObservers()
 
-  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    ObservableReader.NotificationMode notificationMode)
-  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest defaultSelectionsRequest,
-    ObservableReader.NotificationMode notificationMode, ObservableReader.PollingMode pollingMode)
+  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+      NotificationMode notificationM, PollingMode[0..1] pollingM)
 
   +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
   +<b>final</b> stopSeDetection()
-'  +<b>final</b> notifySeProcessed()
+  +<b>final</b> finalizeSeProcessing()
 '
   .. implementation the public interface ObservableReaderNotifier ..
   +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)

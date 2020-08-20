@@ -307,13 +307,11 @@ package plugin.specific #D7BDE2 {
 +interface ObservableReader {
   +addObserver(ReaderObserver observer)
   +removeObserver(ReaderObserver observer)
+
   +notifyObservers(ReaderEvent event)
 
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
-    defaultSelectionsRequest, NotificationMode notificationMode)
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
-    defaultSelectionsRequest, NotificationMode notificationMode,
-    PollingMode pollingMode)
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+      NotificationMode notificationM, PollingMode[0..1] pollingM)
 
   +startSeDetection(PollingMode pollingMode)
   +stopSeDetection()
@@ -325,14 +323,15 @@ package plugin.specific #D7BDE2 {
 +interface ObservableReader {
   +addObserver(<b>final</b> ReaderObserver observer)
   +removeObserver(<b>final</b> ReaderObserver observer)
+
   +notifyObservers(<b>final</b> ReaderEvent event)
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+    NotificationMode notificationM, PollingMode[0..1] pollingM)
 
   +startSeDetection(PollingMode pollingMode)
   +stopSeDetection()
   +notifySeProcessed()
-
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
-    NotificationMode notificationM, PollingMode[0..1] pollingM)
 }
 @enduml
 
@@ -343,12 +342,12 @@ package plugin.specific #D7BDE2 {
   +clearObservers()
   +int countObservers()
 
-  +startSeDetection(PollingMode pollingMode)
-  +stopSeDetection()
-'  +notifySeProcessed()
-
   +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
     NotificationMode notificationM, PollingMode[0..1] pollingM)
+
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +finalizeSeProcessing()
 }
 @enduml
 
@@ -360,7 +359,7 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_EVENTREADER)
+@startuml(id=SEPROXY_EVENTREADER_0_8)
 +enum "EventType" as EventType_Reader {
   IO_ERROR
   SE_INSERTED
@@ -374,9 +373,36 @@ package plugin.specific #D7BDE2 {
   +ReaderEvent(String pluginName, String readerName, EventType
   eventType, DefaultSelectionsResponse[0..1] defaultSelectionsResponse)
 
+  +EventType getEventType()
+
   +String getPluginName()
   +String getReaderName()
+
+  +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
+}
+@enduml
+
+@startuml(id=SEPROXY_EVENTREADER_0_9)
++enum "EventType" as EventType_Reader {
+  IO_ERROR
+  SE_INSERTED
+  SE_MATCHED
+  SE_REMOVAL
+  +EventType(String name)
+  +String getName()
+}
+
++class "<b>final</b> ReaderEvent" as ReaderEvent {
+  +ReaderEvent(String pluginName, String readerName, EventType
+  eventType, DefaultSelectionsResponse[0..1] defaultSelectionsResponse)
+
   +EventType getEventType()
+
+  +String getPluginName()
+  +String getReaderName()
+  +ReaderPlugin getPlugin()
+  +SeReader getReader()
+
   +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
 }
 @enduml
@@ -559,7 +585,7 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_SELECTOR_COMPL_0_8_0)
+@startuml(id=SEPROXY_SELECTOR_COMPL)
 +enum FileOccurrence {
   FIRST
   LAST
@@ -573,7 +599,9 @@ package plugin.specific #D7BDE2 {
   FMD
   NO_RESPONSE
 }
+@enduml
 
+@startuml(id=SEPROXY_SELECTOR_ATR_0_8)
 +class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
   +AtrFilter(String atrRegex)
   +setAtrRegex(String atrRegex)
@@ -583,21 +611,7 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_SELECTOR_COMPL_0_9_0)
-+enum FileOccurrence {
-  FIRST
-  LAST
-  NEXT
-  PREVIOUS
-}
-
-+enum FileControlInformation {
-  FCI
-  FCP
-  FMD
-  NO_RESPONSE
-}
-
+@startuml(id=SEPROXY_SELECTOR_ATR_0_9)
 +class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
   +AtrFilter(String atrRegex)
 
@@ -605,4 +619,5 @@ package plugin.specific #D7BDE2 {
   +boolean atrMatches(byte[] atr)
 }
 @enduml
+
 '---- SE SELECTOR --------------------------------------------------------------]

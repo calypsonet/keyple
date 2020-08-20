@@ -17,7 +17,7 @@
 package ReaderApi.high.forTicketingApplication #FFFFFF {
   !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_AID_ReaderAPI
   !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTOR_COMPL
-      !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_ReaderAPI
+  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_ReaderAPI
   hide AtrSelector
 '  !include ../../../KeypleCoreApi/ApplicationApi/puml/KeypleCore-ApplicationApi-ClassDiag-Selection-ClassElements.iuml!SELECTION_REQUEST_ReaderAPI
   together {

@@ -11,12 +11,27 @@
 ' SPDX-License-Identifier: EPL-2.0 4
 '---------------------------------------------------------------------------------
 
-@startuml(id=SELECTION_SELECTION)
+@startuml(id=SELECTION_SELECTION_0_8)
 +class "<b>final</b> SeSelection" as SeSelection {
   +SeSelection(MultiSeRequestProcessing multiSeRequestProcessing,
     ChannelControl channelControl)
 
   +int prepareSelection(AbstractSeSelectionRequest seSelectionRequest)
+
+  +SelectionsResult processExplicitSelection(SeReader seReader)
+
+  +AbstractDefaultSelectionsRequest getSelectionOperation()
+  +SelectionsResult processDefaultSelection(
+    AbstractDefaultSelectionsResponse selectionResponse)
+}
+@enduml
+
+@startuml(id=SELECTION_SELECTION_0_9)
++class "<b>final</b> SeSelection" as SeSelection {
+  +SeSelection(MultiSeRequestProcessing multiSeRequestProcessing = FIRST_MATCH)
+
+  +int prepareSelection(AbstractSeSelectionRequest seSelectionRequest)
+  +<b>final</b> prepareReleaseSeChannel()
 
   +SelectionsResult processExplicitSelection(SeReader seReader)
 
