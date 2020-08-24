@@ -689,9 +689,9 @@ together {
   +byte[] getAccessConditions()
   +byte[] getKeyIndexes()
 
-  +boolean areKifAvailable()
+  +boolean isKifAvailable(AccessLevel)
   +Byte getKif(AccessLevel)
-  +boolean areKvcAvailable()
+  +boolean isKvcAvailable(AccessLevel)
   +Byte getKvc(AccessLevel)
 }
 @enduml

@@ -13,64 +13,73 @@ A smart card reader is identified through its unique name in a plugin. There are
  - The ‘**Observable Reader**’ interface extends SE readers which have the capability to notify registered Reader Observers about the insertion or remove of a Secure Element in the reader. Reader observers could be added or removed to the observable reader. Useful for systems automatically starting the processing of a SE at its insertion: like a ticketing validator.
 ![Reader Access v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_PluginSettingAndReaderAccess_0_9_0.svg)
 
-(The APDU transmission with a Secure Element is managed at the low-level plugin API through the ProxyReader interface.)
+(The APDU transmission with a Secure Element is managed at the low-level SE Channel API.)
 
 ### Specific Plugin
 To hide plugin native implementation classes, the reader plugins are registered to the SE Proxy Service through related specific plugin factory.
 ![Specific Plugin v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_SpecificPluginAndReader_0_9_0.svg)
 
 ### Reader Notifications
-To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application has to implemented dedicated '**Plugin Observer**' or '**Reader Observer**'.
+To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application has to implemented dedicated '**Plugin Observer**' or '**Reader Observer**' interfaces.
 
 ![Reader Notifications v0.9.0](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_ObservablePluginAndReaderEvents_0_9_0.svg)
 
 #### Plugin event
-Several ‘Plugin Observers’ could be registered to an Observable Plugin. In case of reader connection / disconnection, the observable plugin notifies sequentially the registered observers with the corresponding plugin event.
+Several ‘Plugin Observers’ could be registered to an Observable Plugin.
+In case of reader connection / disconnection, the observable plugin notifies sequentially the registered observers with the corresponding plugin event.
 The observable plugin is a blocking API, the thread managing the issuance of the plugin event waits the acknowledge of the observer currently notified.
 
 #### Reader event
-Several ‘Reader Observers’ could be registered to an Observable Reader. In case of SE insertion / match / removal, the observable reader notifies sequentially the registered observers with the corresponding reader event. The observable reader could be a blocking API, the thread managing the issuance of the plugin event could wait the acknowledge of the notified observers.
+Several ‘Reader Observers’ could be registered to an Observable Reader.
+In case of SE insertion / match / removal, the observable reader notifies sequentially the registered observers with the corresponding reader event. The observable reader could be a blocking API, the thread managing the issuance of the plugin event could wait the acknowledge of the notified observers.
 
-An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured different default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
+An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
  - If the notification mode is defined as ‘always’, then in case of SE insertion, the observable reader will notify a SE matched reader event in case of successful selection, or a simple SE inserted reader event if not.
  - If the notification mode is defined as ‘matched only’, then in case of SE insertion, simple SE inserted reader events aren’t notified.
 
-When the processing of an inserted or matched SE is finished, a reader observer has to notify the observable reader in order to prepare the observable reader to detect the removal of the SE.
+When the processing of an inserted or matched SE is finished, a reader observer has to release the logical channel with the Secure Element, in order to prepare the observable reader to detect the removal of the SE.
 
 #### Observable reader states
-An observable reader is active only if at least one reader observer is registered. When active, an observable read could switch between four internal states: ‘Wait for Start Detection’, ‘Wait for SE Insertion’, ‘Wait for SE Processing’, & ‘Wait for SE Removal’.
+An observable reader is active only when at least one reader observer is registered, and if the start of the detection has been requested. 
+When active, an observable read could switch between three internal states: ‘Wait for SE Insertion’, ‘Wait for SE Processing’, & ‘Wait for SE Removal’.
+
+In the nominal case, a Reader Observer indicates to the observable reader that the processing of the SE is finished by releasing the SE Channel.
+To manage a failure of the reader observer process, the observable reader interface provide a method to finalize the SE processing.
+
+![Observable Reader States](img/KeypleCore_ApplicationApi_StateDiag_SE_Proxy_ObservableReaderStates.svg)
 
 The states could be switched:
- - due to an explicit API request (blue arrows), the call of an Observable Reader method:
-   - the addition or the remove of an Observable Reader,
-   - a request to start or stop the detection,
-   - or a notification by a Reader Observer to indicates to the reader that the processing of the SE is finished.
+ - due to an explicit API request (blue arrows):
+   - the release of the Secure ELement Channel,
+   - the call of an Observable Reader method:
+     - the addition or the remove of an Observable Reader,
+     - a request to start or stop the detection, to finalize the SE processing.
  - Or because of an external event (red arrows), the insertion or the remove of a SE.
-   - the insertion a SE causing the observable reader to notify a 'SE matched' reader event (in case of sucessfull default selection) or a 'SE inserted' reader event (Notification Mode defined as always).
+   - the insertion a SE causing the observable reader to notify a 'SE matched' reader event (in case of sucessful
+   l default selection) or a 'SE inserted' reader event (Notification Mode defined as always).
    - the removal of a SE causing the observable reader to notify a 'SE removed' reader event.
 
 If a SE detection is started with the 'repeating' polling mode, then later when the SE is removed, the reader starts again to detect a SE.
 
 Whatever the plugin of observable reader, when waiting for the SE removal, any observable reader shall have the capability to notify the remove of the SE.
 Some reader plugin solution could have the capability to notify a SE removal also during the processing of the SE.
- 
-![Observable Reader States](img/KeypleCore_ApplicationApi_StateDiag_SE_Proxy_ObservableReaderStates.svg)
+
 
 ## SE Selection
 
 ### Selection scenarios
 Depending on the SE transaction use case, or on the reader capability, there are two ways to manage the selection of a SE:
  - Either on a SE reader, a selection could be operated directly by transmitting the selection request. In this case the same entity manages both the SE selection and the SE processing.
- - Otherwise, on an Observable Reader, a default selection could be defined. The selection is operated implicitly on SE insertion reader event. In this case, the SE selection is managed by the observable reader, but the SE processing is managed by a reader observer.
+ - Otherwise, on an Observable Reader, a default selection could be defined. In this case the selection is operated automatically at the insertion of the SE. In this case, the SE selection is next managed by the observable reader, but the SE processing is managed by a reader observer.
 
 ![Selection v0.9](img/KeypleCore_ApplicationApi_ActivityDiag_Selection_Scenarii.svg)
 
 ### Selection setting and processing
 A SE Selection request is defined with a SE Selector. A SE Selector could be defined with tree optional levels of selection filter.
- - The selection could be limited to match specific SE communication protocols.
- - The SE ATR could be filtered to match a specific regular expression.
+ - The selection could be limited to match a specific SE communication protocol.
+ - The SE ATR could be filtered to match a regular expression.
  - If an AID is defined, the local reader transmits a Select Application APDU command to the SE.
-For a SE Selector defined without any filter, the selection will be always succesful is a SE is present in the reader.
+If a SE Selector is defined without any filter, the selection is always succesful if a SE is present in the reader.
 
 Depending on the Keyple SE extension library, a SE request could be completed with specific SE commands to operate at the selection (for example, a Select File for a specific DF LID, the read of a specific file).
 
@@ -80,7 +89,6 @@ According to the defined 'multi SE request processing' mode, the SE selection co
  - Before the new processing of SE selection request, the logical channel previously opened is closed.
  - The 'channel control' defines if the logical channel should be kept open or close after the last processed SE selection request.
 
-The result of a SE request selection is a card image of a matching SE. For a SE selection with multiple requests, several matching SE could be provided.
-
 ![SE Selection v0.9](img/KeypleCore_ApplicationApi_ClassDiag_Selection_SelectorAndSelection_0_9_0.svg)
 
+The result of a SE request selection is a card image of a matching SE. For a SE selection with multiple requests, several matching SE could be provided.
