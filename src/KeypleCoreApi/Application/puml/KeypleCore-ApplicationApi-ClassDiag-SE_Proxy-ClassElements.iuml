@@ -143,9 +143,18 @@ package util #FFFFFF {
   +setParameter(String key, String value)
   +setParameters(Map<String, String> parameters)
 }
-
 @enduml
 
+@startuml(id=SEPROXY_UTIL_0_9_COLOR)
+~interface ProxyElement {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameters(Map<String, String> parameters)
+
+  +<color:blue>setParameter</color>(String key, String value)
+}
+@enduml
 
 @startuml(id=SEPROXY_PROTOCOL_MODE)
 +enum TransmissionMode {

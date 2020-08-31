@@ -15,7 +15,9 @@
 +interface ObservablePluginNotifier {
   +notifyObservers(<b>final</b> PluginEvent event)
 }
+@enduml
 
+@startuml(id=READER_OBSERVABLE_NOTIFIER)
 +interface ObservableReaderNotifier {
   +notifyObservers(<b>final</b> ReaderEvent event)
 }
@@ -45,20 +47,6 @@
 }
 @enduml
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @startuml(id=PLUGIN_CONFIGURABLE_0_8_1)
 ~abstract AbstractSeProxyComponent {
   -<b>final</b> String name
@@ -68,23 +56,6 @@
   +<b>final</b> String getName()
   .. implements Configurable ..
   +<b>final</b> setParameters(Map<String, String> parameters)
-}
-@enduml
-
-@startuml(id=PLUGIN_CONFIGURABLE_0_9)
-~abstract AbstractSeProxyComponent {
-  -<b>final</b> String name
-  --
-  ~AbstractSeProxyComponent(String name)
-  .. partial implementation of the package interface ProxyElement ..
-  +<b>final</b> String getName()
-
-  +<b>final</b> String getParameters(parameter)
-  +<b>final</b> setParameters(Map<String, String> parameters)
-
-  .. public abstract method to be implemented by ..
-  .. <color:blue>native</color> ReaderPlugin & SeReader ..
-  +{abstract} <color:blue>setParameter</color>(String key, String value)
 }
 @enduml
 
@@ -239,11 +210,9 @@
 @startuml(id=PLUGIN_ABSTRACTREADER_0_9_0)
 +abstract AbstractReader {
   -<b>final</b> String pluginName
-  .. To review - to move to AbstractLocalReader ..
-  #boolean forceClosing
   --
   #AbstractReader(String pluginName, String name)
-'
+  #<b>final</b> String getPluginName()
   .. implementation of tbe public interface ProxyReader ..
   +<b>final</b> List<SeResponse> transmitSeRequests(List<SeRequest seRequests, MultiSeRequestProcessing
     multiSeRequestProcessing, ChannelControl channelControl)
@@ -255,8 +224,6 @@
     MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
 
   #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
-  .. internal process ..
-  #<b>final</b> String getPluginName()
 }
 @enduml
 
@@ -430,11 +397,13 @@
 '
   .. protected abstract method to be implemented by <color:blue>native</color> ObservableReader ..
   #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()
-'
-  .. protected method that could be overridden by <color:blue>native</color> not thread-based ObservableReader ..
+
+  .. internal process ..
+  .. protected method that could be overridden by <color:blue>native</color> not thread-based ..
+  .. ObservableReader in Core API 0.9 => will be hidden in version 1.0 ..
   #<color:blue>onEvent</color>(InternalEvent event)
 '
-  .. internal process ..
+
   ~terminateSeCommunication()
 
   ~startRemovalSequence()

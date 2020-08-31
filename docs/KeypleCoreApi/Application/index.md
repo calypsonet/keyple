@@ -6,7 +6,7 @@ On Keyple, the smart card readers are managed through plugins in order to integr
 The '**Secure Element Proxy Service**' singleton provides the unique name list of registered plugins. There can be three kinds of plugin:
  - The ‘**Reader Plugin**’ is the generic interface to list the readers of a plugin, or to access to a specific reader with its name.
  - The ‘**Observable Plugin**’ interface extends reader plugins which have the capability to be observed: in order to notify registered Plugin Observers about the plug or unplug of readers. Plugin observers could be added or removed to the observable plugin. Useful for systems allowing the hot plug / unplug of readers.
- - A ‘**Reader Pool Plugin**’ is a plugin for which a reader is available only after an explicit allocation. When not more necessary, a reader has to be released. Useful for server solutions managing farms of readers or interfaced with HSM: unallocated readers or HSM SE instances could be shared between several smart card terminal solutions.
+ - A ‘**Reader Pool Plugin**’ is a plugin for which a reader is available only after an explicit allocation. When not more necessary, a reader must be released. Useful for server solutions managing farms of readers or interfaced with HSM: unallocated readers or HSM SE instances could be shared between several smart card terminal solutions.
 
 A smart card reader is identified through its unique name in a plugin. There are two kinds of reader:
  - The ‘**SE Reader**’ is the generic interface to handle a smart card reader. The presence of SE in a reader could be checked.
@@ -20,7 +20,7 @@ To hide plugin native implementation classes, the reader plugins are registered 
 ![Specific Plugin v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_SpecificPluginAndReader_0_9_0.svg)
 
 ### Reader Notifications
-To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application has to implemented dedicated '**Plugin Observer**' or '**Reader Observer**' interfaces.
+To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application must implement the dedicated '**Plugin Observer**' or '**Reader Observer**' interfaces.
 
 ![Reader Notifications v0.9.0](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_ObservablePluginAndReaderEvents_0_9_0.svg)
 
@@ -35,27 +35,27 @@ In case of SE insertion / match / removal, the observable reader notifies sequen
 
 An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
  - If the notification mode is defined as ‘always’, then in case of SE insertion, the observable reader will notify a SE matched reader event in case of successful selection, or a simple SE inserted reader event if not.
- - If the notification mode is defined as ‘matched only’, then in case of SE insertion, simple SE inserted reader events aren’t notified.
+ - If the notification mode is defined as ‘matched only’, then in case of SE insertion, simple SE inserted reader events are not notified.
 
-When the processing of an inserted or matched SE is finished, a reader observer has to release the logical channel with the Secure Element, in order to prepare the observable reader to detect the removal of the SE.
+When the processing of an inserted or matched SE is finished, a reader observer must release the logical channel with the Secure Element, in order to prepare the observable reader to detect the removal of the SE.
 
 #### Observable reader states
 An observable reader is active only when at least one reader observer is registered, and if the start of the detection has been requested. 
 When active, an observable read could switch between three internal states: ‘Wait for SE Insertion’, ‘Wait for SE Processing’, & ‘Wait for SE Removal’.
 
 In the nominal case, a Reader Observer indicates to the observable reader that the processing of the SE is finished by releasing the SE Channel.
-To manage a failure of the reader observer process, the observable reader interface provide a method to finalize the SE processing.
+To manage a failure of the reader observer process, the observable reader interface provides also a method to finalize the SE processing.
 
 ![Observable Reader States](img/KeypleCore_ApplicationApi_StateDiag_SE_Proxy_ObservableReaderStates.svg)
 
 The states could be switched:
  - due to an explicit API request (blue arrows):
-   - the release of the Secure ELement Channel,
+   - the release of the Secure Element Channel,
    - the call of an Observable Reader method:
      - the addition or the remove of an Observable Reader,
      - a request to start or stop the detection, to finalize the SE processing.
  - Or because of an external event (red arrows), the insertion or the remove of a SE.
-   - the insertion a SE causing the observable reader to notify a 'SE matched' reader event (in case of sucessful
+   - the insertion a SE causing the observable reader to notify a 'SE matched' reader event (in case of successful
    l default selection) or a 'SE inserted' reader event (Notification Mode defined as always).
    - the removal of a SE causing the observable reader to notify a 'SE removed' reader event.
 
@@ -79,7 +79,7 @@ A SE Selection request is defined with a SE Selector. A SE Selector could be def
  - The selection could be limited to match a specific SE communication protocol.
  - The SE ATR could be filtered to match a regular expression.
  - If an AID is defined, the local reader transmits a Select Application APDU command to the SE.
-If a SE Selector is defined without any filter, the selection is always succesful if a SE is present in the reader.
+If a SE Selector is defined without any filter, the selection is always successful if a SE is present in the reader.
 
 Depending on the Keyple SE extension library, a SE request could be completed with specific SE commands to operate at the selection (for example, a Select File for a specific DF LID, the read of a specific file).
 

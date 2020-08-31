@@ -15,88 +15,80 @@
 !include ../../Application/puml/KeypleCore-Api-ClassDiag-PlantUmlSetting.iuml
 
 package org.eclipse.keyple.seproxy #FFFFFF {
-
-  !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9_COLOR
-  !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_COLOR
-  ReaderPlugin "1" *-right-> "*" SeReader : readers
-
-  !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_9_0
-
+  together {
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_COLOR
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_9_COLOR
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9_COLOR
+  }
   package message #FFFFFF {
     !include ../../SeChannel/puml/KeypleCore-SeChannelApi-ClassDiag-SE_Proxy-ClassElements.iuml!MESSAGE_PROXYREADER_0_9
   }
-
-  ReaderPlugin -down-|> ProxyElement : extends
-  SeReader -down-|> ProxyElement : extends
-
-  SeReader <|-right- ProxyReader : extends
+  ReaderPlugin -right-|> ProxyElement : extends
+  ProxyElement <|-right- SeReader : extends
+  SeReader -down-> ProxyReader : extends
 
   package plugin #FFFFFF {
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_CONFIGURABLE_0_9
     together {
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_PLUGIN_0_9
       !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_0_9
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER
     }
-    AbstractPlugin-right-|> AbstractSeProxyComponent : extends
-'    AbstractPlugin <|-down-- AbstractThreadedObservablePlugin : extends
     AbstractPlugin <|-down- AbstractObservablePlugin : extends
     AbstractObservablePlugin <|-down- AbstractThreadedObservablePlugin : extends
-
-    ProxyElement <|.down. AbstractSeProxyComponent : implements
-
-    ReaderPlugin <|.. AbstractPlugin : implements
-    ProxyReader <|.. AbstractReader : implements
-
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_9_0
-
-    AbstractSeProxyComponent <|-right- AbstractReader : extends
-
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_READER
-    ProxyReader <|-- SmartSelectionReader : extends
-
-'    package local #FFFFFF {
-    together {
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_9_0
-      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER_0_9_0
-
-      AbstractObservableLocalReader -up-|> AbstractLocalReader: extends
-    }
-    AbstractReader <|-down- AbstractLocalReader : extends
-    SmartSelectionReader-right[hidden]-> AbstractLocalReader
-'    AbstractThreadedObservablePlugin -right[hidden]-> AbstractObservableLocalReader
-
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER
-
-'    AbstractObservablePlugin .down.|> ObservablePluginNotifier : implements
-    AbstractObservablePlugin ..|> ObservablePluginNotifier : implements
     AbstractThreadedObservablePlugin -down[hidden]-> ObservablePluginNotifier
-    AbstractObservableLocalReader .down.|> ObservableReaderNotifier : implements
+    AbstractObservablePlugin ..|> ObservablePluginNotifier : implements
 
-    !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_OBSERVABLE
-    ObservableReaderNotifier <|-left- SmartInsertionReader : extends
-    ObservableReaderNotifier <|-right- SmartRemovalReader : extends
+    package reader #FFFFFF {
+      together {
+        !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_9_0
+        class Toto
+      }
+      together {
+        !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_LOCALREADER_0_9_0
+        !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_READER
+      }
+      together {
+        !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_OBSERVABLEREADER_0_9_0
+        interface SmartInsertionReader
+      }
+      together {
+        !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!READER_OBSERVABLE_NOTIFIER
+        interface SmartRemovalReader
+      }
+      AbstractReader <|-down- AbstractLocalReader : extends
+      AbstractLocalReader <|-down- AbstractObservableLocalReader : extends
+      AbstractObservableLocalReader .down.|> ObservableReaderNotifier : implements
+      Toto -down[hidden]- SmartSelectionReader
+      SmartSelectionReader -down[hidden]- SmartInsertionReader
+      SmartInsertionReader -down[hidden]- SmartRemovalReader
+      hide Toto
+      !include KeypleCore-PluginApi-ClassDiag-SE_Proxy-ClassElements.iuml!PLUGIN_SMART_OBSERVABLE
+
+      SmartRemovalReader -right-|> ObservableReaderNotifier : extends
+      ObservableReaderNotifier <|-- SmartInsertionReader : extends
+    }
   }
+  ReaderPlugin <|.down. AbstractPlugin : implements
+  ProxyReader <|.down. AbstractReader : implements
+  ProxyReader <|-- SmartSelectionReader : extends
 
   package event #FFFFFF {
-    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8_1
     !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
-    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
-    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READEROBSERVER_0_8_1
-
-'    ObservablePlugin -right[hidden]-> ObservableReader
-    ObservablePlugin +-left- PluginObserver
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8_1
+    ObservablePlugin +-right- PluginObserver
     ObservablePlugin "1" o-- "*" PluginObserver : observes <
 
-    ObservableReader +-right- ReaderObserver
-    ObservableReader "1" o-- "*" ReaderObserver : observes <
-  }
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READEROBSERVER_0_8_1
+    !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
+    ReaderObserver -right-+ ObservableReader
+    ReaderObserver "*" --o "1" ObservableReader
 
+    PluginObserver -right[hidden]-> ReaderObserver
+  }
   ObservablePluginNotifier -down-|> ObservablePlugin : extends
   ObservableReaderNotifier -down-|> ObservableReader : extends
 
   ReaderPlugin <|-- ObservablePlugin : extends
-  SeReader <|-- ObservableReader : extends
+  SeReader <|------------ ObservableReader : extends
 }
 @enduml
-
-
