@@ -77,10 +77,8 @@
 }
 
 +abstract AbstractMatchingSe {
-  #AbstractMatchingSe(SeResponse selectionResponse,
-    TransmissionMode transmissionMode)
+  #AbstractMatchingSe(SeResponse selectionResponse)
 
-  +TransmissionMode getTransmissionMode()
   +boolean hasAtr()
   +byte[] getAtrBytes()
   +boolean hasFci()

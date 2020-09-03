@@ -75,6 +75,12 @@ package java.io <<Node>> #FFFFFF {
 
 @startuml(id=SEPROXY_PLUGIN_0_9)
 +interface ReaderPlugin {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameter(String key, String value)
+  +setParameters(Map<String, String> parameters)
+
   +Map<String, SeReader> getReaders()
   +Set<String> getReaderNames()
   +SeReader getReader(String name)
@@ -97,8 +103,23 @@ package java.io <<Node>> #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_READER)
+@startuml(id=SEPROXY_READER_0_8)
 +interface SeReader {
+  +boolean isSePresent()
+  +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +setSeProtocolSetting(Map<SeProtocol, String> protocolSetting)
+  +TransmissionMode getTransmissionMode()
+}
+@enduml
+
+@startuml(id=SEPROXY_READER_0_9)
++interface SeReader {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameter(String key, String value)
+  +setParameters(Map<String, String> parameters)
+
   +boolean isSePresent()
   +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
   +setSeProtocolSetting(Map<SeProtocol, String> protocolSetting)
@@ -148,10 +169,9 @@ package util #FFFFFF {
 @startuml(id=SEPROXY_UTIL_0_9_COLOR)
 ~interface ProxyElement {
   +String getName()
-
-  +Map<String, String> getParameters()
   +setParameters(Map<String, String> parameters)
 
+  +Map<String, String> <color:blue>getParameters</color>()
   +<color:blue>setParameter</color>(String key, String value)
 }
 @enduml
@@ -164,6 +184,11 @@ package util #FFFFFF {
 @enduml
 
 @startuml(id=SEPROXY_PROTOCOL_SETTING)
++interface SeProtocol {
+  +String getName()
+  +TransmissionMode getTransmissionMode()
+}
+
 enum SeCommonProtocols {
   .. contactless ISO standard / NFC compliant ..
   PROTOCOL_ISO14443_4("ISO 14443-4", CONTACTLESS)
@@ -185,11 +210,6 @@ enum SeCommonProtocols {
   PROTOCOL_ISO7816_3("ISO 7816-3", CONTACTS)
   .. contacts proprietary  ..
   PROTOCOL_HSP("Old Calypso SAM HSP", CONTACTS)
-}
-
-+interface SeProtocol {
-  +String getName()
-  +TransmissionMode getTransmissionMode()
 }
 @enduml
 

@@ -22,7 +22,7 @@ package org.eclipse.keyple.core.seproxy #FFFFFF {
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_9
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY_0_9_0
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_9
 
   SeProxyService "1" *-down-> "*" ReaderPlugin : plugins
   ReaderPlugin "1" *-right-> "*" SeReader : readers

@@ -60,7 +60,7 @@ AbstractDefaultSelectionsResponse -down[hidden]- AbstractDefaultSelectionsReques
   }
 
   interface ReaderPlugin
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+  interface SeReader
 
   SeProxyService "1" *--> "*" ReaderPlugin : plugins
   ReaderPlugin "1" *-down-> "*" SeReader : readers

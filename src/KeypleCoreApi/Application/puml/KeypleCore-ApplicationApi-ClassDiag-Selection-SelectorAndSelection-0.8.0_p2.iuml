@@ -16,7 +16,7 @@
 
 package org.eclipse.keyple.core #FFFFFF {
   package "seproxy" as seproxy_even #FFFFFF {
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_8
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_CHANNEL
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTION
 

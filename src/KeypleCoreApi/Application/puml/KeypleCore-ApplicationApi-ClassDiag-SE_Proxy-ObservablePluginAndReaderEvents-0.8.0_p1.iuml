@@ -73,7 +73,7 @@ ReaderEvent . (ReaderObserver, ObservableReader)
 }
 
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_8
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_8
 
 SeProxyService "1" *--> "*" ReaderPlugin : plugins
 ReaderPlugin "1" *-right-> "*" SeReader : readers

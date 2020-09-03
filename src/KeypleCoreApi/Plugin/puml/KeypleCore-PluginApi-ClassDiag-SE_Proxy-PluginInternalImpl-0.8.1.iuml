@@ -18,7 +18,7 @@
 
 package org.eclipse.keyple.seproxy #FFFFFF {
   !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_8
-  !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+  !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_8
   ReaderPlugin "1" *-right-> "*" SeReader : readers
 
   !include ../../Application/puml/KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_8_0

@@ -77,9 +77,14 @@
 
 @startuml(id=PLUGIN_PLUGIN_0_9)
 +abstract AbstractPlugin {
+  -<b>final</b> String name
   #ConcurrentMap<String, SeReader> readers
   --
   #{abstract} AbstractPlugin(String name)
+'
+  .. implementation of the package interface ProxyElement ..
+  +<b>final</b> String getName()
+  +<b>final</b> setParameters(Map<String, String> parameters)
 '
   .. implementation of the public interface ReaderPlugin ..
   +<b>final</b> Set<String> getReaderNames()
@@ -213,6 +218,11 @@
   --
   #AbstractReader(String pluginName, String name)
   #<b>final</b> String getPluginName()
+'
+  .. implementation of the package interface ProxyElement ..
+  +<b>final</b> String getName()
+  +<b>final</b> setParameters(Map<String, String> parameters)
+'
   .. implementation of tbe public interface ProxyReader ..
   +<b>final</b> List<SeResponse> transmitSeRequests(List<SeRequest seRequests, MultiSeRequestProcessing
     multiSeRequestProcessing, ChannelControl channelControl)

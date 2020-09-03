@@ -16,7 +16,7 @@
 
 package org.eclipse.keyple.core #FFFFFF {
   package "seproxy" as seproxy_even #FFFFFF {
-    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_9
     !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SELECTION
 
     package event #FFFFFF {
@@ -41,10 +41,10 @@ package org.eclipse.keyple.core #FFFFFF {
 
   package "seproxy" as seproxy_protocol #FFFFFF {
     package protocol #FFFFFF {
-      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_MODE
+'      !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_MODE
       !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_SETTING
 
-      TransmissionMode "1" -left-* "1" SeProtocol
+'      TransmissionMode "1" -left-* "1" SeProtocol
       SeProtocol <|.down. SeCommonProtocols : implements
     }
 
@@ -79,6 +79,6 @@ package org.eclipse.keyple.core #FFFFFF {
   SeReader "0..1" --* "1" SeResource_T : connected to <
 
   AbstractSeSelectionRequest "1" o-down- "1" SeSelector
-  AbstractMatchingSe "1" *-- "0..1" TransmissionMode
+'  AbstractMatchingSe "1" *-- "0..1" TransmissionMode
 }
 @enduml

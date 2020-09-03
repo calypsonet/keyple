@@ -16,10 +16,18 @@
 
 package org.eclipse.keyple.core.seproxy #FFFFFF {
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_SERVICE_0_9
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_9_0
+'  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_UTIL_0_9_0
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_FACTORY_0_9_0
   !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PLUGIN_0_9
-  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER
+  !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_READER_0_9
+
+  package protocol #FFFFFF {
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_MODE
+    !include KeypleCore-ApplicationApi-ClassDiag-SE_Proxy-ClassElements.iuml!SEPROXY_PROTOCOL_SETTING
+
+    SeProtocol o-left- "1" TransmissionMode
+    SeProtocol <|.right. SeCommonProtocols : implements
+  }
 
   SeProxyService "1" *--> "*" PluginFactory : registers
   SeProxyService "1" *-down-> "*" ReaderPlugin : plugins
@@ -37,8 +45,11 @@ package org.eclipse.keyple.core.seproxy #FFFFFF {
   SeReader <|-- ObservableReader : extends
 }
 
-ProxyElement <|-- ReaderPlugin : extends
-ProxyElement <|-- SeReader : extends
+'ProxyElement <|-- ReaderPlugin : extends
+'ProxyElement <|-- SeReader : extends
+
+TransmissionMode "1" -down-o SeReader
+SeProtocol "*" -down- SeReader
 
 interface ReaderPlugin <<Plugin>>
 interface ObservablePlugin <<Plugin>>
