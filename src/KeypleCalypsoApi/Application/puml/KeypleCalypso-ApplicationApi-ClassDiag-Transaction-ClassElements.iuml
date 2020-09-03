@@ -76,12 +76,12 @@
 
 @startuml(id=TRANSACTION_SELECTION_0_9)
 +class "<b>final</b> PoSelector" as PoSelector {
+  -InvalidatedPo invalidatedPo = REJECT
   -PoSelector(PoSelectorBuilder builder)
   +{static} PoSelectorBuilder builder()
 }
 
 +class PoSelectorBuilder {
-  -InvalidatedPo invalidatedPo = REJECT
   -PoSelectorBuilder()
   +PoSelector build()
 
@@ -111,6 +111,8 @@
 
 @startuml(id=TRANSACTION_SELECTION_SAM_0_9)
 +class "<b>final</b> SamSelector" as SamSelector {
+  -<b>final</b> SamRevision targetSamRevision
+  -<b>final</b> byte[] unlockData
   -SamSelector(SamSelectorBuilder builder)
   +{static} SamSelectorBuilder builder()
 }

@@ -537,6 +537,9 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_SELECTOR_0_9_0)
 +class SeSelector {
+  -SeProtocol[0..1] seProtocol
+  -AtrFilter[0..1] atrFilter
+  -AidSelector[0..1] aidSelector
   #SeSelector(SeSelectorBuilder builder)
   +{static}SeSelectorBuilder builder()
 
@@ -548,9 +551,9 @@ package plugin.specific #D7BDE2 {
 
 @startuml(id=SEPROXY_SELECTOR_BUILDER_0_9_0)
 +class SeSelectorBuilder {
-  ~SeProtocol[0..1] seProtocol
-  ~AtrFilter[0..1] atrFilter
-  ~AidSelector[0..1] aidSelector
+'  ~SeProtocol[0..1] seProtocol
+'  ~AtrFilter[0..1] atrFilter
+'  ~AidSelector[0..1] aidSelector
   #SeSelectorBuilder()
   +SeSelector build()
 
