@@ -1,0 +1,220 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+
+package org.eclipse.keyple #FFFFFF {
+
+package seproxy #FFFFFF {
+
++interface ProxyReader {
+  +boolean isSePresent()
+  +void addSeProtocolSetting(SeProtocolSetting seProtocolSetting);
+  +SeResponseSet transmit(<b>final</b> SeRequestSet seApplicationRequest)
+}
+
++class "<b>final</b> SeRequestSet" as SeRequestSet {
+  -<b>final</b> LinkedHashSet<SeRequest> orderedSetRequests
+  +SeRequestSet(Set<SeRequest> seRequests)
+  +SeRequestSet(SeRequest seRequest)
+  +Set<SeRequest> getRequests()
+  +SeRequest getSingleRequest()
+}
+
++class "<b>final</b> SeResponseSet" as SeResponseSet {
+  -<b>final</b> ArrayList<SeResponse> seResponses
+  +SeResponseSet(List<SeResponse> seResponses)
+  +SeResponseSet(SeResponse seResponse)
+  +List<SeResponse> getResponses()
+  +SeResponse getSingleResponse()
+}
+
++class "<b>final</b> ApduRequest" as ApduRequest {
+  -boolean case4
+  +ApduRequest(ByteBuffer bytes, boolean case4)
+  +boolean isCase4()
+}
+
++class "<b>final</b> ApduResponse" as ApduResponse {
+  -boolean successful
+  +ApduResponse(ByteBuffer bytes, boolean successful)
+  +boolean isSuccessful()
+}
+
++class "<b>final</b> SeRequest" as SeRequest {
+  -Selector[0..1] selector
+  -ArrayList<ApduRequest> apduRequests
+  -SeProtocol[0..1] protocolFlag
+  -boolean keepChannelOpen
+  +SeRequest(Selector[0..1] selector, List<ApduRequest> apduRequests,  boolean keepChannelOpen, SeProtocol[0..1] protocolFlag)
+  +Selector getSelector()
+  +List<ApduRequest> getApduRequests()
+  +boolean isKeepChannelOpen()
+  +SeProtocol getProtocolFlag()
+}
+
++class "<b>final</b> SeResponse" as SeResponse {
+  -boolean channelPreviouslyOpen
+  -ApduResponse[0..1] atr
+  -ApduResponse[0..1] fci
+  -ArrayList<ApduResponse> apduResponses
+  +SeResponse(boolean channelPreviouslyOpen, ApduResponse[0..1] atr, ApduResponse[0..1] fci, List<ApduResponse> apduResponses)
+  +boolean wasChannelPreviouslyOpen()
+  +ApduResponse getAtr()
+  +ApduResponse getFci()
+  +List<ApduResponse> getApduResponses()
+}
+
++abstract "<b>static</b> Selector" as Selector {
+}
++class "<b>static final</b> AidSelector" as AidSelector {
+  +AidSelector(ByteBuffer aidToSelect)
+}
++class "<b>static final</b> AtrSelector" as AtrSelector {
+  +AtrSelector(String atrRegex)
+}
+
++interface SeProtocol {
+	+String getName()
+}
+
+package protocol #FFFFFF {
+
++enum ContactlessProtocols {
+	.. standard ..
+	PROTOCOL_ISO14443_4
+	.. proprietary ..
+	PROTOCOL_ISO14443_3A
+	PROTOCOL_ISO14443_3B
+	PROTOCOL_B_PRIME
+	PROTOCOL_MIFARE_UL
+	PROTOCOL_MIFARE_CLASSIC
+	PROTOCOL_MIFARE_DESFIRE
+	PROTOCOL_MEMORY_ST25
+}
+
++enum ContactsProtocols {
+	.. standard ..
+	PROTOCOL_ISO7816_3
+}
+
++interface SeProtocolSettings {
+  +SeProtocol getFlag();
+  +String getValue();
+}
+}
+
+'#abstract AbstractApduBuffer {
+abstract AbstractApduBuffer {
+  -<b>final</b> ByteBuffer bytes
+  +AbstractApduBuffer()
+  +ByteBuffer getBytes(ByteBuffer bytes)
+}
+
+note bottom of ProxyReader
+  - To operate the transmission of SeRequestSet,
+  a specific <b>local</b> reader processes
+  the sorted list of SeRequest.
+  - According to SeRequest protocolFlag and
+  to the current status of the reader (RF
+  protocol involved / current ATR) the
+  processing of a specific SeRequest could be
+  skipped.
+  - When processing a SeRequest
+    o if necessary a new logical channel is
+    open (for a specific AID if defined)
+    o and ApduRequest are transmited one by
+    one
+end note
+
+note top of SeRequestSet
+ - A SeRequestSet could contain several SeRequest to manage the selection
+ of different types of PO application.
+ - To exchange APDU commands with a soecific selected PO application
+ a single SeRequest is necessary.
+end note
+
+note top of SeRequest
+ - For PO requiring an AID selection, the aidToSelect should be defined
+ with non null value. For PO not supporting AID selection, the aidToSelect
+ should be defined as null.
+ - The protocolFlag parameter is optional.
+end note
+}
+
+package util #FFFFFF {
+  class ByteBufferUtils {
+    +{static}ByteBuffer fromHex(String hex)
+    +{static}String toHex(ByteBuffer buffer)
+    +{static}String toHex(List<ByteBuffer> buffers)
+    +{static}String toHex(ByteBuffer... buffers)
+    +{static}String toHexCutLen(ByteBuffer buffer, int... cutLength)
+    +{static}byte[] toBytes(ByteBuffer buffer)
+    +{static}ByteBuffer subIndex(ByteBuffer buf, int start, int end)
+    +{static}ByteBuffer subLen(ByteBuffer buf, int offset, int length)
+    +{static}ByteBuffer concat(ByteBuffer buf1, ByteBuffer buf2)
+    
+  }
+}
+}
+
+together {
+  interface SeProtocol
+  enum ContactlessProtocols
+  enum ContactsProtocols
+  interface ProxyReader
+  abstract AbstractApduBuffer
+  class ApduRequest
+  class ApduResponse
+  class SeRequest
+  class SeRequestSet
+  class SeResponse
+  class SeResponseSet
+}
+
+'org.eclipse.keyple.util -down[hidden]- org.eclipse.keyple.seproxy
+
+'external.terminalapplication .up.> org.eclipse.keyple.seproxy : imports
+
+'SpecificTerminal --> SeProxyService : uses >
+
+'SeProxyService "1" *-down-> "*" ReadersPlugin : plugins
+'ReadersPlugin "1" *-right-> "*" ProxyReader : readers
+
+'SeProxyService -right[hidden]- SeRequestSet
+ProxyReader -up- SeRequestSet : sends >
+ProxyReader -down- SeResponseSet : receives >
+
+SeRequestSet "0..1" o-right-> "+" SeRequest : sortedSeRequests
+SeRequest "0..1" o-down-> "*" ApduRequest : apduRequests
+
+ApduRequest -down-|> AbstractApduBuffer : extends
+ApduResponse -up-|> AbstractApduBuffer : extends
+
+SeResponse "0..1" o-up-> "*" ApduResponse : apduResponses
+SeResponseSet "0..1" o-right-> "+" SeResponse : seResponses
+
+SeRequest +-right- Selector
+Selector <|-up- AidSelector : extends
+Selector <|-down- AtrSelector : extends
+
+SeProtocol <|-- ContactlessProtocols : extends
+SeProtocol <|-- ContactsProtocols : extends
+ContactsProtocols -left[hidden]- ContactlessProtocols
+
+SeRequest -- SeProtocol : SE Protocol Flag
+ProxyReader -right- SeProtocol : SE Protocol Settings
+SeProtocol -right[hidden]- ApduRequest
+SeResponse -down[hidden]- ByteBufferUtils
+@enduml

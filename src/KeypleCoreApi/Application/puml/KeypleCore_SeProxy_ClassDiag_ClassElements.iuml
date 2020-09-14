@@ -1,0 +1,684 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml(id=SEPROXY_SERVICE_0_8)
++class "<b>final</b> SeProxyService" as SeProxyService << Singleton >> {
+  +{static}SeProxyService getInstance()
+  +String getVersion()
+
+  +registerPlugin(AbstractPluginFactory pluginFactory)
+  +boolean isRegistered(String pluginName)
+  +boolean unregisterPlugin(String pluginName)
+
+  +ReaderPlugin getPlugin(String name)
+  +SortedSet<ReaderPlugin> getPlugins()
+}
+@enduml
+
+@startuml(id=SEPROXY_SERVICE_0_9)
++class "<b>final</b> SeProxyService" as SeProxyService << Singleton >> {
+  -<b>final</b> {static}SeProxyService uniqueInstance
+  -<b>final</b> ConcurrentMap<String, ReaderPlugin> plugins
+  +{static}SeProxyService getInstance()
+  +String getVersion()
+
+  +ReaderPlugin registerPlugin(PluginFactory pluginFactory)
+  +boolean isRegistered(String pluginName)
+  +boolean unregisterPlugin(String pluginName)
+
+  +ReaderPlugin getPlugin(String name)
+  +ConcurrentMap<String, ReaderPlugin> getPlugins()
+}
+@enduml
+
+@startuml(id=SERIALIZABLE)
+package java.io <<Node>> #FFFFFF {
+  +interface Serializable {
+    -writeObject(ObjectOutputStream out)
+    -readObject(ObjectInputStream in)
+    -readObjectNoData()
+  }
+}
+@enduml
+
+@startuml(id=SEPROXY_FACTORY_0_8_0)
++abstract AbstractPluginFactory {
+  {abstract} #String getPluginName()
+  {abstract} #ReaderPlugin getPluginInstance()
+}
+@enduml
+
+@startuml(id=SEPROXY_FACTORY_0_9_0)
++interface PluginFactory {
+  +String getPluginName()
+  +ReaderPlugin getPluginInstance()
+}
+@enduml
+
+@startuml(id=SEPROXY_PLUGIN_0_8)
++interface ReaderPlugin {
+  +SortedSet<String> getReaderNames()
+  +SeReader getReader(String name)
+  +Set<? extends SeReader> getReaders()
+}
+@enduml
+
+@startuml(id=SEPROXY_PLUGIN_0_9)
++interface ReaderPlugin {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameter(String key, String value)
+  +setParameters(Map<String, String> parameters)
+
+  +Map<String, SeReader> getReaders()
+  +Set<String> getReaderNames()
+  +SeReader getReader(String name)
+}
+@enduml
+
+@startuml(id=SEPROXY_PLUGIN_0_9_COLOR)
++interface ReaderPlugin {
+  +Map<String, SeReader> <color:blue>getReaders</color>()
+  +Set<String> <color:blue>getReaderNames</color>()
+  +SeReader <color:blue>getReader</color>(String name)
+}
+@enduml
+
+@startuml(id=SEPROXY_POOLPLUGIN)
++interface ReaderPoolPlugin {
+  +SortedSet<String> getReaderGroupReferences()
+  +SeReader allocateReader(String groupReference)
+  +releaseReader(SeReader seReader)
+}
+@enduml
+
+@startuml(id=SEPROXY_READER_0_8)
++interface SeReader {
+  +boolean isSePresent()
+  +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +setSeProtocolSetting(Map<SeProtocol, String> protocolSetting)
+  +TransmissionMode getTransmissionMode()
+}
+@enduml
+
+@startuml(id=SEPROXY_READER_0_9)
++interface SeReader {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameter(String key, String value)
+  +setParameters(Map<String, String> parameters)
+
+  +boolean isSePresent()
+  +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
+  +setSeProtocolSetting(Map<SeProtocol, String> protocolSetting)
+  +TransmissionMode getTransmissionMode()
+}
+@enduml
+
+@startuml(id=SEPROXY_READER_COLOR)
++interface SeReader {
+  +boolean <color:blue>isSePresent</color>()
+  +<color:blue>addSeProtocolSetting</color>(SeProtocol seProtocol, String protocolRule)
+  +<color:blue>setSeProtocolSetting</color>(Map<SeProtocol, String> protocolSetting)
+  +TransmissionMode <color:blue>getTransmissionMode</color>()
+}
+@enduml
+
+@startuml(id=SEPROXY_READER_ReaderAPI)
++interface SeReader {
+  +String getName()
+}
+@enduml
+
+@startuml(id=SEPROXY_UTIL_0_8_0)
+package util #FFFFFF {
+  +interface Nameable {
+    +String getName()
+  }
+
+  +interface Configurable {
+    +Map<String, String> getParameters()
+    +setParameter(String key, String value)
+    +setParameters(Map<String, String> parameters)
+  }
+}
+@enduml
+
+@startuml(id=SEPROXY_UTIL_0_9_0)
+~interface ProxyElement {
+  +String getName()
+
+  +Map<String, String> getParameters()
+  +setParameter(String key, String value)
+  +setParameters(Map<String, String> parameters)
+}
+@enduml
+
+@startuml(id=SEPROXY_UTIL_0_9_COLOR)
+~interface ProxyElement {
+  +String getName()
+  +setParameters(Map<String, String> parameters)
+
+  +Map<String, String> <color:blue>getParameters</color>()
+  +<color:blue>setParameter</color>(String key, String value)
+}
+@enduml
+
+@startuml(id=SEPROXY_PROTOCOL_MODE)
++enum TransmissionMode {
+  CONTACTS
+  CONTACTLESS
+}
+@enduml
+
+@startuml(id=SEPROXY_PROTOCOL_SETTING)
++interface SeProtocol {
+  +String getName()
+  +TransmissionMode getTransmissionMode()
+}
+
+enum SeCommonProtocols {
+  .. contactless ISO standard / NFC compliant ..
+  PROTOCOL_ISO14443_4("ISO 14443-4", CONTACTLESS)
+  PROTOCOL_ISO15693("ISO 15693 Type V", CONTACTLESS)
+  .. contactless proprietary NFC compliant ..
+  PROTOCOL_ISO14443_3A("ISO 14443-3 Type A", CONTACTLESS)
+  PROTOCOL_ISO14443_3B("ISO 14443-3 Type B", CONTACTLESS)
+  PROTOCOL_JIS_6319_4("JIS 6319-4 Felica", CONTACTLESS)
+  PROTOCOL_NDEF("NFC NDEF TAG", CONTACTLESS)
+  PROTOCOL_NDEF_FORMATABLE("NFC NDEF FORMATABLE", CONTACTLESS)
+  PROTOCOL_NFC_BARCODE("NFC BARCODE, CONTACTLESS)
+  PROTOCOL_MIFARE_UL("Mifare Ultra Light", CONTACTLESS)
+  PROTOCOL_MIFARE_CLASSIC("Mifare Classic", CONTACTLESS)
+  PROTOCOL_MIFARE_DESFIRE("Mifare DESFire", CONTACTLESS)
+  .. contactless proprietary not NFC compliant ..
+  PROTOCOL_B_PRIME("Old Calypso card B prime", CONTACTLESS)
+  PROTOCOL_MEMORY_ST25("Memory ST25", CONTACTLESS)
+  .. contacts ISO standard ..
+  PROTOCOL_ISO7816_3("ISO 7816-3", CONTACTS)
+  .. contacts proprietary  ..
+  PROTOCOL_HSP("Old Calypso SAM HSP", CONTACTS)
+}
+@enduml
+
+@startuml(id=SEPROXY_COMPARABLE_0_8)
+package java.util #FFFFFF {
+  interface Comparable<T> {
+    +int compareTo(T o)
+  }
+}
+@enduml
+
+@startuml(id=SEPROXY_CHANNEL)
++enum ChannelControl {
+	KEEP_OPEN
+	CLOSE_AFTER
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTION)
++enum MultiSeRequestProcessing {
+	FIRST_MATCH
+	PROCESS_ALL
+}
+@enduml
+
+@startuml(id=SEPROXY_TERMINALAPPLICATION)
+package external.terminalapplication #85C1E9 {
+  class SpecificTerminal
+
+  class SpecificPluginObserver {
+    +update(ObservablePlugin plugin, AbstractPluginEvent event)
+  }
+  class SpecificReaderObserver {
+    +update(ObservableReader reader, ReaderEvent event)
+  }
+
+  SpecificTerminal -right[hidden]--> SpecificPluginObserver
+  SpecificPluginObserver -right[hidden]--> SpecificReaderObserver
+}
+@enduml
+
+@startuml(id=SEPROXY_SPECIFICPLUGIN)
+package plugin.specific #D7BDE2 {
+  +class "<b>final</b> SpecificPluginFactory" as SpecificPluginFactory {
+    #String getPluginName()
+    #ReaderPlugin getPluginInstance()
+  }
+
+  ~class SpecificPlugin << Singleton >> {
+    -String name
+    -SpecificPlugin()
+    +{static} SpecificPlugin getInstance()
+    +<b>final</b> String getName()
+'    +<b>final</b> List<SpecificReader> getReaders()
+  }
+
+  ~class SpecificReader {
+    -String name
+    #SpecificReader()
+    +<b>final</b> String getName()
+  }
+
+  SpecificPluginFactory "1" -right-> "1" SpecificPlugin : creates
+  SpecificPlugin "1" *-right-> "*" SpecificReader : readers
+}
+@enduml
+
+'---- PLUGIN EVENT -------------------------------------------------------------[
+@startuml(id=SEPROXY_PLUGINOBSERVER_0_8)
++interface PluginObserver {
+  +update(PluginEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_PLUGINOBSERVER_0_8_1)
++interface PluginObserver {
+  +update(<b>final</b> PluginEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_8)
++interface ObservablePlugin {
+  +addObserver(PluginObserver observer)
+  +removeObserver(PluginObserver observer)
+  +notifyObservers(PluginEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_8_1)
++interface ObservablePlugin {
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
+  +notifyObservers(<b>final</b> PluginEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEPLUGIN_0_9_0)
++interface ObservablePlugin {
+  +addObserver(<b>final</b> PluginObserver observer)
+  +removeObserver(<b>final</b> PluginObserver observer)
+  +clearObservers()
+  +int countObservers()
+}
+@enduml
+
+@startuml(id=SEPROXY_EVENTPLUGIN)
++enum "EventType" as EventType_Plugin {
+  READER_CONNECTED
+  READER_DISCONNECTED
+  +EventType(String name)
+  +String getName()
+}
+
++class "<b>final</b> PluginEvent" as PluginEvent {
+  +PluginEvent(String pluginName, String readerName,
+    EventType eventType)
+  +PluginEvent(String pluginName, Set<String> readerNames,
+    EventType eventType)
+
+  +String getPluginName()
+  +SortedSet<String> getReaderNames()
+  +EventType getEventType()
+}
+@enduml
+'---- PLUGIN EVENT -------------------------------------------------------------]
+
+'---- READER EVENT -------------------------------------------------------------[
+@startuml(id=SEPROXY_READEROBSERVER_0_8)
++interface ReaderObserver {
+  +update(ReaderEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_READEROBSERVER_0_8_1)
++interface ReaderObserver {
+  +update(<b>final</b> ReaderEvent event)
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEREADER_0_8)
++interface ObservableReader {
+  +addObserver(ReaderObserver observer)
+  +removeObserver(ReaderObserver observer)
+
+  +notifyObservers(ReaderEvent event)
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+      NotificationMode notificationM, PollingMode[0..1] pollingM)
+
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +notifySeProcessed()
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEREADER_0_8_1)
++interface ObservableReader {
+  +addObserver(<b>final</b> ReaderObserver observer)
+  +removeObserver(<b>final</b> ReaderObserver observer)
+
+  +notifyObservers(<b>final</b> ReaderEvent event)
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+    NotificationMode notificationM, PollingMode[0..1] pollingM)
+
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +notifySeProcessed()
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEREADER_0_9_0)
++interface ObservableReader {
+  +addObserver(<b>final</b> ReaderObserver observer)
+  +removeObserver(<b>final</b> ReaderObserver observer)
+  +clearObservers()
+  +int countObservers()
+
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
+    NotificationMode notificationM, PollingMode[0..1] pollingM)
+
+  +startSeDetection(PollingMode pollingMode)
+  +stopSeDetection()
+  +finalizeSeProcessing()
+}
+@enduml
+
+@startuml(id=SEPROXY_OBSERVABLEREADER_ReaderAPI)
++interface ObservableReader {
+  +startSeDetection()
+  +stopSeDetection()
+'  +notifySeProcessed()
+}
+@enduml
+
+@startuml(id=SEPROXY_EVENTREADER_0_8)
++enum "EventType" as EventType_Reader {
+  IO_ERROR
+  SE_INSERTED
+  SE_MATCHED
+  SE_REMOVAL
+  +EventType(String name)
+  +String getName()
+}
+
++class "<b>final</b> ReaderEvent" as ReaderEvent {
+  +ReaderEvent(String pluginName, String readerName, EventType
+  eventType, DefaultSelectionsResponse[0..1] defaultSelectionsResponse)
+
+  +EventType getEventType()
+
+  +String getPluginName()
+  +String getReaderName()
+
+  +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
+}
+@enduml
+
+@startuml(id=SEPROXY_EVENTREADER_0_9)
++enum "EventType" as EventType_Reader {
+  IO_ERROR
+  SE_INSERTED
+  SE_MATCHED
+  SE_REMOVAL
+  +EventType(String name)
+  +String getName()
+}
+
++class "<b>final</b> ReaderEvent" as ReaderEvent {
+  +ReaderEvent(String pluginName, String readerName, EventType
+  eventType, DefaultSelectionsResponse[0..1] defaultSelectionsResponse)
+
+  +EventType getEventType()
+
+  +String getPluginName()
+  +String getReaderName()
+  +ReaderPlugin getPlugin()
+  +SeReader getReader()
+
+  +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
+}
+@enduml
+
+@startuml(id=SEPROXY_READERNOTIFICATION)
++enum NotificationMode {
+  ALWAYS
+  MATCHED_ONLY
+  +NotificationMode(String name)
+  +String getName()
+  +{static}NotificationMode get(String name)
+}
+
++enum PollingMode {
+  REPEATING
+  SINGLESHOT
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_0_7)
++class AbstractDefaultSelectionsRequest {
+  #AbstractDefaultSelectionsRequest(SeRequestSet selectionSeRequestSet)
+  {abstract} #SeRequestSet getSelectionSeRequestSet()
+}
+
++class AbstractDefaultSelectionsResponse {
+  #SelectionResponse(SeResponseSet selectionSeResponseSet)
+  {abstract} #SeResponseSet getSelectionSeResponseSet()
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_PUB)
++abstract AbstractDefaultSelectionsRequest {
+}
+
++abstract AbstractDefaultSelectionsResponse {
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_0_8_0)
++abstract AbstractDefaultSelectionsRequest {
+  {abstract} #Set<SeRequest> getSelectionSeRequestSet()
+  {abstract} #MultiSeRequestProcessing getMultiSeRequestProcessing()
+  {abstract} #ChannelControl getChannelControl()
+}
+
++abstract AbstractDefaultSelectionsResponse {
+  {abstract} #List<SeResponse> getSelectionSeResponseSet()
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_0_9_0)
++abstract AbstractDefaultSelectionsRequest {
+  -<b>final</b> List<SeRequest> selectionSeRequests
+  -<b>final</b> MultiSeRequestProcessing multiSeRequestProcessing
+  -<b>final</b> ChannelControl channelControl
+  #DefaultSelectionsRequest(List<SeRequest> selectionSeRequests,
+      MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+
+  +<b>final</b> List<SeRequest> getSelectionSeRequests()
+  +<b>final</b> MultiSeRequestProcessing getMultiSeRequestProcessing()
+  +<b>final</b> ChannelControl getChannelControl()
+}
+
++abstract AbstractDefaultSelectionsResponse {
+  -List<SeResponse> selectionSeResponses
+  #DefaultSelectionsResponse(List<SeResponse> selectionSeResponses)
+
+  +<b>final</b> List<SeResponse> getSelectionSeResponses()
+}
+@enduml
+
+@startuml(id=SEPROXY_DEFAULTSELECTION_1_0_0)
++abstract AbstractDefaultSelectionsRequest {
+  #{abstract} List<SeRequest> getSelectionSeRequests()
+  #{abstract} MultiSeRequestProcessing getMultiSeRequestProcessing()
+  #{abstract} ChannelControl getChannelControl()
+}
+
++abstract AbstractDefaultSelectionsResponse {
+  #{abstract} List<SeResponse> getSelectionSeResponses()
+}
+@enduml
+
+'---- READER EVENT -------------------------------------------------------------]
+
+'---- SE SELECTOR --------------------------------------------------------------[
+@startuml(id=SEPROXY_SELECTOR_0_8)
++class SeSelector {
+  +SeSelector(SeProtocol seProtocol, AtrFilter atrFilter,
+    AidSelector aidSelector, String extraInfo)
+  +SeProtocol getSeProtocol()
+  +AtrFilter getAtrFilter()
+  +AidSelector getAidSelector()
+  +<b>final</b> String getExtraInfo()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_0_9_0)
++class SeSelector {
+  -SeProtocol[0..1] seProtocol
+  -AtrFilter[0..1] atrFilter
+  -AidSelector[0..1] aidSelector
+  #SeSelector(SeSelectorBuilder builder)
+  +{static}SeSelectorBuilder builder()
+
+  +SeProtocol getSeProtocol()
+  +AtrFilter getAtrFilter()
+  +AidSelector getAidSelector()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_BUILDER_0_9_0)
++class SeSelectorBuilder {
+'  ~SeProtocol[0..1] seProtocol
+'  ~AtrFilter[0..1] atrFilter
+'  ~AidSelector[0..1] aidSelector
+  #SeSelectorBuilder()
+  +SeSelector build()
+
+  +SeSelectorBuilder seProtocol(SeProtocol seProtocol)
+  +SeSelectorBuilder atrFilter(SeSelector.AtrFilter atrFilter)
+  +SeSelectorBuilder aidSelector(SeSelector.AidSelector aidSelector)
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_ReaderAPI)
++class SeSelector {
+  +SeSelector(AidSelector[0..1] aidSelector)
+
+  +AidSelector getAidSelector()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_ReaderAPI)
++class SeSelector {
+  +SeSelector(AidSelector aidSelector)
+
+  +SeProtocol getSeProtocol()
+  +AtrFilter getAtrFilter()
+  +AidSelector getAidSelector()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_AID)
++class "<b>final</b> AidSelector" as AidSelector <<static>> {
+  +{static} final int AID_MIN_LENGTH = 5
+  +{static} final int AID_MAX_LENGTH = 16
+
+  +AidSelector(byte[] aidToSelect, Set<Integer> successfulSelectionStatusCodes,
+    FileOccurrence fileOccurrence = FIRST, FileControlInformation fileControlInformation = FCI)
+  +byte[] getAidToSelect()
+  +boolean isSelectNext()
+  +Set<Integer> getSuccessfulSelectionStatusCodes()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_AID_0_9_0)
++class "<b>final</b> AidSelector" as AidSelector <<static>> {
+  +{static} final int AID_MIN_LENGTH = 5
+  +{static} final int AID_MAX_LENGTH = 16
+
+  -AidSelector(AidSelectorBuilder builder)
+  +{static}AidSelectorBuilder builder()
+
+  +byte[] getAidToSelect()
+  +boolean isSelectNext()
+  +Set<Integer> getSuccessfulSelectionStatusCodes()
+}
+
++class AidSelectorBuilder {
+  -byte[5..16] aidToSelect;
+  -FileOccurrence[0..1] fileOccurrence = FIRST
+  -FileControlInformation[0..1] fileControlInformation = FCI
+  -AidSelectorBuilder()
+  +SeSelector.AidSelector build()
+
+  +AidSelectorBuilder aidToSelect(byte[] aid)
+  +AidSelectorBuilder aidToSelect(String aid)
+  +AidSelectorBuilder fileOccurrence(FileOccurrence fileOccurrence)
+  +AidSelectorBuilder fileControlInformation(FileControlInformation fileControlInformation)
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_AID_ReaderAPI)
++class "<b>final</b> AidSelector" as AidSelector <<static>> {
+  +{static} final int AID_MIN_LENGTH = 5
+  +{static} final int AID_MAX_LENGTH = 16
+
+  +AidSelector(byte[] aidToSelect, FileOccurrence fileOccurrence = FIRST,
+  FileControlInformation fileControlInformation = FCI)
+
+  +byte[] getAidToSelect()
+  +boolean isSelectNext()
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_COMPL)
++enum FileOccurrence {
+  FIRST
+  LAST
+  NEXT
+  PREVIOUS
+}
+
++enum FileControlInformation {
+  FCI
+  FCP
+  FMD
+  NO_RESPONSE
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_ATR_0_8)
++class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
+  +AtrFilter(String atrRegex)
+  +setAtrRegex(String atrRegex)
+
+  +String getAtrRegex()
+  +boolean atrMatches(byte[] atr)
+}
+@enduml
+
+@startuml(id=SEPROXY_SELECTOR_ATR_0_9)
++class "<b>final</b> AtrFilter" as AtrFilter <<static>> {
+  +AtrFilter(String atrRegex)
+
+  +String getAtrRegex()
+  +boolean atrMatches(byte[] atr)
+}
+@enduml
+
+'---- SE SELECTOR --------------------------------------------------------------]

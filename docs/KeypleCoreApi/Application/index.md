@@ -11,18 +11,18 @@ The '**Secure Element Proxy Service**' singleton provides the unique name list o
 A smart card reader is identified through its unique name in a plugin. There are two kinds of reader:
  - The ‘**SE Reader**’ is the generic interface to handle a smart card reader. The presence of SE in a reader could be checked.
  - The ‘**Observable Reader**’ interface extends SE readers which have the capability to notify registered Reader Observers about the insertion or remove of a Secure Element in the reader. Reader observers could be added or removed to the observable reader. Useful for systems automatically starting the processing of a SE at its insertion: like a ticketing validator.
-![Reader Access v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_PluginSettingAndReaderAccess_0_9_0.svg)
+![Reader Access v0.9](img/KeypleCore_SeProxy_ClassDiag_PluginSettingAndReaderAccess_0_9_0.svg)
 
 (The APDU transmission with a Secure Element is managed at the low-level SE Channel API.)
 
 ### Specific Plugin
 To hide plugin native implementation classes, the reader plugins are registered to the SE Proxy Service through related specific plugin factory.
-![Specific Plugin v0.9](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_SpecificPluginAndReader_0_9_0.svg)
+![Specific Plugin v0.9](img/KeypleCore_SeProxy_ClassDiag_SpecificPluginAndReader_0_9_0.svg)
 
 ### Reader Notifications
 To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application must implement the dedicated '**Plugin Observer**' or '**Reader Observer**' interfaces.
 
-![Reader Notifications v0.9.0](img/KeypleCore_ApplicationApi_ClassDiag_SE_Proxy_ObservablePluginAndReaderEvents_0_9_0.svg)
+![Reader Notifications v0.9.0](img/KeypleCore_SeProxy_ClassDiag_ObservablePluginAndReaderEvents_0_9_0.svg)
 
 #### Plugin event
 Several ‘Plugin Observers’ could be registered to an Observable Plugin.
@@ -46,7 +46,7 @@ When active, an observable read could switch between three internal states: ‘W
 In the nominal case, a Reader Observer indicates to the observable reader that the processing of the SE is finished by releasing the SE Channel.
 To manage a failure of the reader observer process, the observable reader interface provides also a method to finalize the SE processing.
 
-![Observable Reader States](img/KeypleCore_ApplicationApi_StateDiag_SE_Proxy_ObservableReaderStates.svg)
+![Observable Reader States](img/KeypleCore_SeProxy_StateDiag_ObservableReaderStates_0_9_0.svg)
 
 The states could be switched:
  - due to an explicit API request (blue arrows):
@@ -72,7 +72,7 @@ Depending on the SE transaction use case, or on the reader capability, there are
  - Either on a SE reader, a selection could be operated directly by transmitting the selection request. In this case the same entity manages both the SE selection and the SE processing.
  - Otherwise, on an Observable Reader, a default selection could be defined. In this case the selection is operated automatically at the insertion of the SE. In this case, the SE selection is next managed by the observable reader, but the SE processing is managed by a reader observer.
 
-![Selection v0.9](img/KeypleCore_ApplicationApi_ActivityDiag_Selection_Scenarii.svg)
+![Selection v0.9](img/KeypleCore_Selection_ActivityDiag_Scenarii.svg)
 
 ### Selection setting and processing
 A SE Selection request is defined with a SE Selector. A SE Selector could be defined with tree optional levels of selection filter.
@@ -89,6 +89,6 @@ According to the defined 'multi SE request processing' mode, the SE selection co
  - Before the new processing of SE selection request, the logical channel previously opened is closed.
  - The 'channel control' defines if the logical channel should be kept open or close after the last processed SE selection request.
 
-![SE Selection v0.9](img/KeypleCore_ApplicationApi_ClassDiag_Selection_SelectorAndSelection_0_9_0.svg)
+![SE Selection v0.9](img/KeypleCore_Selection_ClassDiag_SelectorAndSelection_0_9_0.svg)
 
 The result of a SE request selection is a card image of a matching SE. For a SE selection with multiple requests, several matching SE could be provided.

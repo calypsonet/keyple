@@ -1,0 +1,117 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+
+!include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_COMPARABLE_0_8
+
+package org.eclipse.keyple.seproxy #FFFFFF {
+  !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGIN_0_8
+  !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READER_0_8
+  ReaderPlugin "1" *-right-> "*" SeReader : readers
+
+  !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_UTIL_0_8_0
+
+  package message #FFFFFF {
+    !include ../../SeChannel/puml/KeypleCore_SeChannel_ClassDiag_ClassElements.iuml!MESSAGE_PROXYREADER_0_8
+  }
+
+  ReaderPlugin -down-|> Nameable : extends
+  ReaderPlugin -down-|> Configurable : extends
+  SeReader -down-|> Nameable : extends
+  SeReader -down-|> Configurable : extends
+
+  Comparable <|-down- ReaderPlugin : extends
+  Comparable <|-down- SeReader : extends
+  SeReader <|-right- ProxyReader : extends
+
+  package plugin #FFFFFF {
+    !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_CONFIGURABLE_0_8_1
+    together {
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_PLUGIN_0_8_1
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_0_8_1
+    }
+    AbstractPlugin-right-|> AbstractSeProxyComponent : extends
+'    AbstractPlugin <|-down-- AbstractThreadedObservablePlugin : extends
+    AbstractPlugin <|-down- AbstractObservablePlugin : extends
+    AbstractObservablePlugin <|-down- AbstractThreadedObservablePlugin : extends
+
+    Nameable <|.down. AbstractSeProxyComponent : implements
+    Configurable <|.down. AbstractSeProxyComponent : implements
+
+    ReaderPlugin <|.. AbstractPlugin : implements
+    ProxyReader <|.. AbstractReader : implements
+
+    !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_8_1
+
+    AbstractSeProxyComponent <|-right- AbstractReader : extends
+
+    package local #FFFFFF {
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_LOCALREADER_0_8_1
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLEREADER_0_8_1
+
+      AbstractObservableLocalReader -up-|> AbstractLocalReader: extends
+    }
+    AbstractReader <|-down- AbstractLocalReader : extends
+'    AbstractThreadedObservablePlugin -right[hidden]-> AbstractObservableLocalReader
+  }
+
+  package event #FFFFFF {
+    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8_1
+    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_8_1
+    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_8_1
+    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READEROBSERVER_0_8_1
+
+'    ObservablePlugin -right[hidden]-> ObservableReader
+    ObservablePlugin +-left- PluginObserver
+    ObservablePlugin "1" o-- "*" PluginObserver : observes <
+
+    ObservableReader +-right- ReaderObserver
+    ObservableReader "1" o-- "*" ReaderObserver : observes <
+  }
+
+  AbstractThreadedObservablePlugin .down.|> ObservablePlugin : implements
+  AbstractObservableLocalReader .down.|> ObservableReader : implements
+
+  ReaderPlugin <|-- ObservablePlugin : extends
+  SeReader <|-- ObservableReader : extends
+
+/'
+  package "util" as util_Observable #FFFFFF {
+    +interface Observable<T> {
+        +addObserver(<b>final</b> Observer<T> observer)
+        +removeObserver(<b>final</b> Observer<T> observer)
+        +notifyObservers(<b>final</b> T event)
+    }
+
+      +interface Observer<T> {
+        +update(T event)
+      }
+
+        Observable +-down- Observer
+        Observable "1" o-- "*" Observer : observes <
+  }
+  ObservablePlugin -down-|> Observable : extends
+  ObservableReader -down-|> Observable : extends
+
+  PluginObserver --|> Observer : extends 'T = PluginEvent'
+  ReaderObserver --|> Observer : extends 'T = ReaderEvent'
+
+'  Observable <|-up- ObservablePlugin : extends
+'  Observable <|-- ObservableReader : extends
+'/
+}
+@enduml
+
+

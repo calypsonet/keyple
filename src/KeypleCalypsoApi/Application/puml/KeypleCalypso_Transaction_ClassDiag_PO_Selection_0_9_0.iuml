@@ -1,0 +1,74 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../../KeypleCoreApi/Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+
+package org.eclipse.keyple #FFFFFF {
+  package "calypso.transaction" as transaction_sam #FFFFFF {
+    !include KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_SELECTION_SAM_0_9
+
+    SamSelector +-up- "1+" SamSelectorBuilder : build <
+    SamSelectionRequest "1" o-up- "1" SamSelector
+    SamSelectionRequest -down- CalypsoSam : selects >
+    SamResource "1" *-up- "1" CalypsoSam
+  }
+
+  package core #FFFFFF {
+    package seproxy #FFFFFF {
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_0_9_0
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_BUILDER_0_9_0
+
+      SeSelector +-up- "1+" SeSelectorBuilder : build <
+    }
+
+    package selection #FFFFFF {
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore_Selection_ClassDiag_ClassElements.iuml!SELECTION_SELECTION_0_9
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore_Selection_ClassDiag_ClassElements.iuml!SELECTION_REQUEST_0_9
+      !include ../../../KeypleCoreApi/Application/puml/KeypleCore_Selection_ClassDiag_ClassElements.iuml!SELECTION_RESOURCE_0_9
+
+      AbstractSeSelectionRequest -down- AbstractMatchingSe : selects >
+      SeSelection "1" o-up- "*" AbstractSeSelectionRequest
+      SeResource_T "1" *-up- "1" AbstractMatchingSe
+    }
+
+    AbstractSeSelectionRequest "1" o-up- "1" SeSelector
+  }
+
+  package "calypso.transaction" as transaction_po #FFFFFF {
+    !include KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_INVALIDATED
+    !include KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_PO_SHORT_0_9_0
+    !include KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_SELECTION_0_9
+
+    InvalidatedPo -left-+ PoSelector
+    PoSelector +-up- "1+" PoSelectorBuilder : build <
+    InvalidatedPo "0..1" -down-o "1" PoSelectorBuilder : set >
+
+    PoSelectionRequest "1" o-up- "1" PoSelector
+    PoSelectionRequest -down- CalypsoPo : selects >
+    PoResource "1" *-up- "1" CalypsoPo
+  }
+
+  PoSelectorBuilder -left-|> SeSelectorBuilder : extends
+  PoSelector -left-|> SeSelector : extends
+  PoSelectionRequest -left-|> AbstractSeSelectionRequest : extends
+  CalypsoPo -left-|> AbstractMatchingSe : extends
+  PoResource .left.|> SeResource_T : <<bind>>T::CalypsoPo
+
+  SeSelectorBuilder <|-right- SamSelectorBuilder : extends
+  SeSelector <|-right- SamSelector : extends
+  AbstractSeSelectionRequest <|-right- SamSelectionRequest : extends
+  AbstractMatchingSe <|-right- CalypsoSam : extends
+  SeResource_T <|.right. SamResource : <<bind>>T::CalypsoSam
+}
+@enduml

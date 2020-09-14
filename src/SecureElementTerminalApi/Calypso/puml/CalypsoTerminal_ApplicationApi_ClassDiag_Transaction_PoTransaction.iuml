@@ -1,0 +1,99 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include ../../../KeypleCoreApi/Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+
+together {
+  together {
+    !include ../../../KeypleCalypsoApi/Application/puml/KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_SECURITYSETTING_CalypsoAPI
+
+    PoSecuritySettingBuilder .right. N1
+    PoSecuritySettingBuilder -down- PoSecuritySetting : build >
+
+    together {
+      interface SamRevokedService
+
+      +class "SeResource<CalypsoSam>" as SamResource {
+        +SeResource(<color:red>SeReader seReader</color>,
+          CalypsoSam sam)
+      }
+
+      +class "<b>final</b> CalypsoSam" as CalypsoSam {
+        ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
+
+        +SamRevision getSamRevision()
+        +byte[] getSerialNumber()
+        +byte getPlatform()
+        +byte getApplicationType()
+        +byte getApplicationSubType()
+        +byte getSoftwareIssuer()
+      }
+    }
+    PoSecuritySetting "1" o-right- "0..1" SamRevokedService
+    PoSecuritySetting "1 " o-right- " 0..1" SamResource
+    SamRevokedService -down[hidden]- SamResource
+    SamResource "1" o-down- "1" CalypsoSam
+
+    together {
+      interface PoRevokedService
+      interface PoHceService
+
+      +class "SeResource<CalypsoPo>" as PoResource {
+        +SeResource(<color:red>SeReader seReader</color>,
+          CalypsoPo po);
+      }
+    }
+    PoRevokedService "0..1" -right-o "1" PoSecuritySetting
+    PoHceService "0..1 " -right-o " 1" PoSecuritySetting
+    PoRevokedService -down[hidden]- PoHceService
+    PoHceService -down[hidden]- PoResource
+
+    !include ../../../KeypleCalypsoApi/Application/puml/KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_SECURITYSERVICE
+    !include ../../../KeypleCalypsoApi/Application/puml/KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_POTRANSACTION_CalypsoAPI
+    !include ../../../KeypleCalypsoApi/Application/puml/KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_POTRANSACTION_INTPARAM
+
+    SvSetting +-down- Operation
+    SvSetting +-down- Action
+    SvSetting +-down- LogRead
+    SvSetting +-right- NegativeBalance
+
+    PoResource "1" --o "1" PoTransaction
+    PoTransaction "1" o-up- "0..1" PoSecuritySetting
+
+    PoTransaction +-down- SessionState
+
+    PoTransaction +-down- SessionSetting
+    SessionSetting +-down- EncryptionMode
+    SessionSetting +-down- ModificationMode
+    SessionSetting +-down- RatificationMode
+    SessionSetting +-- AccessLevel
+    EncryptionMode -down[hidden]- AccessLevel
+    SessionSetting +-- AuthenticationMode
+    ModificationMode -down[hidden]- AuthenticationMode
+
+    PoTransaction +-down- PinTransmissionMode
+    PoTransaction +-down- SvSetting
+
+    SessionState -right[hidden]- SessionSetting
+    SessionSetting -right[hidden]- PinTransmissionMode
+    PinTransmissionMode -right[hidden]- SvSetting
+  }
+
+  !include ../../../KeypleCalypsoApi/Application/puml/KeypleCalypso_Transaction_ClassDiag_ClassElements.iuml!TRANSACTION_POTRANSACTION_EXTPARAM
+  PoTransaction -- SelectFileControl
+'  PoTransaction -- ChannelControl
+  AuthenticationMode -down[hidden]- SelectFileControl
+'  ChannelControl -left[hidden]- SelectFileControl
+}
+@enduml

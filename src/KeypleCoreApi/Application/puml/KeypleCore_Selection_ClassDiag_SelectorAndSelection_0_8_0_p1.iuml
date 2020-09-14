@@ -1,0 +1,44 @@
+'---------------------------------------------------------------------------------
+' Copyright (c) 2018 Calypso Networks Association https://www.calypsonet-asso.org/
+'
+' See the NOTICE file(s) distributed with this work for additional
+' information regarding copyright ownership.
+'
+' This program and the accompanying materials are made available under the
+' terms of the Eclipse Public License 2.0 which is available at
+' http://www.eclipse.org/legal/epl-2.0
+'
+' SPDX-License-Identifier: EPL-2.0 4
+'---------------------------------------------------------------------------------
+
+@startuml
+!include KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+
+package org.eclipse.keyple.core.seproxy #FFFFFF {
+  !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_COMPL
+  !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_ATR_0_8
+  !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_AID
+  AidSelector +-up- FileOccurrence
+
+  AidSelector +-up- FileControlInformation
+  AidSelector "1" *-up- "1" FileOccurrence
+  AidSelector "1" *-up- "1" FileControlInformation
+
+  !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SELECTOR_0_8
+  SeSelector +-up- AidSelector
+  SeSelector "1" o-up- "0..1" AidSelector
+  SeSelector +-right- AtrFilter
+  SeSelector "1" o-right- "0..1" AtrFilter
+
+  package protocol #FFFFFF {
+    !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PROTOCOL_SETTING
+    !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PROTOCOL_MODE
+
+    SeProtocol "1" *-down- "1" TransmissionMode
+    SeCommonProtocols .up.|> SeProtocol : implements
+    TransmissionMode -right[hidden]- SeCommonProtocols
+  }
+
+  SeSelector "1" o-down- "0..1" SeProtocol
+}
+@enduml

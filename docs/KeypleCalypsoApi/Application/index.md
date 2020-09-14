@@ -11,7 +11,7 @@ In addition, a PO Selection Request provides methods:
 
 The matching SE resulting from a PO Selection Request is a Calypso PO. In case file records have been read during the selection: the corresponding data could be recovered in the Calypso PO card image.
 
-![Calypso Selection v0.9](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_PO_Selection_0_9_0.svg)
+![Calypso Selection v0.9](img/KeypleCalypso_Transaction_ClassDiag_PO_Selection_0_9_0.svg)
 
 ## Calypso Portable Object Transaction
 
@@ -37,7 +37,7 @@ A transaction with a Calypso PO is fully managed through the PoTransaction objec
 
 ### Calypso card image
 
-![Calypso PO card image](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_CalypsoPo_0_9_0.svg)
+![Calypso PO card image](img/KeypleCalypso_Transaction_ClassDiag_CalypsoPo_0_9_0.svg)
 
 ### Calypso transaction
 
@@ -48,8 +48,8 @@ Most of the process methods have a ‘Channel Control’ parameter in order to d
  - processClosing issues first the last prepared PO commands and transmits a Close Secure Session.
  - prepareManageSession allows to change authenticate or change the encryption mode.
 
-![Calypso transaction](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_PoTransaction_0_9_0.svg)
+![Calypso transaction](img/KeypleCalypso_Transaction_ClassDiag_PoTransaction_0_9_0.svg)
 
 ## Data model extension
 
-![Calypso transaction](img/KeypleCalypso_ApplicationApi_ClassDiag_Transaction_SpecificPoTransaction_0_9_0.svg)
+![Calypso transaction](img/KeypleCalypso_Transaction_ClassDiag_SpecificPoTransaction_0_9_0.svg)
