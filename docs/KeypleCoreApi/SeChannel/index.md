@@ -2,4 +2,4 @@
 version 0.9 (current 'develop' branch)
 
 ## APDU Transmission
-![APDU Transmission v0.8](img/KeypleCore_SeChannelApi_ClassDiag_SE_Proxy_ReaderMessage_0_9.svg)
+![APDU Transmission v0.8](img/KeypleCore_SeChannel_ClassDiag_ReaderMessage_0_9.svg)
