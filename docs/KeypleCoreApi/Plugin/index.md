@@ -1,5 +1,5 @@
 # Keyple Core Plugin API
-version 0.9 (current 'develop' branch)
+version 0.9
 
 ## Plugin Factorized Processing
 ![Plugin Factorized Processing v0.9](img/KeypleCore_Plugin_ClassDiag_PluginInternalImpl_0_9_0.svg)

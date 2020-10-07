@@ -12,11 +12,11 @@
 '---------------------------------------------------------------------------------
 
 @startuml
-!include KeypleCore_SeProxy_ClassDiag_ObservablePluginAndReaderEvents_shared_0_8_1.iuml
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SERVICE_0_9
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGIN_0_9
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READER_0_9
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_EVENTREADER_0_9
-!include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
+!include KeypleCore_Reader_ClassDiag_ObservablePluginAndReaderEvents_shared_1_0_0.iuml
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SERVICE_1_0_0
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEPLUGIN_1_0_0
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_EVENTREADER_1_0_0
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEREADER_1_0_0
 @enduml

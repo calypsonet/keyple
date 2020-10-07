@@ -12,25 +12,26 @@
 '---------------------------------------------------------------------------------
 
 @startuml
-!include ../../Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+!include KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
 
-package org.eclipse.keyple.seproxy #FFFFFF {
-  together {
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READER_0_9_0_PLUGIN
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_UTIL_0_9_0_PLUGIN
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGIN_0_9_0_PLUGIN
+package org.eclipse.keyple.core #FFFFFF {
+  package "reader" as core_reader #FFFFFF {
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0_PLUGIN
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_UTIL_1_0_0_PLUGIN
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0_PLUGIN
   }
-  package message #FFFFFF {
-    !include ../../SeChannel/puml/KeypleCore_SeChannel_ClassDiag_ClassElements.iuml!MESSAGE_PROXYREADER_0_9
+
+  package card #FFFFFF {
+    !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_PROXYREADER_1_0_0
   }
   ReaderPlugin -right-|> ProxyElement : extends
-  ProxyElement <|-right- SeReader : extends
-  SeReader -down-> ProxyReader : extends
+  ProxyElement <|-right- CardReader : extends
+  CardReader -down-> ProxyReader : extends
 
   package plugin #FFFFFF {
     together {
-      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_PLUGIN_0_9
-      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_0_9
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_PLUGIN_1_0_0
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_1_0_0
       !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER
     }
     AbstractPlugin <|-down- AbstractObservablePlugin : extends
@@ -38,17 +39,17 @@ package org.eclipse.keyple.seproxy #FFFFFF {
     AbstractThreadedObservablePlugin -down[hidden]-> ObservablePluginNotifier
     AbstractObservablePlugin ..|> ObservablePluginNotifier : implements
 
-    package reader #FFFFFF {
+    package "reader" as plugin_reader #FFFFFF {
       together {
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_ABSTRACTREADER_0_9_0
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_ABSTRACTREADER_1_0_0
         class Toto
       }
       together {
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_LOCALREADER_0_9_0
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_SELECTION_0_8_1
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_LOCALREADER_1_0_0
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_SELECTION_1_0_0
       }
       together {
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLEREADER_0_9_0
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLEREADER_1_0_0
         interface SmartInsertionReader
       }
       together {
@@ -72,14 +73,14 @@ package org.eclipse.keyple.seproxy #FFFFFF {
   ProxyReader <|.down. AbstractReader : implements
   ProxyReader <|-- SmartSelectionReader : extends
 
-  package event #FFFFFF {
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEPLUGIN_0_9_0
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGINOBSERVER_0_8_1
+  package reader.event #FFFFFF {
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEPLUGIN_1_0_0
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGINOBSERVER_1_0_0
     ObservablePlugin +-right- PluginObserver
     ObservablePlugin "1" o-- "*" PluginObserver : observes <
 
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READEROBSERVER_0_8_1
-    !include ../../Application/puml/KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_OBSERVABLEREADER_0_9_0
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READEROBSERVER_1_0_0
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEREADER_1_0_0
     ReaderObserver -right-+ ObservableReader
     ReaderObserver "*" --o "1" ObservableReader
 
@@ -89,6 +90,6 @@ package org.eclipse.keyple.seproxy #FFFFFF {
   ObservableReaderNotifier -down-|> ObservableReader : extends
 
   ReaderPlugin <|-- ObservablePlugin : extends
-  SeReader <|------------ ObservableReader : extends
+  CardReader <|------------ ObservableReader : extends
 }
 @enduml

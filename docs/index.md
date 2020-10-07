@@ -3,12 +3,15 @@
 ## [Calypso Api](./SecureElementTerminalApi/Calypso)
 
 <BR/><BR/>
-# Eclipse Keyple API
-(version 0.9 - current 'develop' branch)
+# Eclipse Keyple API - version 0.9
 ## [Keyple Core - Application API](./KeypleCoreApi/Application)
 ## [Keyple Core - SE Channel API](./KeypleCoreApi/SeChannel)
 ## [Keyple Core - Plugin API](./KeypleCoreApi/Plugin)
 ## [Keyple Calypso - Application API](./KeypleCalypsoApi/Application)
+
+# Eclipse Keyple API - version 1.0.0
+## [Keyple Core - Application API](./KeypleCoreApi/KeypleCore_ApplicationApi.md)
+## [Keyple Core - SmartCard solution API](./KeypleCoreApi/KeypleCore_SolutionApi.md)
 
 <BR/><BR/>
 # API evolutions

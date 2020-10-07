@@ -12,7 +12,7 @@
 '---------------------------------------------------------------------------------
 
 @startuml
-!include KeypleCore_SeProxy_ClassDiag_ObservablePluginAndReaderEvents_shared.iuml
+!include KeypleCore_SeProxy_ClassDiag_ObservablePluginAndReaderEvents_shared_0_8_1.iuml
 !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_SERVICE_0_8
 !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_PLUGIN_0_8
 !include KeypleCore_SeProxy_ClassDiag_ClassElements.iuml!SEPROXY_READER_0_8

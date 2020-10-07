@@ -37,7 +37,7 @@
   +boolean unregisterPlugin(String pluginName)
 
   +ReaderPlugin getPlugin(String name)
-  +ConcurrentMap<String, ReaderPlugin> getPlugins()
+  +Map<String, ReaderPlugin> getPlugins()
 }
 @enduml
 
@@ -87,7 +87,7 @@ package java.io <<Node>> #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_PLUGIN_0_9_COLOR)
+@startuml(id=SEPROXY_PLUGIN_0_9_0_PLUGIN)
 +interface ReaderPlugin {
   +Map<String, SeReader> <color:blue>getReaders</color>()
   +Set<String> <color:blue>getReaderNames</color>()
@@ -127,7 +127,7 @@ package java.io <<Node>> #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_READER_COLOR)
+@startuml(id=SEPROXY_READER_0_9_0_PLUGIN)
 +interface SeReader {
   +boolean <color:blue>isSePresent</color>()
   +<color:blue>addSeProtocolSetting</color>(SeProtocol seProtocol, String protocolRule)
@@ -166,13 +166,25 @@ package util #FFFFFF {
 }
 @enduml
 
-@startuml(id=SEPROXY_UTIL_0_9_COLOR)
+@startuml(id=SEPROXY_UTIL_1_0_0)
+~interface ProxyElement {
+  +String getName()
+}
+@enduml
+
+@startuml(id=SEPROXY_UTIL_0_9_0_PLUGIN)
 ~interface ProxyElement {
   +String getName()
   +setParameters(Map<String, String> parameters)
 
   +Map<String, String> <color:blue>getParameters</color>()
   +<color:blue>setParameter</color>(String key, String value)
+}
+@enduml
+
+@startuml(id=SEPROXY_UTIL_1_0_0_PLUGIN)
+~interface ProxyElement {
+  +String getName()
 }
 @enduml
 
