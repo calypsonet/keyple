@@ -12,6 +12,7 @@
 # Eclipse Keyple API - version 1.0.0
 ## [Keyple Core - Application API](./KeypleCoreApi/KeypleCore_ApplicationApi.md)
 ## [Keyple Core - SmartCard solution API](./KeypleCoreApi/KeypleCore_SolutionApi.md)
+## [Keyple Core - Plugin API](./KeypleCoreApi/KeypleCore_PluginApi.md)
 
 <BR/><BR/>
 # API evolutions
