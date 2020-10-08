@@ -258,18 +258,6 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_DEFAULTSELECTION_0_7)
-+class AbstractDefaultSelectionsRequest {
-  #AbstractDefaultSelectionsRequest(SeRequestSet selectionSeRequestSet)
-  {abstract} #SeRequestSet getSelectionSeRequestSet()
-}
-
-+class AbstractDefaultSelectionsResponse {
-  #SelectionResponse(SeResponseSet selectionSeResponseSet)
-  {abstract} #SeResponseSet getSelectionSeResponseSet()
-}
-@enduml
-
 @startuml(id=READER_DEFAULTSELECTION_PUB_1_0_0)
 +abstract AbstractDefaultSelectionsRequest {
 }
@@ -278,48 +266,15 @@ package plugin.specific #D7BDE2 {
 }
 @enduml
 
-@startuml(id=SEPROXY_DEFAULTSELECTION_0_8_0)
+@startuml(id=DEFAULT_DEFAULTSELECTION_1_0_0)
 +abstract AbstractDefaultSelectionsRequest {
-  {abstract} #Set<SeRequest> getSelectionSeRequestSet()
-  {abstract} #MultiSeRequestProcessing getMultiSeRequestProcessing()
-  {abstract} #ChannelControl getChannelControl()
-}
-
-+abstract AbstractDefaultSelectionsResponse {
-  {abstract} #List<SeResponse> getSelectionSeResponseSet()
-}
-@enduml
-
-@startuml(id=SEPROXY_DEFAULTSELECTION_0_9_0)
-+abstract AbstractDefaultSelectionsRequest {
-  -<b>final</b> List<SeRequest> selectionSeRequests
-  -<b>final</b> MultiSeRequestProcessing multiSeRequestProcessing
-  -<b>final</b> ChannelControl channelControl
-  #DefaultSelectionsRequest(List<SeRequest> selectionSeRequests,
-      MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
-
-  +<b>final</b> List<SeRequest> getSelectionSeRequests()
-  +<b>final</b> MultiSeRequestProcessing getMultiSeRequestProcessing()
-  +<b>final</b> ChannelControl getChannelControl()
-}
-
-+abstract AbstractDefaultSelectionsResponse {
-  -List<SeResponse> selectionSeResponses
-  #DefaultSelectionsResponse(List<SeResponse> selectionSeResponses)
-
-  +<b>final</b> List<SeResponse> getSelectionSeResponses()
-}
-@enduml
-
-@startuml(id=SEPROXY_DEFAULTSELECTION_1_0_0)
-+abstract AbstractDefaultSelectionsRequest {
-  #{abstract} List<SeRequest> getSelectionSeRequests()
-  #{abstract} MultiSeRequestProcessing getMultiSeRequestProcessing()
+  #{abstract} List<SelectionRequest> getSelectionRequests()
+  #{abstract} MultiSelectionProcessing getMultiSelectionProcessing()
   #{abstract} ChannelControl getChannelControl()
 }
 
 +abstract AbstractDefaultSelectionsResponse {
-  #{abstract} List<SeResponse> getSelectionSeResponses()
+  #{abstract} +List<SelectionResponse> getSelectionResponses()
 }
 @enduml
 

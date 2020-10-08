@@ -5,7 +5,7 @@
 <BR/><BR/>
 # Eclipse Keyple API - version 0.9
 ## [Keyple Core - Application API](./KeypleCoreApi/Application)
-## [Keyple Core - SE Channel API](./KeypleCoreApi/SeChannel)
+## [Keyple Core - SmartCard solution API](./KeypleCoreApi/SeChannel)
 ## [Keyple Core - Plugin API](./KeypleCoreApi/Plugin)
 ## [Keyple Calypso - Application API](./KeypleCalypsoApi/Application)
 

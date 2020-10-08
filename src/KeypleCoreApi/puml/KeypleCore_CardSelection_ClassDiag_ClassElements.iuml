@@ -45,7 +45,7 @@
 }
 
 +abstract AbstractSmartCard {
-  #AbstractSmartCard(CardResponse selectionResponse)
+  #AbstractSmartCard(SelectionResponse selectionResponse)
 
   +boolean hasAtr()
   +byte[] getAtrBytes()

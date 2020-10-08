@@ -20,7 +20,7 @@
 
 @startuml(id=CARD_PROXYREADER_1_0_0)
 +interface ProxyReader {
-  +List<SelectionResponse> transmitCardSelections(List<SelectionRequest> seRequests,
+  +List<SelectionResponse> transmitCardSelections(List<SelectionRequest> cardRequests,
     MultiSelectionProcessing multiSelectionProcessing, ChannelControl channelControl)
 
   +CardResponse transmitCardRequest(CardRequest cardRequest, ChannelControl channelControl)
@@ -31,15 +31,15 @@
 
 @startuml(id=CARD_DEFAULTSELECTION_1_0_0)
 +class "<b>final</b> DefaultSelectionsRequest" as DefaultSelectionsRequest {
-  -<b>final</b> List<SeRequest> selectionSeRequests
-  -<b>final</b> MultiSeRequestProcessing multiSeRequestProcessing
+  -<b>final</b> List<SelectionRequest> selectionRequests
+  -<b>final</b> MultiSelectionProcessing multiMode
   -<b>final</b> ChannelControl channelControl
 '
-  +DefaultSelectionsRequest(List<SeRequest> selectionSeRequests,
-    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
+  +DefaultSelectionsRequest(List<SelectionRequest> selectionRequests,
+    MultiSelectionProcessing multiMode, ChannelControl channelControl)
 
-  +List<SeRequest> getSelectionSeRequests()
-  +MultiSeRequestProcessing getMultiSeRequestProcessing()
+  +List<SelectionRequest> getSelectionRequests()
+  +MultiSelectionProcessing getMultiSelectionProcessing()
   +ChannelControl getChannelControl()
 }
 
@@ -64,7 +64,9 @@
   -<b>final</b> boolean logicalChannelStatus
   -<b>final</b> List<ApduResponse> apduResponses
 
-  +SeResponse(boolean logicalChannelStatus, List<ApduResponse> apduResponses)
+  +CardResponse(boolean logicalChannelStatus, List<ApduResponse> apduResponses)
+  +CardResponse(boolean logicalChannelStatus)
+
   +boolean isLogicalChannelOpen()
   +List<ApduResponse> getApduResponses()
 }
@@ -72,12 +74,13 @@
 
 @startuml(id=CARD_SELECTION_1_0_0)
 +class "<b>final</b> SelectionRequest" as SelectionRequest {
-  -<b>final</b> Selector selector
+  -<b>final</b> CardSelector selector
   -<b>final</b> CardRequest apduRequests
 
-  +SelectionRequest(Selector selector, CardRequest apduRequests)
+  +SelectionRequest(CardSelector selector, CardRequest apduRequests)
+  +SelectionRequest(CardSelector selector)
 
-  +SeSelector getSeSelector()
+  +CardSelector getCardSelector()
   +CardRequest getCardRequest()
 }
 
@@ -85,10 +88,10 @@
   -<b>final</b> SelectionStatus selectionStatus
   -<b>final</b> CardResponse apduResponses
 
-  +SelectionResponse(SelectionStatus selectionStatus, CardResponse apduResponses)
-  +boolean isLogicalChannelOpen()
+  +SelectionResponse(SelectionStatus selectionStatus, CardResponse cardResponse)
+
   +SelectionStatus getSelectionStatus()
-  +List<ApduResponse> getApduResponses()
+  +CardResponse getCardResponse()
 }
 @enduml
 

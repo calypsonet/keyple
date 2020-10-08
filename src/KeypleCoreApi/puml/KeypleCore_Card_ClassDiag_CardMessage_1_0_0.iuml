@@ -20,10 +20,8 @@ package org.eclipse.keyple.core #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
     package event as even_request #FFFFFF {
-  '  !include KeypleCore_Card_ClassDiag_ClassElements.iuml!READER_DEFAULTSELECTION_1_0_0
-      abstract AbstractDefaultSelectionsRequest
-      interface ObservableReader
-      abstract AbstractDefaultSelectionsResponse
+      !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!DEFAULT_DEFAULTSELECTION_1_0_0
+      !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEREADER_1_0_0
 
       ObservableReader "1" o-up- "0..1" AbstractDefaultSelectionsRequest : processes >
       ObservableReader "1" o-down- "0..1" AbstractDefaultSelectionsResponse : returns >
@@ -38,16 +36,19 @@ package org.eclipse.keyple.core #FFFFFF {
       !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_PROXYREADER_1_0_0
       !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_REQUEST_1_0_0
       !include KeypleCore_Card_ClassDiag_ClassElements.iuml!SELECTION_CHANNEL_1_0_0
+      !include KeypleCore_CardSelection_ClassDiag_ClassElements.iuml!SELECTION_MULTIPLE_1_0_0
     }
 
-    SelectionRequest "1" o-left-> "*" CardRequest : contains >
+    SelectionRequest "1" o-left-> "0..1" CardRequest : contains >
     ProxyReader "1" -left- "1" ChannelControl : sets >
-    SelectionResponse "1" o-left-> "*" CardResponse : contains >
+    MultiSelectionProcessing "1" -- "1" ProxyReader : sets <
+    SelectionResponse "1" o-left-> "0..1" CardResponse : contains >
     ChannelControl -up[hidden]-> CardRequest
     ChannelControl -down[hidden]-> CardResponse
+    MultiSelectionProcessing -right[hidden]-> ChannelControl
     ProxyReader "1" -up- "+" SelectionRequest : sends >
     ProxyReader "1" -down- "+" SelectionResponse : receives >
-    ProxyReader "1" -- "+" CardRequest : sends >
+    ProxyReader "1" -- "1" CardRequest : sends >
     ProxyReader "1" -- "1" CardResponse : receives >
 
 
@@ -59,7 +60,7 @@ package org.eclipse.keyple.core #FFFFFF {
       !include KeypleCore_CardSelection_ClassDiag_ClassElements.iuml!SELECTION_SELECTOR_1_0_0
     }
     !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_STATUS_1_0_0
-    SelectionRequest "1" o-up-|> "0..1" CardSelector : contains >
+    SelectionRequest "1" o-up-|> "1" CardSelector : contains >
     SelectionResponse "1" o-down-> "1" SelectionStatus : contains >
 
     SelectionStatus "1" o-left-> "0..1" ApduResponse : fci
@@ -91,6 +92,7 @@ class SelectionRequest <<Send>>
 class DefaultSelectionsRequest <<Send>>
 class CardSelector <<Send>>
 class ChannelControl <<Send>>
+class MultiSelectionProcessing <<Send>>
 hide <<Send>> stereotype
 
 class CardResponse <<Receive>>

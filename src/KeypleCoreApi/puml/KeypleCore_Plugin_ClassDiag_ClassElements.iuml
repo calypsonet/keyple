@@ -52,7 +52,7 @@
 @startuml(id=PLUGIN_PLUGIN_1_0_0)
 +abstract AbstractPlugin {
   -<b>final</b> String name
-  #ConcurrentMap<String, SeReader> readers
+  #ConcurrentMap<String, CardReader> readers
   --
   #{abstract} AbstractPlugin(String name)
 '
@@ -61,16 +61,16 @@
 '
   .. implementation of the public interface ReaderPlugin ..
   +<b>final</b> Set<String> getReaderNames()
-  +<b>final</b> SeReader getReader(String name)
-  +<b>final</b> Map<String, SeReader> getReaders()
+  +<b>final</b> CardReader getReader(String name)
+  +<b>final</b> Map<String, CardReader> getReaders()
 '
   .. protected abstract method to be implemented by <color:blue>native</color> ReaderPlugin ..
-  #{abstract} Map<String, SeReader> <color:blue>initNativeReaders</color>()
+  #{abstract} Map<String, CardReader> <color:blue>initNativeReaders</color>()
 }
 @enduml
 
 @startuml(id=PLUGIN_OBSERVALEPLUGIN_1_0_0)
-+abstract AbstractObservablePlugin << <color:red>internal / dedicated</color> for RemoteSePlugin >>{
++abstract AbstractObservablePlugin << <color:red>internal / dedicated</color> for RemotePlugin >>{
   -List<PluginObserver> observers
   -<b>final</b> final Object sync
   --
@@ -101,10 +101,10 @@
 
   .. protected abstract methods to be implemented by <color:blue>native</color> ObservablePlugin ..
   #{abstract} SortedSet<String> <color:blue>fetchNativeReadersNames</color>()
-  #{abstract} SeReader <color:blue>fetchNativeReader</color>(String name)
+  #{abstract} CardReader <color:blue>fetchNativeReader</color>(String name)
 '
   .. internal process ..
-  .. To review - used by unit test Stub & Remote SE ..
+  .. To review - used by unit test Stub & Remote Plugin ..
   #Boolean isMonitoring()
 }
 @enduml
@@ -137,19 +137,19 @@
 +abstract AbstractLocalReader {
   -{static}<b>final</b> byte[] getResponseHackRequestBytes
   -boolean logicalChannelIsOpen
-  -SeSelector.AidSelector.IsoAid aidCurrentlySelected
+  -CardSelector.AidSelector.IsoAid aidCurrentlySelected
   -SelectionStatus currentSelectionStatus
 '  -long before
-  -Map<SeProtocol, String> protocolsMap
+  -Map<String, String> protocolsMap
   --
   #AbstractLocalReader(String pluginName, String name)'
   .. implementation of the public interface SeReader ..
-'  +<b>final</b> boolean isSePresent()
-'  +<b>final</b> addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
-'  +<b>final</b> setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
-  +boolean isSePresent()
-  +addSeProtocolSetting(SeProtocol seProtocol, String protocolRule)
-  +setSeProtocols(Map<SeProtocol, String> seProtocolSettings)
+'  +<b>final</b> +boolean isCardPresent()
+'  +<b>final</b> +activateProtocol(String applicationReference, String pluginReference)
+'  +<b>final</b> +deactivateProtocol(String applicationReference)
+  +boolean isCardPresent()
+  +activateProtocol(String applicationReference, String pluginReference)
+  +deactivateProtocol(String applicationReference)
 '
   .. implementation of the protected abstract methods of the class AbstractReader ..
   #<b>final</b> List<SeResponse> processSeRequests(List<SeRequest> seRequests,
@@ -158,8 +158,8 @@
   #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
 '
   .. protected abstract methods to be implemented by <color:blue>native</color> SeReader ..
-  #{abstract} boolean <color:blue>protocolFlagMatches</color>(SeProtocol protocolFlag)
-  #{abstract} boolean <color:blue>checkSePresence</color>()
+  #{abstract} String <color:blue>getProtocolReference</color>()
+  #{abstract} boolean <color:blue>checkCardPresence</color>()
 
   #{abstract} <color:blue>openPhysicalChannel</color>()
   #{abstract} <color:blue>closePhysicalChannel</color>()
@@ -168,16 +168,17 @@
   #{abstract} byte[] <color:blue>getATR</color>()
   #{abstract} byte[] <color:blue>transmitApdu</color>(byte[] apduIn)
   .. internal process ..
-  #<b>final</b> Map<SeProtocol, String> getProtocolsMap()
+  #<b>final</b> Map<String, String> getProtocolsMap()
 
-  -ApduResponse recoverSelectionFciData(SeSelector.AidSelector aidSelector)
-  -ApduResponse processExplicitAidSelection(SeSelector.AidSelector aidSelector)
-  -SeResponse processSeRequestLogical(SeRequest seRequest)
+  -ApduResponse recoverSelectionFciData(CardSelector.AidSelector aidSelector)
+  -ApduResponse processExplicitAidSelection(CardSelector.AidSelector aidSelector)
+  -SelectionResponse processSelectionRequestLogical(SelectionRequest sRequest)
+  -CardResponse processCardRequestLogical(CardRequest cRequest)
   -ApduResponse processApduRequest(ApduRequest apduRequest)
   -ApduResponse case4HackGetResponse(int originalStatusCode)
 
-  ~SelectionStatus openLogicalChannel(SeSelector seSelector)
-  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(SeSelector seSelector)
+  ~SelectionStatus openLogicalChannel(CardSelector selector)
+  ~<b>final</b> SelectionStatus openLogicalChannelAndSelect(CardSelector selector)
   ~<b>final</b> boolean isLogicalChannelOpen()
   -closeLogicalChannel()
   ~closeLogicalAndPhysicalChannels()
@@ -203,9 +204,9 @@
   +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
       NotificationMode notificationM, PollingMode[0..1] pollingM)
 
-  +<b>final</b> startSeDetection(ObservableReader.PollingMode pollingMode)
-  +<b>final</b> stopSeDetection()
-  +<b>final</b> finalizeSeProcessing()
+  +<b>final</b> startCardDetection(ObservableReader.PollingMode pollingMode)
+  +<b>final</b> stopCardDetection()
+  +<b>final</b> finalizeCardProcessing()
 '
   .. implementation the public interface ObservableReaderNotifier ..
   +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)
@@ -219,15 +220,15 @@
   #<color:blue>onEvent</color>(InternalEvent event)
 '
 
-  ~terminateSeCommunication()
+  ~terminateCardCommunication()
 
   ~startRemovalSequence()
-  ~<b>final</b> ReaderEvent processSeInserted()
-  ~<b>final</b> processSeRemoved()
+  ~<b>final</b> ReaderEvent processCardInserted()
+  ~<b>final</b> processCardRemoved()
   ~ObservableReader.PollingMode getPollingMode()
   ~switchState(AbstractObservableState.MonitoringState stateId)
   ~AbstractObservableState.MonitoringState getCurrentMonitoringState()
-  ~boolean isSePresentPing()
+  ~boolean isCardPresentPing()
 }
 @enduml
 

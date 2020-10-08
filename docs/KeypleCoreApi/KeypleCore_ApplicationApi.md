@@ -3,7 +3,7 @@ version 1.0.0
 
 ## Reader Access
 On Keyple, the smart card readers are managed through plugins in order to integrate specific reader solutions.
-The '**Secure Element Proxy Service**' singleton provides the unique name list of registered plugins. There can be three kinds of plugin:
+The '**SmartCard Service**' singleton provides the unique name list of registered plugins. There can be three kinds of plugin:
  - The ‘**Reader Plugin**’ is the generic interface to list the readers of a plugin, or to access to a specific reader with its name.
  - The ‘**Observable Plugin**’ interface extends reader plugins which have the capability to be observed: in order to notify registered Plugin Observers about the plug or unplug of readers. Plugin observers could be added or removed to the observable plugin. Useful for systems allowing the hot plug / unplug of readers.
  - A ‘**Reader Pool Plugin**’ is a plugin for which a reader is available only after an explicit allocation. When not more necessary, a reader must be released. Useful for server solutions managing farms of readers or interfaced with HSM: unallocated readers or HSM SE instances could be shared between several smart card terminal solutions.
