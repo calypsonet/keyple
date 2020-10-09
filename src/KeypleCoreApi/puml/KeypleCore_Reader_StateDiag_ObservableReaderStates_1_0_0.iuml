@@ -14,12 +14,12 @@ state "Card observation <b>disabled</b>" as Card_ObservationDisabled {
 
 state "Card observation <b>activated</b>" as Card_ObservationActivated {
   Card_ObservationActivated : number of observer > 0  &&  PollingMode defined
-  WaitForCardInsertion -down[#Red]-> WaitForSeProcessing : notifies 'Card matched'\n|| \n'Card inserted' &&\n(NotificationMode == always)\n\n
+  WaitForCardInsertion -down[#Red]-> WaitForCardProcessing : notifies 'Card matched'\n|| \n'Card inserted' &&\n(NotificationMode == always)\n\n
   WaitForCardInsertion -down[#Red]-> WaitForCardRemoval : 'Card inserted' not notified &&\n((NotificationMode == match_only)\n&& selection failed)
   WaitForCardRemoval -up[#Red]-> WaitForCardInsertion : notifies 'Card removed' &&\n(PollingMode == Repeating)
-  WaitForSeProcessing -up[#Red,dashed]-> WaitForCardInsertion : notifies 'Card removed' &&\n(Observable Reader\nwith the capability\nto detect the removal\nat any time)
+  WaitForCardProcessing -up[#Red,dashed]-> WaitForCardInsertion : notifies 'Card removed' &&\n(Observable Reader\nwith the capability\nto detect the removal\nat any time)
 
-  WaitForSeProcessing -right[#Blue]-> WaitForCardRemoval : finalizeCardProcessing()\n|| \n'Card channel release requested'
+  WaitForCardProcessing -right[#Blue]-> WaitForCardRemoval : finalizeCardProcessing()\n|| \n'Card channel release requested'
 }
 
 WaitForStartDetection -down[#Blue]-> WaitForCardInsertion : startCardDetection(PollingMode)

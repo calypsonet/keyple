@@ -14,7 +14,7 @@
 @startuml(id=PLUGIN_FACTORY_1_0_0)
 +interface PluginFactory {
   +String getPluginName()
-  +ReaderPlugin getPluginInstance()
+  +Plugin getPluginInstance()
 }
 @enduml
 
@@ -52,20 +52,20 @@
 @startuml(id=PLUGIN_PLUGIN_1_0_0)
 +abstract AbstractPlugin {
   -<b>final</b> String name
-  #ConcurrentMap<String, CardReader> readers
+  #ConcurrentMap<String, Reader> readers
   --
   #{abstract} AbstractPlugin(String name)
 '
   .. implementation of the package interface ProxyElement ..
   +<b>final</b> String getName()
 '
-  .. implementation of the public interface ReaderPlugin ..
+  .. implementation of the public interface Plugin ..
   +<b>final</b> Set<String> getReaderNames()
-  +<b>final</b> CardReader getReader(String name)
-  +<b>final</b> Map<String, CardReader> getReaders()
+  +<b>final</b> Reader getReader(String name)
+  +<b>final</b> Map<String, Reader> getReaders()
 '
-  .. protected abstract method to be implemented by <color:blue>native</color> ReaderPlugin ..
-  #{abstract} Map<String, CardReader> <color:blue>initNativeReaders</color>()
+  .. protected abstract method to be implemented by <color:blue>native</color> Plugin ..
+  #{abstract} Map<String, Reader> <color:blue>initNativeReaders</color>()
 }
 @enduml
 
@@ -101,7 +101,7 @@
 
   .. protected abstract methods to be implemented by <color:blue>native</color> ObservablePlugin ..
   #{abstract} SortedSet<String> <color:blue>fetchNativeReadersNames</color>()
-  #{abstract} CardReader <color:blue>fetchNativeReader</color>(String name)
+  #{abstract} Reader <color:blue>fetchNativeReader</color>(String name)
 '
   .. internal process ..
   .. To review - used by unit test Stub & Remote Plugin ..

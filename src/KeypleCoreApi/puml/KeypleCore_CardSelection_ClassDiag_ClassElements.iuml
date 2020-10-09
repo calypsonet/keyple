@@ -25,7 +25,7 @@
   +int prepareSelection(AbstractCardSelectionRequest cardSelectionRequest)
   +<b>final</b> prepareReleaseCardChannel()
 
-  +SelectionsResult processExplicitSelection(CardReader reader)
+  +SelectionsResult processExplicitSelection(Reader reader)
 
   +AbstractDefaultSelectionsRequest getSelectionOperation()
   +SelectionsResult processDefaultSelection(
@@ -82,8 +82,8 @@
 
 @startuml(id=SELECTION_RESOURCE_1_0_0)
 +class "<b>final</b> CardResource<T extends AbstractSmartCard>" as CardResource_T {
-  #CardResource(CardReader reader, T card)
-  +CardReader getCardReader()
+  #CardResource(Reader reader, T card)
+  +Reader getReader()
   +T getSmartCard()
 }
 @enduml

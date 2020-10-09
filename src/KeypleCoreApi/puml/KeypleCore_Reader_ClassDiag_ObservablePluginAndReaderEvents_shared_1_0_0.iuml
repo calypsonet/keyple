@@ -58,14 +58,14 @@ AbstractDefaultSelectionsResponse -down[hidden]- AbstractDefaultSelectionsReques
 '---- EVENT_READER_RELATION ----------------------------------------------------]
   }
 
-  interface ReaderPlugin
-  interface CardReader
+  interface Plugin
+  interface Reader
 
-  SmartCardService "1" *--> "*" ReaderPlugin : plugins
-  ReaderPlugin "1" *-down-> "*" CardReader : readers
+  SmartCardService "1" *--> "*" Plugin : plugins
+  Plugin "1" *-down-> "*" Reader : readers
 
-  ObservablePlugin -left-|> ReaderPlugin : extends
-  ObservableReader -left-|> CardReader : extends
+  ObservablePlugin -left-|> Plugin : extends
+  ObservableReader -left-|> Reader : extends
 }
 
 SpecificPluginObserver .down.|> PluginObserver : implements

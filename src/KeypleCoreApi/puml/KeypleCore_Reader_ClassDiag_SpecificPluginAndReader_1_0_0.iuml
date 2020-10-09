@@ -14,28 +14,33 @@
 @startuml
 !include KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
 
-package external.terminalapplication #3399FF {
+package specific.terminal_application #85C1E9 {
   class SpecificTerminal
 }
 
-package org.eclipse.keyple.core.reader #FFFFFF {
-  !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SERVICE_1_0_0
-  !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_FACTORY_1_0_0
-  !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
-  !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
+package org.eclipse.keyple.core #FFFFFF {
+  package reader #FFFFFF {
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SERVICE_1_0_0
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
+    !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
-  SmartCardService "1" *-down-> "*" ReaderPlugin : plugins
-  ReaderPlugin "1" *-right-> "*" CardReader : readers
+    SmartCardService "1" *-down-> "*" Plugin : plugins
+    Plugin "1" *-left-> "*" Reader : readers
+  }
+  package plugin.setting #FFFFFF {
+    !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_FACTORY_1_0_0
+  }
 
-  SmartCardService "1" *--> "*" PluginFactory : registers
-  PluginFactory "1" -right-> "1" ReaderPlugin : creates
+  plugin.setting -left[hidden]- reader
+  SmartCardService "1" *-right-> "*" PluginFactory : registers
+  PluginFactory "1" --> "1" Plugin : creates >
 }
 
-!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SPECIFICPLUGIN_1_0_0
 
+!include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SPECIFICPLUGIN_1_0_0
 SpecificTerminal -down-> SmartCardService : uses >
 
 PluginFactory <|.down. SpecificPluginFactory : implements
-ReaderPlugin <|.. SpecificPlugin : implements
-CardReader <|.. SpecificReader : implements
+Plugin <|.down. SpecificPlugin : implements
+Reader <|.down. SpecificReader : implements
 @enduml

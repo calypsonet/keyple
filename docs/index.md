@@ -13,6 +13,7 @@
 ## [Keyple Core - Application API](./KeypleCoreApi/KeypleCore_ApplicationApi.md)
 ## [Keyple Core - SmartCard solution API](./KeypleCoreApi/KeypleCore_SolutionApi.md)
 ## [Keyple Core - Plugin API](./KeypleCoreApi/KeypleCore_PluginApi.md)
+## [Keyple Calypso Application API](./KeypleCalypso/KeypleCalypso_Transaction.md)
 
 <BR/><BR/>
 # API evolutions

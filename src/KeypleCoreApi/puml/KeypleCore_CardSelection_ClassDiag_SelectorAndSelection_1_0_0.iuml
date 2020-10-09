@@ -75,11 +75,11 @@ package org.eclipse.keyple.core #FFFFFF {
 '    AbstractSmartCard "1" *-- "0..1" TransmissionMode
   }
 
-  CardSelection -up- CardReader : sends <
+  CardSelection -up- Reader : sends <
   CardSelection -up- AbstractDefaultSelectionsRequest : exports >
   CardSelection -up- AbstractDefaultSelectionsResponse : imports >
 
-  SelectionsResult -up- CardReader : receives <
-  CardReader "0..1" --* "1" CardResource_T : connected to <
+  SelectionsResult -up- Reader : receives <
+  Reader "0..1" --* "1" CardResource_T : connected to <
 }
 @enduml

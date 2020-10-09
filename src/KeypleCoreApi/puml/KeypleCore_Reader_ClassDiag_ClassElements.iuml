@@ -14,47 +14,47 @@
 @startuml(id=READER_SERVICE_1_0_0)
 +class "<b>final</b> SmartCardService" as SmartCardService << Singleton >> {
   -<b>final</b> {static}SmartCardService uniqueInstance
-  -<b>final</b> ConcurrentMap<String, ReaderPlugin> plugins
+  -<b>final</b> ConcurrentMap<String, Plugin> plugins
   +{static}SmartCardService getInstance()
   +String getVersion()
 
-  +ReaderPlugin registerPlugin(PluginFactory pluginFactory)
+  +Plugin registerPlugin(PluginFactory pluginFactory)
   +boolean isRegistered(String pluginName)
   +boolean unregisterPlugin(String pluginName)
 
-  +ReaderPlugin getPlugin(String name)
-  +Map<String, ReaderPlugin> getPlugins()
+  +Plugin getPlugin(String name)
+  +Map<String, Plugin> getPlugins()
 }
 @enduml
 
 @startuml(id=READER_PLUGIN_1_0_0)
-+interface ReaderPlugin {
++interface Plugin {
   +String getName()
 
-  +Map<String, CardReader> getReaders()
+  +Map<String, Reader> getReaders()
   +Set<String> getReaderNames()
-  +CardReader getReader(String name)
+  +Reader getReader(String name)
 }
 @enduml
 
 @startuml(id=READER_PLUGIN_1_0_0_PLUGIN)
-+interface ReaderPlugin {
-  +Map<String, SeReader> <color:blue>getReaders</color>()
++interface Plugin {
+  +Map<String, Reader> <color:blue>getReaders</color>()
   +Set<String> <color:blue>getReaderNames</color>()
-  +SeReader <color:blue>getReader</color>(String name)
+  +Reader <color:blue>getReader</color>(String name)
 }
 @enduml
 
 @startuml(id=READER_POOLPLUGIN)
-+interface ReaderPoolPlugin {
++interface PoolPlugin {
   +SortedSet<String> getReaderGroupReferences()
-  +CardReader allocateReader(String groupReference)
-  +releaseReader(CardReader reader)
+  +Reader allocateReader(String groupReference)
+  +releaseReader(Reader reader)
 }
 @enduml
 
 @startuml(id=READER_READER_1_0_0)
-+interface CardReader {
++interface Reader {
   +String getName()
 
   +boolean isCardPresent()
@@ -65,17 +65,11 @@
 @enduml
 
 @startuml(id=READER_READER_1_0_0_PLUGIN)
-+interface CardReader {
++interface Reader {
   +boolean <color:blue>isCardPresent</color>()
   +<color:blue>activateProtocol</color>(String applicationReference, String pluginReference)
   +<color:blue>deactivateProtocol</color>(String applicationReference)
   +boolean <color:blue>isContactlessTransmission</color>()
-}
-@enduml
-
-@startuml(id=SEPROXY_READER_ReaderAPI)
-+interface SeReader {
-  +String getName()
 }
 @enduml
 
@@ -86,7 +80,7 @@
 @enduml
 
 @startuml(id=READER_TERMINALAPPLICATION_1_0_0)
-package external.terminalapplication #85C1E9 {
+package specific.terminal_application #85C1E9 {
   class SpecificTerminal
 
   class SpecificPluginObserver {
@@ -102,10 +96,10 @@ package external.terminalapplication #85C1E9 {
 @enduml
 
 @startuml(id=READER_SPECIFICPLUGIN_1_0_0)
-package plugin.specific #D7BDE2 {
+package specific.plugin #D7BDE2 {
   +class "<b>final</b> SpecificPluginFactory" as SpecificPluginFactory {
-    #String getPluginName()
-    #ReaderPlugin getPluginInstance()
+    +String getPluginName()
+    +Plugin getPluginInstance()
   }
 
   ~class SpecificPlugin << Singleton >> {
@@ -236,8 +230,8 @@ package plugin.specific #D7BDE2 {
 
   +String getPluginName()
   +String getReaderName()
-  +ReaderPlugin getPlugin()
-  +SeReader getReader()
+  +Plugin getPlugin()
+  +Reader getReader()
 
   +AbstractDefaultSelectionsResponse getDefaultSelectionsResponse()
 }

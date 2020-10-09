@@ -12,12 +12,12 @@
 '---------------------------------------------------------------------------------
 
 @startuml
-!include ../../../KeypleCoreApi/Application/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
+!include ../../KeypleCoreApi/puml/KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
 
 package calypso {
 package transaction {
-+class "SeResource<CalypsoSam>" as SamResource {
-  +SeResource(<color:red>SeReader seReader</color>, CalypsoSam sam)
++class "CardResource<CalypsoSam>" as SamResource {
+  +CardResource(<color:red>Reader reader</color>, CalypsoSam sam)
 }
 }
 
@@ -41,10 +41,10 @@ package sammanager {
 }
 
 +abstract SamResourceManager <<not prefixed Abstract !!! >> {
-  #SamResourceManagerDefault.ManagedSamResource createSamResource(SeReader samReader)
+  #SamResourceManagerDefault.ManagedSamResource createSamResource(Reader samReader)
   .. abstract methods to be implemented ..
-  +{abstract} SeResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
-  +{abstract} freeSamResource(SeResource<CalypsoSam> samResource)
+  +{abstract} CardResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
+  +{abstract} freeSamResource(CardResource<CalypsoSam> samResource)
 }
 
 SamResourceManager +-up- AllocationMode
@@ -57,8 +57,8 @@ SamResourceManager -up- SamResourceManagerFactory : build <
 
   #SamResourceManagerPool(ReaderPoolPlugin samReaderPoolPlugin, int maxBlockingTime, int sleepTime)
   .. Override SamResourceManager abstract methods ..
-  +SeResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
-  +freeSamResource(SeResource<CalypsoSam> samResource)
+  +CardResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
+  +freeSamResource(CardResource<CalypsoSam> samResource)
 }
 
 +class SamResourceManagerDefault {
@@ -69,12 +69,12 @@ SamResourceManager -up- SamResourceManagerFactory : build <
   -<b>final</b> int sleepTime
 --
   #SamResourceManagerDefault(ReaderPlugin readerPlugin, String samReaderFilter, int maxBlockingTime, int sleepTime)
-  -initSamReader(SeReader samReader, ReaderObserver readerObserver)
-  #removeResource(SeReader samReader)
+  -initSamReader(Reader samReader, ReaderObserver readerObserver)
+  #removeResource(Reader samReader)
 
   .. Override SamResourceManager abstract methods ..
-  +SeResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
-  +freeSamResource(SeResource<CalypsoSam> samResource)
+  +CardResource<CalypsoSam> allocateSamResource(AllocationMode allocationMode, SamIdentifier samIdentifier)
+  +freeSamResource(CardResource<CalypsoSam> samResource)
 }
 
 
@@ -94,7 +94,7 @@ SamIdentifier -down[hidden]- SamResourceManagerPool
   -SamResourceStatus samResourceStatus
   -SamIdentifier samIdentifier
 
-  +ManagedSamResource(SeReader seReader, CalypsoSam calypsoSam)
+  +ManagedSamResource(Reader reader, CalypsoSam calypsoSam)
   +boolean isSamResourceFree()
   +setSamIdentifier(SamIdentifier samIdentifier)
   +boolean isSamMatching(SamIdentifier samIdentifier)

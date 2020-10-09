@@ -17,7 +17,7 @@
 start
 partition "Reader initialization" {
 	:register plugin;
-	:get cad reader;
+	:get reader;
 	:prepare card selection request;
 }
 

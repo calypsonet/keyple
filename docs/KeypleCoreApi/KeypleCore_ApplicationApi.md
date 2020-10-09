@@ -4,19 +4,19 @@ version 1.0.0
 ## Reader Access
 On Keyple, the smart card readers are managed through plugins in order to integrate specific reader solutions.
 The '**SmartCard Service**' singleton provides the unique name list of registered plugins. There can be three kinds of plugin:
- - The ‘**Reader Plugin**’ is the generic interface to list the readers of a plugin, or to access to a specific reader with its name.
- - The ‘**Observable Plugin**’ interface extends reader plugins which have the capability to be observed: in order to notify registered Plugin Observers about the plug or unplug of readers. Plugin observers could be added or removed to the observable plugin. Useful for systems allowing the hot plug / unplug of readers.
- - A ‘**Reader Pool Plugin**’ is a plugin for which a reader is available only after an explicit allocation. When not more necessary, a reader must be released. Useful for server solutions managing farms of readers or interfaced with HSM: unallocated readers or HSM instances could be shared between several smart card terminal solutions.
+ - The ‘**Plugin**’ is the generic interface to list the readers of a plugin, or to access to a specific reader with its name.
+ - The ‘**Observable Plugin**’ interface extends Plugins which have the capability to be observed: in order to notify registered Plugin Observers about the plug or unplug of readers. Plugin Observers could be added or removed to the Observable Plugin. Useful for systems allowing the hot plug / unplug of Readers.
+ - A ‘**Pool Plugin**’ is a plugin for which a Reader is available only after an explicit allocation. When not more necessary, a Reader must be released. Useful for server solutions managing farms of Readers or interfaced with HSM: unallocated Readers or HSM instances could be shared between several smartcard terminal solutions.
 
-A smart card reader is identified through its unique name in a plugin. There are two kinds of reader:
- - The ‘**Card Reader**’ is the generic interface to handle a smart card reader. The presence of card in a reader could be checked.
- - The ‘**Observable Reader**’ interface extends card readers which have the capability to notify registered Reader Observers about the insertion or remove of a smartcard in the reader. Reader observers could be added or removed to the observable reader. Useful for systems automatically starting the processing of a card at its insertion: like a ticketing validator.
+A smartcard Reader is identified through its unique name in a Plugin. There are two kinds of Reader:
+ - The ‘**Reader**’ is the generic interface to handle a smartcard reader. The presence of card in a Reader could be checked.
+ - The ‘**Observable Reader**’ interface extends Readers which have the capability to notify registered Reader Observers about the insertion or remove of a Card in the Reader. Reader Observers could be added or removed to the Observable Reader. Useful for systems automatically starting the processing of a Card at its insertion: like a ticketing validator.
 ![Reader Access v1.0.0](img/KeypleCore_Reader_ClassDiag_PluginSettingAndReaderAccess_1_0_0.svg)
 
-(The APDU transmission with a card is managed at a lower layer, throught the SmartCard solution API.)
+(The APDU transmission with a Card is managed at a lower layer, through a Card Solution API.)
 
 ### Specific Plugin
-To hide plugin native implementation classes, the reader plugins are registered to the Card Service through related specific plugin factory.
+To hide Plugin native implementation classes, the Plugins are registered to the SmartCard Service through related specific Plugin Factory.
 ![Specific Plugin v1.0.0](img/KeypleCore_Reader_ClassDiag_SpecificPluginAndReader_1_0_0.svg)
 
 ### Reader Notifications
@@ -24,27 +24,27 @@ To be notified about '**Plugin Event**' or '**Reader Event**', a terminal applic
 
 ![Reader Notifications v1.0.0](img/KeypleCore_Reader_ClassDiag_ObservablePluginAndReaderEvents_1_0_0.svg)
 
-#### Plugin event
+#### Plugin Event
 Several ‘Plugin Observers’ could be registered to an Observable Plugin.
-In case of reader connection / disconnection, the observable plugin notifies sequentially the registered observers with the corresponding plugin event.
-The observable plugin is a blocking API, the thread managing the issuance of the plugin event waits the acknowledge of the observer currently notified.
+In case of reader connection / disconnection, the Observable Plugin notifies sequentially the registered Plugin Observers with the corresponding Plugin Event.
+The Observable Plugin is a blocking API, the thread managing the issuance of the Plugin Event waits the acknowledge of the Plugin Observer currently notified.
 
-#### Reader event
+#### Reader Event
 Several ‘Reader Observers’ could be registered to an Observable Reader.
-In case of card insertion / removal or selection match, the observable reader notifies sequentially the registered observers with the corresponding reader event. The observable reader could be a blocking API, the thread managing the issuance of the plugin event could wait the acknowledge of the notified observers.
+In case of Card insertion / removal or selection match, the Observable Reader notifies sequentially the registered Reader Observers with the corresponding Reader Event. The Observable Reader could be a blocking API, the thread managing the issuance of the Plugin Event could wait the acknowledge of the notified Reader Observers.
 
-An observable reader has the capability to be set with a ‘Default Selections Request’: in this case when a SE is inserted in the reader, the reader will try to operate the configured default selections. If a selection successfully matches with the SE, instead to simply notify the insertion of SE, the observable reader will notify about a successful selection with a SE application.
- - If the notification mode is defined as ‘always’, then in case of card insertion, the observable reader will notify a matched card reader event in case of successful selection, or a simple inserted card reader event if not.
- - If the notification mode is defined as ‘matched only’, then in case of card insertion, simple inserted card reader events are not notified.
+An Observable Reader has the capability to be set with a ‘Default Selections Request’: in this case when a Card is inserted in the Reader, the Reader will try to operate the configured default selections. If a selection successfully matches with the Card, instead to simply notify about the insertion of a Card, the Observable Reader will notify about a successful selection with a Card application.
+ - If the notification mode is defined as ‘always’, then in case of Card insertion, the Observable Reader will notify a matched card Reader Event in case of successful selection, or a simple card insertion Reader Event if not.
+ - If the notification mode is defined as ‘matched only’, then in case of Card insertion, simple card insertion Reader Events are not notified.
 
-When the processing of an inserted or matched card is finished, a reader observer must release the logical channel with the smartcard, in order to prepare the observable reader to detect the removal of the card.
+When the processing of an inserted or matched Card is finished, a Reader Observer must release the logical channel with the Card, in order to prepare the Observable Reader to detect the removal of the Card.
 
-#### Observable reader states
-An observable reader is active only when at least one reader observer is registered, and if the start of the detection has been requested. 
-When active, an observable read could switch between three internal states: ‘Wait for Card Insertion’, ‘Wait for Card Processing’, & ‘Wait for Card Removal’.
+#### Observable Reader states
+An Observable Reader is active only when at least one Reader Observer is registered, and if the start of the detection has been requested. 
+When active, an Observable Reader could switch between three internal states: ‘Wait for Card Insertion’, ‘Wait for Card Processing’, & ‘Wait for Card Removal’.
 
-In the nominal case, a Reader Observer indicates to the observable reader that the processing of the SE is finished by releasing the Card Channel.
-To manage a failure of the reader observer process, the observable reader interface provides also a method to finalize the card processing.
+In the nominal case, a Reader Observer indicates to the Observable Reader that the processing of the SE is finished by releasing the Card Channel.
+To manage a failure of the Reader Observer process, the Observable Reader interface provides also a method to finalize the Card processing.
 
 ![Observable Reader States](img/KeypleCore_Reader_StateDiag_ObservableReaderStates_1_0_0.svg)
 
@@ -53,23 +53,23 @@ The states could be switched:
    - the release of the Card Channel,
    - the call of an Observable Reader method:
      - the addition or the remove of an Observable Reader,
-     - a request to start or stop the detection, to finalize the card processing.
- - Or because of an external event (red arrows), the insertion or the remove of a card.
-   - the insertion a card causing the observable reader to notify a 'card matched' reader event (in case of successful default selection) or a 'card inserted' reader event (Notification Mode defined as always).
-   - the removal of a card causing the observable reader to notify a 'card removed' reader event.
+     - a request to start or stop the detection, to finalize the Card processing.
+ - Or because of an external event (red arrows), the insertion or the remove of a Card.
+   - the insertion a Card causing the Observable Reader to notify a 'Card matched' Reader Event (in case of successful default selection) or a 'Card inserted' Reader Event (Notification Mode defined as always).
+   - the removal of a Card causing the Observable Reader to notify a 'Card removed' Reader Event.
 
-If a card detection is started with the 'repeating' polling mode, then later when the card is removed, the reader starts again to detect a card.
+If a Card detection is started with the 'repeating' polling mode, then later when the Card is removed, the Reader starts again the detection of a new Card.
 
-Whatever the plugin of observable reader, when waiting for the card removal, any observable reader shall have the capability to notify the remove of the card.
-Some reader plugin solution could have the capability to notify a card removal also during the processing of the card.
+Whatever the Plugin of Observable Reader, when waiting for the Card removal, any Observable Reader shall have the capability to notify the remove of the Card.
+Some Plugin solutions could have the capability to notify a Card removal also during the processing of the Card.
 
 
 ## Card Selection
 
 ### Selection scenarios
-Depending on the card transaction use case, or on the reader capability, there are two ways to manage the selection of a card:
- - Either on a card reader, a selection could be operated directly by transmitting the selection request. In this case the same entity manages both the card selection and the card processing.
- - Otherwise, on an Observable Reader, a default selection could be defined. In this case the selection is operated automatically at the insertion of the card. In this case, the card selection is next managed by the observable reader, but the card processing is managed by a reader observer.
+Depending on the Card transaction use case, or on the Reader capability, there are two ways to manage the Selection of a Card:
+ - Either on a simple Reader, a Selection could be operated directly by transmitting the Selection Request. In this case the same entity manages both the Card Selection and the Card processing.
+ - Otherwise, on an Observable Reader, a Default Selection could be defined. In this case the Selection is operated automatically at the insertion of the Card. In this case, the Card Selection is next managed by the Observable Reader, but the Card processing is managed by a Reader Observer.
 
 ![Selection v1.0.0](img/KeypleCore_CardSelection_ActivityDiag_Scenarii.svg)
 

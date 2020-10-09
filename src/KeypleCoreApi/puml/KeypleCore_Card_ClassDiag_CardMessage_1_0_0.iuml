@@ -27,7 +27,7 @@ package org.eclipse.keyple.core #FFFFFF {
       ObservableReader "1" o-down- "0..1" AbstractDefaultSelectionsResponse : returns >
     }
 
-    ObservableReader -left-|> CardReader : extends
+    ObservableReader -left-|> Reader : extends
   }
 
   package card #FFFFFF {
@@ -71,7 +71,7 @@ package org.eclipse.keyple.core #FFFFFF {
   }
 
   card -right[hidden]- reader
-  ProxyReader -right-|> CardReader : extends
+  ProxyReader -right-|> Reader : extends
   DefaultSelectionsRequest -right-|> AbstractDefaultSelectionsRequest : extends
   DefaultSelectionsResponse -right-|> AbstractDefaultSelectionsResponse : extends
 }

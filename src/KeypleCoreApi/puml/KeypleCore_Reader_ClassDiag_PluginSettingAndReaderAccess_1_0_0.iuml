@@ -23,30 +23,30 @@ package org.eclipse.keyple.core #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
-    SmartCardService "1" *-down-> "*" ReaderPlugin : plugins
-    ReaderPlugin "1" *-right-> "*" CardReader : readers
+    SmartCardService "1" *-down-> "*" Plugin : plugins
+    Plugin "1" *-right-> "*" Reader : readers
 
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_POOLPLUGIN
-    ReaderPlugin <|-- ReaderPoolPlugin : extends
+    Plugin <|-- PoolPlugin : extends
 
     package event #FFFFFF {
       !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEPLUGIN_1_0_0
       !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_OBSERVABLEREADER_1_0_0
     }
-    ReaderPlugin <|-- ObservablePlugin : extends
-    CardReader <|-- ObservableReader : extends
+    Plugin <|-- ObservablePlugin : extends
+    Reader <|-- ObservableReader : extends
   }
 
   PluginFactory "*" -down- "1" SmartCardService : registers <
-  PluginFactory "1" --> "1" ReaderPlugin : creates >
+  PluginFactory "1" --> "1" Plugin : creates >
 }
 
-interface ReaderPlugin <<Plugin>>
+interface Plugin <<Plugin>>
 interface ObservablePlugin <<Plugin>>
-interface ReaderPoolPlugin <<Plugin>>
+interface PoolPlugin <<Plugin>>
 hide <<Plugin>> stereotype
 
-interface CardReader <<Reader>>
+interface Reader <<Reader>>
 interface ObservableReader <<Reader>>
 hide <<Reader>> stereotype
 

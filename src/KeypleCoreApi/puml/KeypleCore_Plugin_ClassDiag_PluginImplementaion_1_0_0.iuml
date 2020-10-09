@@ -24,9 +24,9 @@ package org.eclipse.keyple.core #FFFFFF {
   package card #FFFFFF {
     !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_PROXYREADER_1_0_0
   }
-  ReaderPlugin -right-|> ProxyElement : extends
-  ProxyElement <|-right- CardReader : extends
-  CardReader -down-> ProxyReader : extends
+  Plugin -right-|> ProxyElement : extends
+  ProxyElement <|-right- Reader : extends
+  Reader -down-> ProxyReader : extends
 
   package plugin #FFFFFF {
     together {
@@ -69,7 +69,7 @@ package org.eclipse.keyple.core #FFFFFF {
       ObservableReaderNotifier <|-- SmartInsertionReader : extends
     }
   }
-  ReaderPlugin <|.down. AbstractPlugin : implements
+  Plugin <|.down. AbstractPlugin : implements
   ProxyReader <|.down. AbstractReader : implements
   ProxyReader <|-- SmartSelectionReader : extends
 
@@ -89,7 +89,7 @@ package org.eclipse.keyple.core #FFFFFF {
   ObservablePluginNotifier -down-|> ObservablePlugin : extends
   ObservableReaderNotifier -down-|> ObservableReader : extends
 
-  ReaderPlugin <|-- ObservablePlugin : extends
-  CardReader <|------------ ObservableReader : extends
+  Plugin <|-- ObservablePlugin : extends
+  Reader <|------------ ObservableReader : extends
 }
 @enduml
