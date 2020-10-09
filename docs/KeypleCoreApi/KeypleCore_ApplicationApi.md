@@ -15,9 +15,9 @@ A smartcard Reader is identified through its unique name in a Plugin. There are 
 
 (The APDU transmission with a Card is managed at a lower layer, through a Card Solution API.)
 
-### Specific Plugin
+### Specific Plugin integration
 To hide Plugin native implementation classes, the Plugins are registered to the SmartCard Service through related specific Plugin Factory.
-![Specific Plugin v1.0.0](img/KeypleCore_Reader_ClassDiag_SpecificPluginAndReader_1_0_0.svg)
+![Specific Plugin v1.0.0](img/KeypleCore_Reader_ClassDiag_SpecificPluginFactoryAndProtocol_1_0_0.svg)
 
 ### Reader Notifications
 To be notified about '**Plugin Event**' or '**Reader Event**', a terminal application must implement the dedicated '**Plugin Observer**' or '**Reader Observer**' interfaces.

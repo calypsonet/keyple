@@ -24,23 +24,29 @@ package org.eclipse.keyple.core #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
+    package util #FFFFFF {
+      !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_UTIL_1_0_0
+    }
+
     SmartCardService "1" *-down-> "*" Plugin : plugins
     Plugin "1" *-left-> "*" Reader : readers
+    ContactlessCardCommonProtocols -right[hidden]- SmartCardService
+    ContactlessCardCommonProtocols -down- Reader : application\nprotocol\nreference >
   }
   package plugin.setting #FFFFFF {
     !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_FACTORY_1_0_0
   }
 
   plugin.setting -left[hidden]- reader
-  SmartCardService "1" *-right-> "*" PluginFactory : registers
+  SmartCardService "1" <-right- "*" PluginFactory : sets <
   PluginFactory "1" --> "1" Plugin : creates >
 }
-
 
 !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SPECIFICPLUGIN_1_0_0
 SpecificTerminal -down-> SmartCardService : uses >
 
-PluginFactory <|.down. SpecificPluginFactory : implements
 Plugin <|.down. SpecificPlugin : implements
 Reader <|.down. SpecificReader : implements
+PluginFactory <|.down. SpecificPluginFactory : implements
+Reader -- SpecificSupportedProtocols : plugin\nprotocol\nreference <
 @enduml

@@ -58,9 +58,10 @@
   +String getName()
 
   +boolean isCardPresent()
+  +boolean isContactlessTransmission()
+
   +activateProtocol(String applicationReference, String pluginReference)
   +deactivateProtocol(String applicationReference)
-  +boolean isContactlessTransmission()
 }
 @enduml
 
@@ -76,6 +77,20 @@
 @startuml(id=READER_UTIL_1_0_0_PLUGIN)
 ~interface ProxyElement {
   +String getName()
+}
+@enduml
+
+@startuml(id=READER_UTIL_1_0_0)
+enum ContactlessCardCommonProtocols {
+.. standard ..
+  ISO_14443_4
+.. NFC compliant ..
+  NFC_A_ISO_14443_3A
+  NFC_B_ISO_14443_3B
+  NFC_F_JIS_6319_4
+  NFC_V_ISO_15693
+.. proprietary ..
+  CALYPSO_OLD_CARD_PRIME
 }
 @enduml
 
@@ -97,6 +112,12 @@ package specific.terminal_application #85C1E9 {
 
 @startuml(id=READER_SPECIFICPLUGIN_1_0_0)
 package specific.plugin #D7BDE2 {
+  +enum SpecificSupportedProtocols {
+    ISO_14443_4
+    CALYPSO_OLD_CARD_PRIME
+  }
+
+
   +class "<b>final</b> SpecificPluginFactory" as SpecificPluginFactory {
     +String getPluginName()
     +Plugin getPluginInstance()
@@ -116,8 +137,11 @@ package specific.plugin #D7BDE2 {
     +<b>final</b> String getName()
   }
 
+'  SpecificPluginFactory "1" --> "1" SpecificPlugin : creates
+'  SpecificPlugin "1" *--> "*" SpecificReader : readers
   SpecificPluginFactory "1" -right-> "1" SpecificPlugin : creates
   SpecificPlugin "1" *-right-> "*" SpecificReader : readers
+  SpecificSupportedProtocols -left[hidden]- SpecificReader
 }
 @enduml
 
