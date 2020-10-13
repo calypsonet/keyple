@@ -32,7 +32,7 @@ package org.eclipse.keyple.core #FFFFFF {
     together {
       !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_PLUGIN_1_0_0
       !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVALEPLUGIN_1_0_0
-      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLE_NOTIFIER_1_0_0
     }
     AbstractPlugin <|-down- AbstractObservablePlugin : extends
     AbstractObservablePlugin <|-down- AbstractThreadedObservablePlugin : extends
@@ -53,7 +53,7 @@ package org.eclipse.keyple.core #FFFFFF {
         interface SmartInsertionReader
       }
       together {
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!READER_OBSERVABLE_NOTIFIER
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!READER_OBSERVABLE_NOTIFIER_1_0_0
         interface SmartRemovalReader
       }
       AbstractReader <|-down- AbstractLocalReader : extends
@@ -63,7 +63,7 @@ package org.eclipse.keyple.core #FFFFFF {
       SmartSelectionReader -down[hidden]- SmartInsertionReader
       SmartInsertionReader -down[hidden]- SmartRemovalReader
       hide Toto
-      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_OBSERVABLE
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_OBSERVABLE_1_0_0
 
       SmartRemovalReader -right-|> ObservableReaderNotifier : extends
       ObservableReaderNotifier <|-- SmartInsertionReader : extends

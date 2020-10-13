@@ -37,7 +37,7 @@ package org.eclipse.keyple.core #FFFFFF {
     Reader <|-- ObservableReader : extends
   }
 
-  PluginFactory "*" -down- "1" SmartCardService : registers <
+  PluginFactory "*" -down- "1" SmartCardService : sets >
   PluginFactory "1" --> "1" Plugin : creates >
 }
 
