@@ -30,6 +30,8 @@ TA->KC: **prepare** CardSelection
 TA->KC: **process** ExplicitSelection(PO Reader)
 POR<[#0000FF]-KC: **PO 1: transmits** SelectionRequest(PoSelector, ApduCommands[ReadRecord(SFI_Env)],\nkeep  PO Channel)
 
+PO<-POR: Open card channel
+PO-->>POR: ack
 PO<-POR: SelectApplication
 PO-->>POR: PO FCI
 POR->POR: checks invalidation\nstatus
@@ -39,14 +41,14 @@ PO-->>POR: Env EF data
 PO<-POR: ReadRecord(SFI_CList)
 PO-->>POR: CList EF data
 end
-POR--[#0000FF]>KC: **replies** SelectionResponse(SelectionStatus(PO FCI), ApduResponses[Env EF data])
+POR--[#0000FF]>>KC: **replies** SelectionResponse(SelectionStatus(PO FCI), ApduResponses[Env EF data])
 KC->KC: Calypso card identified\n(PO type, serial, revision, features)
 KC->KC: Card validity check\n(black listed serial, HCE token expiration)
-TA<--KC: Calypso card image: PoCard
+TA<<--KC: Calypso card image: PoCard
 TA->KC: PoCard.getEfFileData(SFI_Env)
-TA<--KC: Environment bytes
+TA<<--KC: Environment bytes
 TA->KC: PoCard.getEfFileData(SFI_CList)
-TA<--KC: ContractsList bytes
+TA<<--KC: ContractsList bytes
 
 == PO Secure Session ==
 TA->KC: new PoTransaction({PoReader, PoCard}, {SamReader, SamCard},\nSessionMode.ATOMIC)
@@ -55,7 +57,7 @@ TA->KC: **prepare** ReadRecord(SFI_Contract1)
 TA->KC: **prepare** ReadCounter(SFI_Counter1)
 TA->KC: **process** Opening(PO_DebitKey)
 
-KC-[#00FF00]>SMR: **CSM 1: transmits** CardRequest(ApduCommands[\nSelectDiversifier(PO_Serial), GetChallenge],\nkeep  SAM Channel)
+KC-[#00FF00]>SMR: **SAM 1: transmits** CardRequest(ApduCommands[\nSelectDiversifier(PO_Serial), GetChallenge],\nkeep  SAM Channel)
 SMR->SM: SelectDiversifier
 SMR<<--SM: ack
 SMR->SM: GetChallenge
@@ -71,56 +73,63 @@ PO-->>POR: Contract1 EF data
 PO<-POR: ReadCounter
 PO-->>POR: Counter1 EF data
 end
-POR--[#0000FF]>KC: **replies** CardResponse(ApduResponses[Open response with Env EF data,\nContracts1 EF data, Counter1 EF data])
+POR--[#0000FF]>>KC: **replies** CardResponse(ApduResponses[Open response with Env EF data,\nContracts1 EF data, Counter1 EF data])
+KC->KC: Card responses consistency\n(avoid injection command attack)
 KC->KC: Card session commands\nmemorized in cache (SAM digest not updated)
 KC->KC: Ratification status check
 KC->KC: Card image update\ndata consistency check\n(Env read outside & inside session)
-TA<--KC: ack
+TA<<--KC: ack
 TA->KC: PoCard.getEfFileData(SFI_Contract1)
-TA<--KC: Contract1 bytes
+TA<<--KC: Contract1 bytes
 TA->KC: PoCard.getEfFileData(SFI_Counter1)
-TA<--KC: Counter1 value
+TA<<--KC: Counter1 value
 
 TA->KC: **prepare** UpdateRecord(SFI_Event, EventData)
 TA->KC: **prepare** DecreaseCounter(SFI_Counter1, ValueToDecrease)
+TA->KC: **prepare** releaseChannel()
 TA->KC: **process** Closing(Not Ratified)
 
+KC->KC: Anticipation of the future card responses\nupdate of the session cache
 
-
-
-TA->KC: **processClosing**(List<PoRequestInSession>,\nList<AnticipatedPoResponse>,\nPoRatificationCommand)
-
-KC-[#00FF00]>SMR: CSM 2: SeRequest(noAID,\nList<ApduRequest>)
+KC-[#00FF00]>SMR: **SAM 2: transmits** CardRequest(ApduCommands[\nDigestInit(PO_OpenResponse), DigestUpdateMultiple\n, DigestUpdateMultiple, DigestUpdateMultiple,\nDigestUpdateMultiple, DigestClose],\nkeep  SAM Channel)
 SMR->SM: DigestInit
 SMR<<--SM:ack
-group '2 * y' session MAC updates
-SMR->SM: DigestUpdate
+group 'n' session MAC updates
+SMR->SM: DigestUpdateMultiple(ReadRecord\ncmd & responses)
 SMR<<--SM: ack
-SMR->SM: DigestUpdate
+SMR->SM: DigestUpdateMplutiple(ReadRecord\ncmd & responses)
 SMR<<--SM: ack
 end
 group '2 * z' session MAC updates
-SMR->SM: DigestUpdate
+SMR->SM: DigestUpdateMultiple(UpdateRecord\ncmd & **anticipated** response)
 SMR<<--SM: ack
-SMR->SM: DigestUpdate
+SMR->SM: DigestUpdateMultiple(DecreaseCounter\ncmd & **anticipated** response)
 SMR<<--SM: ack
 end
 SMR->SM: DigestClose
-SMR<<--SM: CSM certificate
-KC<<[#00FF00]--SMR: CSM certificate
-POR<[#0000FF]-KC: PO 3: SeRequest(AID,\nList<PoRequest>)
-group 'z' PO commands inside session
-PO<-POR: ApduRequest
-PO-->>POR: ApduResponse
+SMR<<--SM: SAM certificate
+KC<<[#00FF00]--SMR: **replies** CardResponse(ApduResponses[DigestInit status,\nDigestUpdateMultiple**s** status], DigestClose reponse\nwith SAM certificate)
+
+POR<[#0000FF]-KC: **PO 3: transmits** CardRequest(ApduCommands[UpdateRecord(SFI_Event), DecreaseCounter(decValue),\nCloseSession(SamCertificate),RatificationCommand],\nkeep  SAM Channel)
+group PO APDU commands inside session
+PO<-POR: UpdateRecord
+PO-->>POR: ack
+PO<-POR: DecreaseCounter
+PO-->>POR: new counter value
 end
-PO<-POR: CloseSession
+PO<-POR: CloseSession(SAM certificate)
 PO-->>POR: PO certificate
 PO<-POR: Ratification
 PO-->>POR: ack
-POR--[#0000FF]>KC: SeResponse(FCI, List<ApduResponse>)
-KC-[#00FF00]>SMR: CSM 3: SeRequest(noAID, List<ApduRequest>)
+PO<-POR: Close card channel
+PO-->>POR: ack
+POR--[#0000FF]>>KC: **replies** CardResponse(ApduResponses[UpdateReoord status,\nnew Counter1 value, PO certificate, Ratification ack], ChannelStatus.Closed)
+
+KC-[#00FF00]>SMR: **SAM 3: transmits** CardRequest(ApduCommands[\nExternal Authenticate(PO certificate)],\nkeep  SAM Channel)
 SMR->SM: ExternalAuthenticate
 SMR<<--SM: authentication status
-KC<<[#00FF00]--SMR: Authentification status
-TA<<--KC: SessionState_Closed, List<PoResponse>
+KC<<[#00FF00]--SMR: **replies** CardResponse(ApduResponses[Authentification status])
+
+
+TA<<--KC: ack
 @enduml

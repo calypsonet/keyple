@@ -53,3 +53,9 @@ Most of the process methods have a ‘Channel Control’ parameter in order to d
 ## Data model extension
 
 ![Calypso transaction](img/KeypleCalypso_Transaction_ClassDiag_SpecificPoTransaction_1_0_0.svg)
+
+
+
+## Secure session sequence
+
+![Calypso session](img/KeypleCalypso_Transaction_SequenceDiag_SecureSessionProcessing_1_0_0.svg)
