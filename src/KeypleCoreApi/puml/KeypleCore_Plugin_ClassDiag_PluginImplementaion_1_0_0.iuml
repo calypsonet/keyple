@@ -65,7 +65,8 @@ package org.eclipse.keyple.core #FFFFFF {
       hide Toto
       !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_OBSERVABLE_1_0_0
 
-      SmartRemovalReader -right-|> ObservableReaderNotifier : extends
+      SmartRemovalReader -left-|> ObservableReaderNotifier : extends
+      NativeInsertionReader -right-|> ObservableReaderNotifier : extends
       ObservableReaderNotifier <|-- SmartInsertionReader : extends
     }
   }

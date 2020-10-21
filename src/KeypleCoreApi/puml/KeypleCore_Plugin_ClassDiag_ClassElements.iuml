@@ -32,12 +32,16 @@
 
 @startuml(id=PLUGIN_SMART_SELECTION_1_0_0)
 +interface SmartSelectionReader {
-  +ApduResponse <color:blue>openChannelForAid</color>(AidSelector aidSelector)
+  +ApduResponse <color:blue>openChannelForAid</color>(byte[] dfName)
   +<color:blue>closeLogicalChannel()</color>()
 }
 @enduml
 
 @startuml(id=PLUGIN_SMART_OBSERVABLE_1_0_0)
++interface NativeInsertionReader  {
+  +<color:blue>notifyCardInserted</color>()
+}
+
 +interface SmartInsertionReader  {
   +boolean <color:blue>waitForCardPresent</color>()
   +<color:blue>stopWaitForCard</color>()
@@ -120,16 +124,16 @@
   +<b>final</b> String getName()
 '
   .. implementation of tbe public interface ProxyReader ..
-  +<b>final</b> List<SeResponse> transmitSeRequests(List<SeRequest seRequests, MultiSeRequestProcessing
-    multiSeRequestProcessing, ChannelControl channelControl)
-
-  +<b>final</b> SeResponse transmitSeRequest(SeRequest seRequest, ChannelControl channelControl)
+  +<b>final</b> List<SelectionResponse> transmitCardSelections(List<SelectionRequest> requests, MultiSelectionProcessing
+    selectionMode, ChannelControl channelControl)
+  +<b>final</b> CardResponse transmitCardRequest(CardRequest request, ChannelControl channelControl)
+  +<b>final</b> releaseChannel()
 '
   .. protected abstract methods to be implemented by AbstractLocalReader or VirtualReader ..
-  #{abstract} List<SeResponse> processSeRequests(List<SeRequest> seRequests,
-    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
-
-  #{abstract} SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+  #{abstract} List<SelectionResponse> processCardSelections(List<SelectionRequest> requests,
+    MultiSelectionProcessing selectionMode, ChannelControl channelControl)
+  #{abstract} CardResponse processCardRequest(CardRequest request, ChannelControl channelControl)
+  #{abstract} terminateChannel()
 }
 @enduml
 
@@ -143,22 +147,21 @@
   -Map<String, String> protocolsMap
   --
   #AbstractLocalReader(String pluginName, String name)'
-  .. implementation of the public interface SeReader ..
-'  +<b>final</b> +boolean isCardPresent()
-'  +<b>final</b> +activateProtocol(String applicationReference, String pluginReference)
-'  +<b>final</b> +deactivateProtocol(String applicationReference)
-  +boolean isCardPresent()
-  +activateProtocol(String applicationReference, String pluginReference)
-  +deactivateProtocol(String applicationReference)
+  .. implementation of the public interface CardReader ..
+  +<b>final</b> boolean isCardPresent()                              <color:red>should be final !!</color>
+  +<b>final</b> activateProtocol(String readerProtocolName, String applicationProtocolName)
+  +<b>final</b> deactivateProtocol(String readerProtocolName)
 '
   .. implementation of the protected abstract methods of the class AbstractReader ..
-  #<b>final</b> List<SeResponse> processSeRequests(List<SeRequest> seRequests,
-    MultiSeRequestProcessing multiSeRequestProcessing, ChannelControl channelControl)
-
-  #<b>final</b> SeResponse processSeRequest(SeRequest seRequest, ChannelControl channelControl)
+    ~<b>final</b> List<SelectionResponse> processCardSelections(List<SelectionRequest> requests,
+      MultiSelectionProcessing selectionMode, ChannelControl channelControl)
+    ~<b>final</b> CardResponse processCardRequest(CardRequest request, ChannelControl channelControl)
+    ~<b>final</b> terminateChannel()
 '
-  .. protected abstract methods to be implemented by <color:blue>native</color> SeReader ..
-  #{abstract} String <color:blue>getProtocolReference</color>()
+  .. protected abstract methods to be implemented by <color:blue>native</color> CardReader ..
+  #{abstract} <color:blue>activateReaderProtocol</color>(String readerProtocolName);
+  #{abstract} <color:blue>deactivateReaderProtocol</color>(String readerProtocolName);
+
   #{abstract} boolean <color:blue>checkCardPresence</color>()
 
   #{abstract} <color:blue>openPhysicalChannel</color>()
@@ -188,47 +191,47 @@
 
 @startuml(id=PLUGIN_OBSERVABLEREADER_1_0_0)
 +abstract AbstractObservableLocalReader {
+  -List<ReaderObserver> observers
   -DefaultSelectionsRequest[0..1] defaultSelectionsRequest
-  -ObservableReader.NotificationMode notificationMode
-  -ObservableReader.PollingMode currentPollingMode
-  -ObservableReaderStateService stateService
+  -NotificationMode notificationMode
+  -PollingMode currentPollingMode
+  ~<b>final</b> ObservableReaderStateService stateService
+  -<b>final</b> Object sync
   --
   #AbstractObservableLocalReader(String pluginName, String readerName)
 '
+'  .. implementation of the public interface CardReader ..
+'  +<b>final</b> boolean isCardPresent()                            <color:red>to remove !!</color>
   .. implementation of the public interface ObservableReader ..
   +<b>final</b> addObserver(ReaderObserver observer)
   +<b>final</b> removeObserver(ReaderObserver observer)
   +<b>final</b> clearObservers()
   +<b>final</b> int countObservers()
 
-  +<b>final</b> setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
-      NotificationMode notificationM, PollingMode[0..1] pollingM)
-
-  +<b>final</b> startCardDetection(ObservableReader.PollingMode pollingMode)
+  +<b>final</b> setDefaultSelections(AbstractDefaultSelectionsRequest
+      selectionsR, NotificationMode notificationM)
+  +<b>final</b> setDefaultSelectionsAndStartCardDetection(AbstractDefaultSelectionsRequest
+      selectionsR, NotificationMode notificationM, PollingMode pollingM)
+  +<b>final</b> startCardDetection(PollingMode pollingMode)
   +<b>final</b> stopCardDetection()
+
   +<b>final</b> finalizeCardProcessing()
+'  ~<b>final</b> terminateCardCommunication()       <color:red>only one to keep ??</color>
 '
   .. implementation the public interface ObservableReaderNotifier ..
   +<b>final</b> notifyObservers(<b>final</b> ReaderEvent event)
 '
-  .. protected abstract method to be implemented by <color:blue>native</color> ObservableReader ..
-  #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()
-
+'  .. protected abstract method to be implemented by <color:blue>native</color> ObservableReader ..
+'  #{abstract} ObservableReaderStateService <color:blue>initStateService</color>()
   .. internal process ..
-  .. protected method that could be overridden by <color:blue>native</color> not thread-based ..
-  .. ObservableReader in Core API 0.9 => will be hidden in version 1.0 ..
-  #<color:blue>onEvent</color>(InternalEvent event)
-'
-
-  ~terminateCardCommunication()
-
-  ~startRemovalSequence()
-  ~<b>final</b> ReaderEvent processCardInserted()
+  ~ObservableReaderStateService initStateService()
+  ~onEvent(InternalEvent event)
+  ~ReaderEvent processCardInserted()
+  ~boolean isCardPresentPing()
   ~<b>final</b> processCardRemoved()
   ~ObservableReader.PollingMode getPollingMode()
-  ~switchState(AbstractObservableState.MonitoringState stateId)
-  ~AbstractObservableState.MonitoringState getCurrentMonitoringState()
-  ~boolean isCardPresentPing()
+  ~switchState(MonitoringState stateId)
+  ~MonitoringState getCurrentMonitoringState()
 }
 @enduml
 

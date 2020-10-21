@@ -67,9 +67,9 @@
 
 @startuml(id=READER_READER_1_0_0_PLUGIN)
 +interface Reader {
-  +boolean <color:blue>isCardPresent</color>()
-  +<color:blue>activateProtocol</color>(String applicationReference, String pluginReference)
-  +<color:blue>deactivateProtocol</color>(String applicationReference)
+  +boolean isCardPresent()
+  +activateProtocol(String applicationReference, String pluginReference)
+  +deactivateProtocol(String applicationReference)
   +boolean <color:blue>isContactlessTransmission</color>()
 }
 @enduml
@@ -196,11 +196,14 @@ package specific.plugin #D7BDE2 {
   +clearObservers()
   +int countObservers()
 
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest selectionsR,
-    NotificationMode notificationM, PollingMode[0..1] pollingM)
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
+    selectionsR, NotificationMode notificationM)
 
+  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
+    selectionsR, NotificationMode notificationM, PollingMode pollingM)
   +startCardDetection(PollingMode pollingMode)
   +stopCardDetection()
+
   +finalizeCardProcessing()
 }
 @enduml
