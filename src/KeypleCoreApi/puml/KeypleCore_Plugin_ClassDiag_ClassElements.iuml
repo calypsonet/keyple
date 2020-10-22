@@ -148,7 +148,7 @@
   --
   #AbstractLocalReader(String pluginName, String name)'
   .. implementation of the public interface CardReader ..
-  +<b>final</b> boolean isCardPresent()                              <color:red>should be final !!</color>
+  +<b>final</b> boolean isCardPresent()
   +<b>final</b> activateProtocol(String readerProtocolName, String applicationProtocolName)
   +<b>final</b> deactivateProtocol(String readerProtocolName)
 '
@@ -159,8 +159,9 @@
     ~<b>final</b> terminateChannel()
 '
   .. protected abstract methods to be implemented by <color:blue>native</color> CardReader ..
-  #{abstract} <color:blue>activateReaderProtocol</color>(String readerProtocolName);
-  #{abstract} <color:blue>deactivateReaderProtocol</color>(String readerProtocolName);
+  #{abstract} <color:blue>activateReaderProtocol</color>(String readerProtocolName)
+  #{abstract} <color:blue>deactivateReaderProtocol</color>(String readerProtocolName)
+  #{abstract} boolean <color:blue>isCurrentProtocol</color>(String readerProtocolName)
 
   #{abstract} boolean <color:blue>checkCardPresence</color>()
 

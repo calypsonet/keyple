@@ -196,10 +196,9 @@ package specific.plugin #D7BDE2 {
   +clearObservers()
   +int countObservers()
 
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
+  +setDefaultSelections(AbstractDefaultSelectionsRequest
     selectionsR, NotificationMode notificationM)
-
-  +setDefaultSelectionRequest(AbstractDefaultSelectionsRequest
+  +setDefaultSelectionsAndStartCardDetection(AbstractDefaultSelectionsRequest
     selectionsR, NotificationMode notificationM, PollingMode pollingM)
   +startCardDetection(PollingMode pollingMode)
   +stopCardDetection()
