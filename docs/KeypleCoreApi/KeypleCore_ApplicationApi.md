@@ -1,4 +1,4 @@
-# Keyple Core - Interface for the development of ticketing terminal application
+# Keyple Core - 'Service Interface': for the development of ticketing terminal application
 version 1.0.0
 
 ## Reader Access
