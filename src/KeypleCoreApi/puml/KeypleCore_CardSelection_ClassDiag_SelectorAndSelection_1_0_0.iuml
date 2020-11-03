@@ -15,7 +15,7 @@
 !include KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
 
 package org.eclipse.keyple.core #FFFFFF {
-  package "reader" as reader_even #FFFFFF {
+  package "service" as reader_even #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
     package event #FFFFFF {

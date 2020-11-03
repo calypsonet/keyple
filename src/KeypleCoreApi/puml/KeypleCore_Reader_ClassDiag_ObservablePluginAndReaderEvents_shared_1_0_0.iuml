@@ -16,7 +16,7 @@
 
 !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_TERMINALAPPLICATION_1_0_0
 
-package org.eclipse.keyple.core.reader #FFFFFF {
+package org.eclipse.keyple.core.service #FFFFFF {
   class SmartCardService
 
   package event #FFFFFF {

@@ -16,7 +16,7 @@
 
 package org.eclipse.keyple.core #FFFFFF {
 
-  package reader #FFFFFF {
+  package service #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
 
     package event as even_request #FFFFFF {
@@ -70,7 +70,7 @@ package org.eclipse.keyple.core #FFFFFF {
     DefaultSelectionsResponse "1" o-left-> "+" SelectionResponse : contains >
   }
 
-  card -right[hidden]- reader
+'  card -right[hidden]- service
   ProxyReader -right-|> Reader : extends
   DefaultSelectionsRequest -right-|> AbstractDefaultSelectionsRequest : extends
   DefaultSelectionsResponse -right-|> AbstractDefaultSelectionsResponse : extends

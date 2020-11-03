@@ -15,10 +15,11 @@
 !include KeypleCore_Api_ClassDiag_PlantUmlSetting.iuml
 
 package org.eclipse.keyple.core #FFFFFF {
-  package plugin.factory #FFFFFF {
+'  package plugin.factory #FFFFFF {
+'    !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_FACTORY_1_0_0
+'  }
+  package service #FFFFFF {
     !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_FACTORY_1_0_0
-  }
-  package reader #FFFFFF {
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_SERVICE_1_0_0
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_PLUGIN_1_0_0
     !include KeypleCore_Reader_ClassDiag_ClassElements.iuml!READER_READER_1_0_0
@@ -37,7 +38,8 @@ package org.eclipse.keyple.core #FFFFFF {
     Reader <|-- ObservableReader : extends
   }
 
-  PluginFactory "*" -down- "1" SmartCardService : sets >
+'  PluginFactory "*" -down- "1" SmartCardService : sets >
+  PluginFactory "*" -right- "1" SmartCardService : sets >
   PluginFactory "1" --> "1" Plugin : creates >
 }
 
