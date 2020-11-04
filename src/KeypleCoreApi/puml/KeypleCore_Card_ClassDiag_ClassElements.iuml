@@ -20,7 +20,7 @@
 
 @startuml(id=CARD_PROXYREADER_1_0_0)
 +interface ProxyReader {
-  +List<SelectionResponse> transmitCardSelections(List<SelectionRequest> cardRequests,
+  +List<CardSelectionResponse> transmitCardSelectionRequests(List<CardSelectionRequest> cardRequests,
     MultiSelectionProcessing multiSelectionProcessing, ChannelControl channelControl)
 
   +CardResponse transmitCardRequest(CardRequest cardRequest, ChannelControl channelControl)
@@ -31,24 +31,24 @@
 
 @startuml(id=CARD_DEFAULTSELECTION_1_0_0)
 +class "<b>final</b> DefaultSelectionsRequest" as DefaultSelectionsRequest {
-  -<b>final</b> List<SelectionRequest> selectionRequests
+  -<b>final</b> List<CardSelectionRequest> selectionRequests
   -<b>final</b> MultiSelectionProcessing multiMode
   -<b>final</b> ChannelControl channelControl
 '
-  +DefaultSelectionsRequest(List<SelectionRequest> selectionRequests,
+  +DefaultSelectionsRequest(List<CardSelectionRequest> selectionRequests,
     MultiSelectionProcessing multiMode, ChannelControl channelControl)
 
-  +List<SelectionRequest> getSelectionRequests()
+  +List<CardSelectionRequest> getSelectionRequests()
   +MultiSelectionProcessing getMultiSelectionProcessing()
   +ChannelControl getChannelControl()
 }
 
 +class "<b>final</b> DefaultSelectionsResponse" as DefaultSelectionsResponse {
-  -<b>final</b> List<SelectionResponse> selectionResponses
+  -<b>final</b> List<CardSelectionResponse> selectionResponses
 '
-  +DefaultSelectionsResponse(List<SelectionResponse> selectionResponses)
+  +DefaultSelectionsResponse(List<CardSelectionResponse> selectionResponses)
 
-  +List<SelectionResponse> getSelectionResponses()
+  +List<CardSelectionResponse> getSelectionResponses()
 }
 @enduml
 
@@ -73,22 +73,22 @@
 @enduml
 
 @startuml(id=CARD_SELECTION_1_0_0)
-+class "<b>final</b> SelectionRequest" as SelectionRequest {
++class "<b>final</b> CardSelectionRequest" as CardSelectionRequest {
   -<b>final</b> CardSelector selector
   -<b>final</b> CardRequest apduRequests
 
-  +SelectionRequest(CardSelector selector, CardRequest apduRequests)
-  +SelectionRequest(CardSelector selector)
+  +CardSelectionRequest(CardSelector selector, CardRequest apduRequests)
+  +CardSelectionRequest(CardSelector selector)
 
   +CardSelector getCardSelector()
   +CardRequest getCardRequest()
 }
 
-+class "<b>final</b> SelectionResponse" as SelectionResponse {
++class "<b>final</b> CardSelectionResponse" as CardSelectionResponse {
   -<b>final</b> SelectionStatus selectionStatus
   -<b>final</b> CardResponse apduResponses
 
-  +SelectionResponse(SelectionStatus selectionStatus, CardResponse cardResponse)
+  +CardSelectionResponse(SelectionStatus selectionStatus, CardResponse cardResponse)
 
   +SelectionStatus getSelectionStatus()
   +CardResponse getCardResponse()
