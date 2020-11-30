@@ -28,7 +28,7 @@ package org.keyple.calypso #FFFFFF {
       }
 
       +class "<b>final</b> CalypsoSam" as CalypsoSam {
-        ~CalypsoSam(<color:red>SeResponse selectionResponse</color>)
+        ~CalypsoSam(<color:red>CardSelectionResponse samSelectionResponse</color>)
 
         +SamRevision getSamRevision()
         +byte[] getSerialNumber()

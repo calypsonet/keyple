@@ -17,12 +17,12 @@
 'package org.keyple.calypso.transaction #FFFFFF {
 together {
   +class "CardResource<CalypsoPo>" as PoResource {
-    +CardResource(<color:red>Reader poReader</color>,
+    +CardResource(<color:red>Reader</color> poReader,
     CalypsoPo po);
   }
 
   +class "CardResource<CalypsoSam>" as SamResource {
-    +CardResource(<color:red>Reader samReader</color>,
+    +CardResource(<color:red>Reader</color> samReader,
     CalypsoSam sam);
   }
 
@@ -30,7 +30,7 @@ together {
   }
 
   +class CalypsoPo {
-    ~CalypsoPo(<color:red>SelectionResponse selectionResponse</color>)
+    ~CalypsoPo(<color:red>CardSelectionResponse</color> selectionResponse)
 
     +<b>final</b> String getDfName()
     +<b>final</b> String getApplicationSerialNumber()

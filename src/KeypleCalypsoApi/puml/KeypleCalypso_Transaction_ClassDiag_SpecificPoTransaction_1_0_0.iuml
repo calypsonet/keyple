@@ -29,7 +29,7 @@ package org.keyple.calypso.transaction #FFFFFF {
 }
 
 +class CalypsoPo {
-  ~CalypsoPo(<color:red>SeResponse selectionResponse</color>)
+  ~CalypsoPo(<color:red>CardSelectionResponse</color> poSelectionResponse)
 
   +<b>final</b> DirectoryHeader getDirectoryHeader()
   +<b>final</b> ElementaryFile getFileBySfi(byte sfi)

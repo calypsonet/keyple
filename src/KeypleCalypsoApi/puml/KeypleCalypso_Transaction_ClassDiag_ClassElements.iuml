@@ -20,7 +20,7 @@
 
 @startuml(id=TRANSACTION_PO_SHORT_1_0_0)
 +class CalypsoPo {
-  ~CalypsoPo(SeResponse selectionResponse)
+  ~CalypsoPo(<color:red>CardSelectionResponse</color> poSelectionResponse)
   +<b>final</b> String getDfName()
   +<b>final</b> String getApplicationSerialNumber()
   +<b>final</b> String getAtr()
@@ -96,7 +96,7 @@
 }
 
 +class "<b>final</b> CalypsoSam" as CalypsoSam {
-  ~CalypsoSam(<color:red>SelectionResponse selectionResponse</color>)
+  ~CalypsoSam(<color:red>CardSelectionResponse</color> samSelectionResponse)
 
   +SamRevision getSamRevision()
   +byte[] getSerialNumber()
