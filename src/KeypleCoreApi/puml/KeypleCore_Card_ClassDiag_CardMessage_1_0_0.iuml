@@ -31,44 +31,47 @@ package org.eclipse.keyple.core #FFFFFF {
   }
 
   package card #FFFFFF {
-    together {
-      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_SELECTION_1_0_0
-      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_PROXYREADER_1_0_0
-      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_REQUEST_1_0_0
-      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!SELECTION_CHANNEL_1_0_0
-      !include KeypleCore_CardSelection_ClassDiag_ClassElements.iuml!SELECTION_MULTIPLE_1_0_0
-    }
-
-    CardSelectionRequest "1" o-left-> "0..1" CardRequest : contains >
-    ProxyReader "1" -left- "1" ChannelControl : sets >
-    MultiSelectionProcessing "1" -- "1" ProxyReader : sets <
-    CardSelectionResponse "1" o-left-> "0..1" CardResponse : contains >
-    ChannelControl -up[hidden]-> CardRequest
-    ChannelControl -down[hidden]-> CardResponse
-    MultiSelectionProcessing -right[hidden]-> ChannelControl
-    ProxyReader "1" -up- "+" CardSelectionRequest : sends >
-    ProxyReader "1" -down- "+" CardSelectionResponse : receives >
-    ProxyReader "1" -- "1" CardRequest : sends >
-    ProxyReader "1" -- "1" CardResponse : receives >
-
-
-    !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_APDUREQUEST_1_0_0
-    CardRequest "1" o-up-> "*" ApduRequest : contains >
-    CardResponse "0..1" o-down-> "*" ApduResponse : contains >
-
     package selection #FFFFFF {
       !include KeypleCore_CardSelection_ClassDiag_ClassElements.iuml!SELECTION_SELECTOR_1_0_0
     }
-    !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_STATUS_1_0_0
-    CardSelectionRequest "1" o-up-|> "1" CardSelector : contains >
-    CardSelectionResponse "1" o-down-> "1" SelectionStatus : contains >
 
-    SelectionStatus "1" o-left-> "0..1" ApduResponse : fci
+    package message #FFFFFF {
+      together {
+        !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_SELECTION_1_0_0
+        !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_PROXYREADER_1_0_0
+        !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_REQUEST_1_0_0
+        !include KeypleCore_Card_ClassDiag_ClassElements.iuml!SELECTION_CHANNEL_1_0_0
+        !include KeypleCore_CardSelection_ClassDiag_ClassElements.iuml!SELECTION_MULTIPLE_1_0_0
+      }
 
-    !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_DEFAULTSELECTION_1_0_0
-    DefaultSelectionsRequest "1" o-left-> "+" CardSelectionRequest : contains >
-    DefaultSelectionsResponse "1" o-left-> "+" CardSelectionResponse : contains >
+      CardSelectionRequest "1" o-left-> "0..1" CardRequest : contains >
+      ProxyReader "1" -left- "1" ChannelControl : sets >
+      MultiSelectionProcessing "1" -- "1" ProxyReader : sets <
+      CardSelectionResponse "1" o-left-> "0..1" CardResponse : contains >
+      ChannelControl -up[hidden]-> CardRequest
+      ChannelControl -down[hidden]-> CardResponse
+      MultiSelectionProcessing -right[hidden]-> ChannelControl
+      ProxyReader "1" -up- "+" CardSelectionRequest : sends >
+      ProxyReader "1" -down- "+" CardSelectionResponse : receives >
+      ProxyReader "1" -- "1" CardRequest : sends >
+      ProxyReader "1" -- "1" CardResponse : receives >
+
+      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_APDUREQUEST_1_0_0
+      CardRequest "1" o-up-> "*" ApduRequest : contains >
+      CardResponse "0..1" o-down-> "*" ApduResponse : contains >
+
+      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_STATUS_1_0_0
+      CardSelectionRequest "1" o-up-|> "1" CardSelector : contains >
+      CardSelectionResponse "1" o-down-> "1" SelectionStatus : contains >
+
+      SelectionStatus "1" o-left-> "0..1" ApduResponse : fci
+
+      !include KeypleCore_Card_ClassDiag_ClassElements.iuml!CARD_DEFAULTSELECTION_1_0_0
+      DefaultSelectionsRequest "1" o-left-> "+" CardSelectionRequest : contains >
+      DefaultSelectionsResponse "1" o-left-> "+" CardSelectionResponse : contains >
+    }
   }
+  selection -down[hidden]- message
 
 '  card -right[hidden]- service
   ProxyReader -right-|> Reader : extends

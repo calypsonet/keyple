@@ -19,26 +19,26 @@
 @enduml
 
 @startuml(id=SELECTION_SELECTION_1_0_0)
-+class "<b>final</b> CardSelection" as CardSelection {
-  +CardSelection(MultiSelectionProcessing multiMode = FIRST_MATCH)
++class "<b>final</b> CardSelectionsService" as CardSelectionsService {
+  +CardSelectionsService(MultiSelectionProcessing multiMode = FIRST_MATCH)
 
-  +int prepareSelection(AbstractCardSelectionRequest cardSelectionRequest)
+  +int prepareSelection(AbstractCardSelection cardSelection)
   +<b>final</b> prepareReleaseCardChannel()
 
-  +SelectionsResult processExplicitSelection(Reader reader)
+  +CardSelectionsResult processExplicitSelections(Reader reader)
 
-  +AbstractDefaultSelectionsRequest getSelectionOperation()
-  +SelectionsResult processDefaultSelection(
+  +AbstractDefaultSelectionsRequest getDefaultSelectionsRequest()
+  +CardSelectionsResult processDefaultSelectionsResponse(
     AbstractDefaultSelectionsResponse selectionResponse)
 }
 @enduml
 
 @startuml(id=SELECTION_REQUEST_1_0_0)
-+abstract AbstractCardSelectionRequest {
-  +AbstractCardSelectionRequest(CardSelector selector)
++abstract AbstractCardSelection {
+  +AbstractCardSelection(CardSelector selector)
 
   #<b>final</b> addApduRequest(ApduRequest apduRequest)
-  ~<b>final</b> CardRequest getSelectionRequest()
+  ~<b>final</b> CardSelectionRequest getCardSelectionRequest()
   {abstract} #AbstractSmartCard parse(CardResponse selectionResponse)
 
   +CardSelector getCardSelector()
@@ -66,8 +66,8 @@
 @enduml
 
 @startuml(id=SELECTION_RESULT_1_0_0)
-+class "<b>final</b> SelectionsResult" as SelectionsResult {
-  ~SelectionsResult()
++class "<b>final</b> CardSelectionsResult" as CardSelectionsResult {
+  ~CardSelectionsResult()
   ~addMatchingCard(int selectionIndex, AbstractSmartCard matchingSe)
 
   +boolean hasActiveSelection()

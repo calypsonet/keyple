@@ -48,8 +48,8 @@
 }
 
 
-+class PoSelectionRequest {
-  +PoSelectionRequest(PoSelector poSelector)
++class PoSelection {
+  +PoSelection(PoSelector poSelector)
 
   +<b>final</b> prepareSelectFile(byte[] path)
   +<b>final</b> prepareSelectFile(shord lid)
@@ -86,8 +86,8 @@
   +SamSelector build()
 }
 
-+class SamSelectionRequest {
-  +SamSelectionRequest(SamSelector samSelector)
++class SamSelection {
+  +SamSelection(SamSelector samSelector)
 
   #CalypsoSam parse(SelectionResponse selectionResponse)
 }

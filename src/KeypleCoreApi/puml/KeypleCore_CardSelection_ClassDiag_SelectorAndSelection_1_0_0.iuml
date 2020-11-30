@@ -32,11 +32,11 @@ package org.eclipse.keyple.core #FFFFFF {
 
     CardResource_T "1" *-right- "1" AbstractSmartCard
 
-    CardSelection "1" o-down- "*" AbstractCardSelectionRequest
-    CardSelection "1" o-left- "0..1" SelectionsResult
+    CardSelectionsService "1" o-down- "*" AbstractCardSelection
+    CardSelectionsService "1" o-left- "0..1" CardSelectionsResult
 
-    SelectionsResult "1" o-down- "*" AbstractSmartCard
-    AbstractSmartCard -right- AbstractCardSelectionRequest : selects <
+    CardSelectionsResult "1" o-down- "*" AbstractSmartCard
+    AbstractSmartCard "1..0" -right- "1" AbstractCardSelection : selects <
 '  }
 
 '  package "seproxy" as seproxy_protocol #FFFFFF {
@@ -69,17 +69,17 @@ package org.eclipse.keyple.core #FFFFFF {
     CardSelector +-left- AtrFilter
     CardSelector +-- "1+" CardSelectorBuilder : build <
 
-    MultiSelectionProcessing -left- CardSelection : set <
+    MultiSelectionProcessing -left- CardSelectionsService : set <
 
-    AbstractCardSelectionRequest "1" o-down- "1" CardSelector
+    AbstractCardSelection "1" o-down- "1" CardSelector
 '    AbstractSmartCard "1" *-- "0..1" TransmissionMode
   }
 
-  CardSelection -up- Reader : sends <
-  CardSelection -up- AbstractDefaultSelectionsRequest : exports >
-  CardSelection -up- AbstractDefaultSelectionsResponse : imports >
+  CardSelectionsService -up- Reader : sends <
+  CardSelectionsService -up- AbstractDefaultSelectionsRequest : exports >
+  CardSelectionsService -up- AbstractDefaultSelectionsResponse : imports >
 
-  SelectionsResult -up- Reader : receives <
+  CardSelectionsResult -up- Reader : receives <
   Reader "0..1" --* "1" CardResource_T : connected to <
 }
 @enduml

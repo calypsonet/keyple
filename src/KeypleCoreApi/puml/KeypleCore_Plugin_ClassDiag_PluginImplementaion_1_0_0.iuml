@@ -39,36 +39,64 @@ package org.eclipse.keyple.core #FFFFFF {
     AbstractThreadedObservablePlugin -down[hidden]-> ObservablePluginNotifier
     AbstractObservablePlugin ..|> ObservablePluginNotifier : implements
 
-    package "reader" as plugin_reader #FFFFFF {
-      together {
+'    package "reader" as plugin_reader #FFFFFF {
+    together {
+'      together {
         !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_ABSTRACTREADER_1_0_0
-        class Toto
-      }
+'        class Toto
+'      }
       together {
         !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_LOCALREADER_1_0_0
         !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_SELECTION_1_0_0
       }
-      together {
-        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLEREADER_1_0_0
-        interface SmartInsertionReader
-      }
-      together {
+      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_OBSERVABLEREADER_1_0_0
+      AbstractObservableLocalReader <|-right- AbstractObservableLocalAutonomousReader : extends
+
+together {
         !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!READER_OBSERVABLE_NOTIFIER_1_0_0
-        interface SmartRemovalReader
+      together {
+        !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_OBSERVABLE_1_0_0
       }
+}
       AbstractReader <|-down- AbstractLocalReader : extends
       AbstractLocalReader <|-down- AbstractObservableLocalReader : extends
       AbstractObservableLocalReader .down.|> ObservableReaderNotifier : implements
-      Toto -down[hidden]- SmartSelectionReader
-      SmartSelectionReader -down[hidden]- SmartInsertionReader
-      SmartInsertionReader -down[hidden]- SmartRemovalReader
-      hide Toto
-      !include KeypleCore_Plugin_ClassDiag_ClassElements.iuml!PLUGIN_SMART_OBSERVABLE_1_0_0
 
-      SmartRemovalReader -left-|> ObservableReaderNotifier : extends
-      NativeInsertionReader -right-|> ObservableReaderNotifier : extends
-      ObservableReaderNotifier <|-- SmartInsertionReader : extends
-    }
+      WaitForCardInsertionAutonomous -right[hidden]- WaitForCardRemovalAutonomous
+      WaitForCardRemovalDuringProcessing -right[hidden]- DontWaitForCardRemovalDuringProcessing
+      WaitForCardInsertionNonBlocking -right[hidden]- WaitForCardRemovalNonBlocking
+      WaitForCardInsertionBlocking -right[hidden]- WaitForCardRemovalBlocking
+
+      WaitForCardInsertionAutonomous -down[hidden]- WaitForCardRemovalDuringProcessing
+      WaitForCardRemovalDuringProcessing -down[hidden]- WaitForCardInsertionNonBlocking
+      WaitForCardInsertionNonBlocking -down[hidden]- WaitForCardInsertionBlocking
+
+      ObservableReaderNotifier <|-right- WaitForCardInsertionAutonomous : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalAutonomous : extends
+      ObservableReaderNotifier <|-right- WaitForCardRemovalDuringProcessing : extends
+      ObservableReaderNotifier <|-- DontWaitForCardRemovalDuringProcessing : extends
+      ObservableReaderNotifier <|-right- WaitForCardInsertionNonBlocking : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalNonBlocking : extends
+      ObservableReaderNotifier <|-right- WaitForCardInsertionBlocking : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalBlocking : extends
+/'
+      WaitForCardInsertionAutonomous -down[hidden]- WaitForCardRemovalAutonomous
+      WaitForCardRemovalAutonomous -down[hidden]- WaitForCardRemovalDuringProcessing
+      WaitForCardRemovalDuringProcessing -down[hidden]- DontWaitForCardRemovalDuringProcessing
+      DontWaitForCardRemovalDuringProcessing -down[hidden]- WaitForCardInsertionNonBlocking
+      WaitForCardInsertionNonBlocking -down[hidden]- WaitForCardRemovalNonBlocking
+      WaitForCardRemovalNonBlocking -down[hidden]- WaitForCardInsertionBlocking
+      WaitForCardInsertionBlocking -down[hidden]- WaitForCardRemovalBlocking
+
+      ObservableReaderNotifier <|-- WaitForCardInsertionAutonomous : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalAutonomous : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalDuringProcessing : extends
+      ObservableReaderNotifier <|-right- DontWaitForCardRemovalDuringProcessing : extends
+      ObservableReaderNotifier <|-- WaitForCardInsertionNonBlocking : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalNonBlocking : extends
+      ObservableReaderNotifier <|-- WaitForCardInsertionBlocking : extends
+      ObservableReaderNotifier <|-- WaitForCardRemovalBlocking : extends
+'/
   }
   Plugin <|.down. AbstractPlugin : implements
   ProxyReader <|.down. AbstractReader : implements
